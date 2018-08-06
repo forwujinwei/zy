@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>我的合同</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+	<link rel="stylesheet" href="../../css/main.css">
+	<script src="../../libs/jquery.min.js"></script>
+	<script src="../../plugins/layer/layer.js"></script>
+	<script src="../../libs/bootstrap.min.js"></script>
+	<script src="../../libs/vue.min.js"></script>
+	<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+	<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+	<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+	<script src="../../js/common.js"></script>
+</head>
+<body>
+<div id="rrapp">
+	<div class="grid-btn">
+		<div class="form-group">
+			<select name="skey" id="skey">
+
+				<option value="1">合同号</option>
+
+				<option value="2">名称</option>
+
+				<option value="3">联系人</option>
+
+				<option value="4">顾问</option>
+
+			</select>
+
+			<select name="jz_zt" id="jz_zt">
+				<option value="0">所有</option>
+				<option value="1">加急</option>
+				<option value="2">不加急</option>
+			</select>
+			<input type="text" name="searchW" class="form-control" style="width: 10%;margin-left:5px;margin-right:5px;">
+			<div class="form-group form-inline">
+				日期
+				<input type="text" value="" id="datetimepicker" class="form-control show-date" style="width: 13%;margin-left:5px;margin-right:5px;">
+
+				到
+				<input type="text" name="eTime" id="eTime" size="11" maxlength="10" class="form-control show-date" onfocus="" style="width: 13%;margin-left:5px;margin-right:5px;">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+		</div>
+
+		<!--&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="back" value="返回"/>-->
+	</div>
+	<table id="jqGrid"></table>
+	<div id="jqGridPager"></div>
+</div>
+
+<script src="../../js/modules/agreement/agreement_own.js"></script>
+</body>
+</html>

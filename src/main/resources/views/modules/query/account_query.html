@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>打款查询</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+	<link rel="stylesheet" href="../../css/main.css">
+	<script src="../../libs/jquery.min.js"></script>
+	<script src="../../plugins/layer/layer.js"></script>
+	<script src="../../libs/bootstrap.min.js"></script>
+	<script src="../../libs/vue.min.js"></script>
+	<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+	<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+	<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+	<script src="../../js/common.js"></script>
+</head>
+<body>
+<div id="rrapp">
+	<div class="grid-btn">
+
+		<div class="form-group col-sm-2">
+			<input type="button" class="btn btn-warning" @click="back" value="查询打款单"/>
+			<select name="searchK">
+				<option value="0" selected="selected">顾问</option>
+				<option value="1">合同号</option>
+			</select>
+			<input type="text" class="form-control" v-model="q.jobId" @keyup.enter="query" placeholder="任务ID">
+			<div class="form-group form-inline">
+				提交时间
+				<input type="text" value="" id="datetimepicker" class="form-control show-date" style="width: 13%;margin-left:5px;margin-right:5px;">
+
+				到
+				<input type="text" name="eTime" id="eTime" size="11" maxlength="10" class="form-control show-date" onfocus="" style="width: 13%;margin-left:5px;margin-right:5px;">
+
+				<a class="btn btn-default" @click="query">查询</a>
+				&nbsp;&nbsp;
+			</div>
+		</div>
+	</div>
+	<table id="jqGrid"></table>
+	<div id="jqGridPager"></div>
+</div>
+
+<script src="../../js/modules/query/account_query.js"></script>
+</body>
+</html>

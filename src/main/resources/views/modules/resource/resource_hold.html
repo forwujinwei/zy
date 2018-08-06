@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>定时任务日志</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+	<link rel="stylesheet" href="../../css/main.css">
+	<script src="../../libs/jquery.min.js"></script>
+	<script src="../../plugins/layer/layer.js"></script>
+	<script src="../../libs/bootstrap.min.js"></script>
+	<script src="../../libs/vue.min.js"></script>
+	<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+	<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+	<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+	<script src="../../js/common.js"></script>
+</head>
+<body>
+<div id="rrapp">
+	<div class="form-group form-inline">
+		<input type="button" class="btn btn-warning" @click="back" value="添加客户" style="width: 10%;margin-left:5px;margin-right:5px;"/>
+		<select id="intention" name="intention" style="width: 20% ;margin-left:5px;margin-right:5px;" class="form-control">
+			<option selected="selected" value="0">意向程度</option>
+				<option value="A">A:意向特别好的</option>
+			<option value="B">B:改名</option>
+			<option value="C">C:执照没下来</option>
+			<option value="D">D:字可以注册，还没有委托我</option>
+			<option value="E">E:已经注册过了，一手标</option>
+			<option value="G">G:其他</option>
+			<option value="J">J:不跟踪了</option>
+			<option value="s">s:已经签合同的资源</option>
+			<option value="W">W</option>
+			<option value="重复提交">重复提交</option>
+		</select>
+		<select name="searchK" class="form-control" style="width: 10%;margin-left:5px;margin-right:5px;" >
+			<option value="0" selected="selected">电话</option>
+			<option value="1">QQ</option>
+			<option value="2">客户名称</option>
+			<option value="3">顾问名称</option>
+			<option value="4">商标名称</option>
+		</select>
+		<input type="text" name="searchW" class="form-control" style="width: 10%;margin-left:5px;margin-right:5px;">
+
+		<select name="my_jiaocha" class="form-control" style="width: 10%;margin-left:5px;margin-right:5px;">
+			<option value="">交叉类型</option>
+			<option value="0">本站</option>
+			<option value="1">盛凡</option>
+			<option value="3">清上</option>
+		</select>
+
+		<select name="my_type" class="form-control" style="width: 10%;margin-left:5px;margin-right:5px;">
+			<option value="">类型</option>
+			<option value="商标">商标</option>
+			<option value="专利">专利</option>
+			<option value="国际商标">国际商标</option>
+			<option value="国际专利">国际专利</option>
+		</select>
+
+		<select name="xssj" class="form-control" style="width: 13%;margin-left:5px;margin-right:5px;">
+			<option value="60">2个月内信息</option>
+			<option value="90">3个月内信息</option>
+			<option value="120">4个月内信息</option>
+			<option value="9999">全部信息</option>
+		</select>
+		<select name="come" class="form-control" style="width: 13%;margin-left:5px;margin-right:5px;">
+			<option value="">来源</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="bdmobile">bdmobile</option>
+			<option value="smmobile">smmobile</option>
+			<option value="search">search</option>
+			<option value="sogo_mobile">sogo_mobile</option>
+			<option value="360_mobile">360_mobile</option>
+			<option value="bing_pc">bing_pc</option>
+			<option value="baidu_pc">baidu_pc</option>
+			<option value="sogou_pc">sogou_pc</option>
+		</select>
+	</div>
+	<div class="form-group form-inline">
+		提交时间
+		<input type="text" value="" id="datetimepicker" class="form-control show-date" style="width: 13%;margin-left:5px;margin-right:5px;">
+
+		到
+		<input type="text" name="eTime" id="eTime" size="11" maxlength="10" class="form-control show-date" onfocus="" style="width: 13%;margin-left:5px;margin-right:5px;">
+
+		确认时间
+		<input type="text" name="sQTime" id="sQTime" size="11" maxlength="10" class="form-control show-date" onfocus="" style="width: 13%;margin-left:5px;margin-right:5px;">
+		到
+		<input type="text" name="eQTime" id="eQTime" size="11" maxlength="10" class="form-control show-date" onfocus="" style="width: 13%;margin-left:5px;margin-right:5px;">
+
+		<a class="btn btn-default" @click="query">查询</a>
+		&nbsp;&nbsp;
+	</div>
+		<a class="btn btn-default" @click="query">查询</a>
+		&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="back" value="返回"/>
+	<table id="jqGrid"></table>
+	<div id="jqGridPager"></div>
+</div>
+
+<script src="../../js/modules/resource/resource_hold.js"></script>
+</body>
+</html>
