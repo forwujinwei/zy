@@ -1,6 +1,6 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'api/resource/personal/list/?statusCode=RS_001',
+        url: baseURL + 'api/resource/RDSP_002/list/RS_001',
         datatype: "json",
         colModel: [
             { label: '资源ID', name: 'id', width: 50, hidden:true },
@@ -107,7 +107,7 @@ function surePersonalResource (){
         alert("请选择一条数据");
         return ;
     }
-    var url = 'api/resource/personal/update';
+    var url = 'api/resource/RDSP_001/update/sure';
     $.ajax({
         type: "POST",
         url: baseURL + url,

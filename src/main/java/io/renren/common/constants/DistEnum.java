@@ -22,10 +22,11 @@ public enum DistEnum {
     ACROSS_TYPE_SHENGFAN("AT_002","盛凡"),
     ACROSS_TYPE_QINGSHANG("AT_003","清上"),
 
-    RESOURCE_TYPE_SB("RT_001","商标"),
-    RESOURCE_TYPE_ZL("RT_002","专利"),
+    RESOURCE_TYPE_SB("RT_001","中国商标"),
+    RESOURCE_TYPE_ZL("RT_002","中国专利"),
     RESOURCE_TYPE_GSB("RT_003","国际商标"),
     RESOURCE_TYPE_GZL("RT_004","国际专利"),
+    RESOURCE_TYPE_CP("RT_005","版权"),
 
     SOURCE_TYPE_SHANGQIAO("ST_001","商桥"),
     SOURCE_TYPE_DIANXIAO("ST_002","电销"),
@@ -36,6 +37,9 @@ public enum DistEnum {
     RESOURCE_STATUS_NO_SURE("RS_001","待确认"),
     RESOURCE_STATUS_SURE("RS_002","确认"),
     RESOURCE_STATUS_GIVE_UP("RS_003","放弃"),
+
+    RESOURCE_DATA_SOURCE_REAL_TIME("RDSP_001","实时数据"),
+   RESOURCE_DATA_SOURCE_PERSONAL("RDSP_002","人工导入"),
 
 
     INFO_RANGE_TWO("IR_001","2个月内信息"),

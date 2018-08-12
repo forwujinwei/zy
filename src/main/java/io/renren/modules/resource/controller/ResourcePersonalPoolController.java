@@ -28,7 +28,7 @@ import java.util.*;
 @RestController
 public class ResourcePersonalPoolController {
     @Resource
-    private ResourcePersonalPoolService resourcePoolService;
+    private ResourcePersonalPoolService resourcePersonalPoolService;
     @AuthIgnore
     @RequestMapping("/list")
     public R list(@RequestParam(required = false) Map<String, Object> params) throws ParseException {
@@ -51,8 +51,8 @@ public class ResourcePersonalPoolController {
             params.put("sureEndDate",dateFormat.parse(sureEndDate.toString()));
         }
         Query query = new Query(params);
-        List<ResourcePersonalPoolModel> resourcePersonalPoolList = resourcePoolService.queryList(query);
-        int total = resourcePoolService.queryTotal(query);
+        List<ResourcePersonalPoolModel> resourcePersonalPoolList = resourcePersonalPoolService.queryList(query);
+        int total = resourcePersonalPoolService.queryTotal(query);
         PageUtils pageUtil = new PageUtils(resourcePersonalPoolList, total, query.getLimit(), query.getPage());
         return R.ok().put("page", pageUtil);
     }
@@ -80,7 +80,7 @@ public class ResourcePersonalPoolController {
         resourcePersonalPoolModel.setSubmitDate(new Date());
         resourcePersonalPoolModel.setSureBy(username);
         resourcePersonalPoolModel.setSureDate(new Date());
-        resourcePoolService.save(resourcePersonalPoolModel);
+        resourcePersonalPoolService.save(resourcePersonalPoolModel);
         return R.ok();
     }
 
@@ -96,7 +96,7 @@ public class ResourcePersonalPoolController {
         resourcePersonalPoolModel.setSureBy(username);
         resourcePersonalPoolModel.setSureDate(new Date());
         resourcePersonalPoolModel.setUpdateBy(username);
-        resourcePoolService.update(resourcePersonalPoolModel);
+        resourcePersonalPoolService.update(resourcePersonalPoolModel);
         return R.ok();
     }
 }

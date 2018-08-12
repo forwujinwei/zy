@@ -12,7 +12,7 @@ $(function () {
         elem: '#sureEndDate' //指定元素
     });
     $("#jqGrid").jqGrid({
-        url: baseURL + 'api/resource/public/list',
+        url: baseURL + 'api/resource/RDSP_001/list/RS_002',
         datatype: "json",
         colModel: [
             { label: '资源ID', name: 'id', hidden:true},
@@ -77,6 +77,8 @@ var vm = new Vue({
             intentCode: '00',
             queryTypeCode: '00',
             queryTypeValue: null,
+            dataSourceCode:'RDSP_001',
+            statusCode:'RS_002',
             typeCode: '00',
             infoRange: '00',
             acrossCode:'00',

@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>放弃库</title>
+	<title>我的资源1</title>
 	<meta charset="UTF-8">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<link rel="stylesheet" href="../../css/bootstrap.min.css">
@@ -10,6 +14,7 @@
 	<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
 	<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
 	<link rel="stylesheet" href="../../css/main.css">
+
 	<script src="../../libs/jquery.min.js"></script>
 	<script src="../../plugins/layer/layer.js"></script>
 	<script src="../../libs/bootstrap.min.js"></script>
@@ -17,19 +22,272 @@
 	<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
 	<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
 	<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+	<script src="../../libs/moment-with-locales.js"></script>
 	<script src="../../js/common.js"></script>
+	<script src="../../plugins/laydate/laydate.js"></script>
 </head>
 <body>
-<div id="rrapp">
-	<div class="grid-btn">
-		<div class="form-group col-sm-2">
-			<input type="text" class="form-control" v-model="q.jobId" @keyup.enter="query" placeholder="任务ID">
-		</div>
-		<a class="btn btn-default" @click="query">查询</a>
-		&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="back" value="返回"/>
+<div id="rrapp" v-cloak>
+	<div  v-show="showList" >
+		<form role="form" class="contain">
+			<div  class="form-group form-inline row">
+				<select id="intention" v-model="condition.intentCode"  class="form-control">
+					<option value="00">意向程度</option>
+					<option value="IN_001">意向特别好的</option>
+					<option value="IN_002">改名</option>
+					<option value="IN_003">执照没下来</option>
+					<option value="IN_004">字可以注册，还没有委托我</option>
+					<option value="IN_005">已经注册过了，一手标</option>
+					<option value="IN_006">其他</option>
+					<option value="IN_008">不跟踪了</option>
+					<option value="IN_009">已经签合同的资源</option>
+					<option value="IN_010">待确认</option>
+					<option value="IN_011">重复提交</option>
+				</select>
+				<select  v-model="condition.queryTypeCode" class="form-control">
+					<option value="00">查询方式</option>
+					<option value="QU_001">电话</option>
+					<option value="QU_002">QQ</option>
+					<option value="QU_003">客户名称</option>
+					<option value="QU_004">顾问名称</option>
+					<option value="QU_005">商标名称</option>
+				</select>
+				<input type="text"  v-model="condition.queryTypeValue" class="form-control">
+
+				<select name="my_jiaocha" v-model="condition.acrossCode" class="form-control " >
+					<option value="00">交叉类型</option>
+					<option value="AT_001">本站</option>
+					<option value="AT_002">盛凡</option>
+					<option value="AT_003">清上</option>
+				</select>
+
+				<select  v-model="condition.typeCode" class="form-control ">
+					<option value="00">类型</option>
+					<option value="RT_001">商标</option>
+					<option value="RT_002">专利</option>
+					<option value="RT_003">国际商标</option>
+					<option value="RT_004">国际专利</option>
+				</select>
+
+				<select  v-model="condition.infoRangeCode" class="form-control ">
+					<option value="00">全部信息</option>
+					<option value="IR_001">2个月内信息</option>
+					<option value="IR_002">3个月内信息</option>
+					<option value="IR_003">4个月内信息</option>
+				</select>
+			</div>
+			<div class="form-group form-inline row">
+				<label class="form-inline">
+					提交时间
+					<input type="text"  value="" id="submitStartDate" class="form-control input-date-width">
+				</label>
+				<label class="form-inline">
+					到
+					<input type="text"  value="" id="submitEndDate" class="form-control input-date-width ">
+				</label>
+				<label class="form-inline">
+					确认时间
+					<input type="text"  value="" id="sureStartDate" class="form-control input-date-width">
+				</label>
+
+				<label class="form-inline">
+					到
+					<input type="text"  value="" id="sureEndDate" class="form-control input-date-width">
+				</label>
+				<a  class="btn btn-primary" @click="query"><i class="fa fa-plus"></i>&nbsp;查询</a>
+			</div>
+		</form>
+		<table id="jqGrid"></table>
+		<div id="jqGridPager"></div>
 	</div>
-	<table id="jqGrid"></table>
-	<div id="jqGridPager"></div>
+	<!--添加客户 start-->
+	<div v-show="showAddCustomer" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">业务类型</div>
+				<div class="col-sm-10">
+					<select name="xssj" v-model="customerResource.typeCode" class="form-control clo-sm-2">
+						<option value="RT_001">商标</option>
+						<option value="RT_002">专利</option>
+						<option value="RT_003">国际商标</option>
+						<option value="RT_004">国际专利</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">名称</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="customerResource.name" placeholder="名称"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">行业/类型</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="customerResource.fieldDes" placeholder="行业/类型"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">联系人</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="customerResource.linkMan" placeholder="联系人"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">联系电话</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="customerResource.phoneNumber" placeholder="联系电话"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">联系QQ</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="customerResource.qqNumber" placeholder="联系QQ"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">来源</div>
+				<div class="col-sm-10">
+					<select name="xssj" v-model="customerResource.sourceCode" class="form-control clo-sm-2">
+						<option value="ST_001">商桥</option>
+						<option value="ST_002">电销</option>
+						<option value="ST_003">400</option>
+						<option value="ST_004">QQ</option>
+						<option value="ST_005">其他</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveResource" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+	<!--添加客户 end-->
+
+	<!--记录 start-->
+	<div v-show="showAddRecord" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-max-panel">
+			<div class="modal-body  row">
+				<div class="col-sm-8">
+					<table id="recordGridTable"></table>
+					<div id="recordGridPager"></div>
+				</div>
+				<div class="col-sm-4">
+					<input type="text"  v-model="revisit.resourceId" class="hidden"/>
+					<div class="form-group" style="margin: 5px 0px">
+						<select id="record_intention" v-model="revisit.intentCode"  class="form-control">
+							<option value="00">意向程度</option>
+							<option value="IN_001">意向特别好的</option>
+							<option value="IN_002">改名</option>
+							<option value="IN_003">执照没下来</option>
+							<option value="IN_004">字可以注册，还没有委托我</option>
+							<option value="IN_005">已经注册过了，一手标</option>
+							<option value="IN_006">其他</option>
+							<option value="IN_008">不跟踪了</option>
+							<option value="IN_009">已经签合同的资源</option>
+							<option value="IN_010">待确认</option>
+							<option value="IN_011">重复提交</option>
+						</select>
+					</div>
+					<div class="control-label">回访日期</div>
+					<div class="form-group" style="margin: 5px 0px">
+						<input type="text"  value="" id="revisitDate" class="form-control" >
+					</div>
+					<div class="form-group" style="margin: 5px 0px">
+                              <textarea class="form-control" rows="5" v-model="revisit.revisitRemark"
+										placeholder="输入回访记"></textarea>
+					</div>
+					<div class="form-group">
+						<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+						&nbsp;&nbsp; <input type="button" class="btn btn-primary" @click="saveRevisit" value="确定"/>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<!--记录 end-->
+
+	<!--添加合同 start-->
+	<div v-show="showAddAgreement" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<input type="text"  v-model="agreement.resourceId" class="hidden"/>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">合同编号 </div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="agreement.agreementId" placeholder="名称" readonly/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">总费用</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="agreement.allcost" placeholder="总费用(单位元)"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">定金</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="agreement.earnest" placeholder="定金"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">尾款</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="agreement.finalPayment" placeholder="尾款"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">联系人</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="agreement.linkMan" placeholder="联系人"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">甲方</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="agreement.firstParty" placeholder="甲方"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">客户邮箱</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="agreement.email" placeholder="客户邮箱"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">电话</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="agreement.phoneNumber" placeholder="电话"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">地址</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="agreement.address" placeholder="地址"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">合同类型</div>
+				<div class="col-sm-10">
+					<select name="xssj" v-model="agreement.agreementTypeCode" class="form-control clo-sm-2">
+						<option value="AGT_001">商标</option>
+						<option value="AGT_002">专利</option>
+						<option value="AGT_003">版权</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveAgreement" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+	<!--添加合同 end-->
 </div>
 
 <script src="../../js/modules/resource/resource_give_up.js"></script>

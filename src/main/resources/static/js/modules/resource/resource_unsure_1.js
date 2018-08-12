@@ -1,6 +1,6 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'api/resource/public/list/?statusCode=RS_001',
+        url: baseURL + 'api/resource/RDSP_001/list/RS_001',
         datatype: "json",
         colModel: [
             { label: '资源ID', name: 'id', width: 50, hidden:true },
