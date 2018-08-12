@@ -1,31 +1,31 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="io.renren.modules.resource.dao.RevisitRecordMapper" >
-  <resultMap id="BaseResultMap" type="io.renren.modules.resource.model.RevisitRecord" >
-    <id column="id" property="id" jdbcType="VARCHAR" />
-    <result column="resource_id" property="resourceId" jdbcType="VARCHAR" />
-    <result column="intent_code" property="intentCode" jdbcType="VARCHAR" />
-    <result column="intent_des" property="intentDes" jdbcType="VARCHAR" />
-    <result column="adviser" property="adviser" jdbcType="VARCHAR" />
-    <result column="revisit_remark" property="revisitRemark" jdbcType="VARCHAR" />
-    <result column="revisit_date" property="revisitDate" jdbcType="TIMESTAMP" />
-    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
-    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.renren.modules.resource.dao.RevisitRecordMapper">
+  <resultMap id="BaseResultMap" type="io.renren.modules.resource.model.RevisitRecord">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="resource_id" jdbcType="VARCHAR" property="resourceId" />
+    <result column="intent_code" jdbcType="VARCHAR" property="intentCode" />
+    <result column="intent_des" jdbcType="VARCHAR" property="intentDes" />
+    <result column="adviser" jdbcType="VARCHAR" property="adviser" />
+    <result column="revisit_remark" jdbcType="VARCHAR" property="revisitRemark" />
+    <result column="revisit_date" jdbcType="TIMESTAMP" property="revisitDate" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
   </resultMap>
-  <sql id="Base_Column_List" >
+  <sql id="Base_Column_List">
     id, resource_id, intent_code, intent_des,revisit_remark, adviser, revisit_date, create_by, create_date
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from revisit_record
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from revisit_record
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="io.renren.modules.resource.model.RevisitRecord" >
+  <insert id="insert" parameterType="io.renren.modules.resource.model.RevisitRecord">
     insert into revisit_record (id, resource_id, intent_code, 
       intent_des,revisit_remark, adviser, revisit_date,
       create_by, create_date)
@@ -33,98 +33,98 @@
       #{intentDes,jdbcType=VARCHAR}, #{revisitRemark,jdbcType=VARCHAR}, #{adviser,jdbcType=VARCHAR}, #{revisitDate,jdbcType=TIMESTAMP},
       #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="io.renren.modules.resource.model.RevisitRecord" >
+  <insert id="insertSelective" parameterType="io.renren.modules.resource.model.RevisitRecord">
     insert into revisit_record
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         id,
       </if>
-      <if test="resourceId != null" >
+      <if test="resourceId != null">
         resource_id,
       </if>
-      <if test="intentCode != null" >
+      <if test="intentCode != null">
         intent_code,
       </if>
-      <if test="revisitRemark != null" >
+      <if test="revisitRemark != null">
         revisit_remark,
       </if>
-      <if test="intentDes != null" >
+      <if test="intentDes != null">
         intent_des,
       </if>
-      <if test="adviser != null" >
+      <if test="adviser != null">
         adviser,
       </if>
-      <if test="revisitDate != null" >
+      <if test="revisitDate != null">
         revisit_date,
       </if>
-      <if test="createBy != null" >
+      <if test="createBy != null">
         create_by,
       </if>
-      <if test="createDate != null" >
+      <if test="createDate != null">
         create_date,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="resourceId != null" >
+      <if test="resourceId != null">
         #{resourceId,jdbcType=VARCHAR},
       </if>
-      <if test="intentCode != null" >
+      <if test="intentCode != null">
         #{intentCode,jdbcType=VARCHAR},
       </if>
-      <if test="revisitRemark != null" >
+      <if test="revisitRemark != null">
         #{revisitRemark,jdbcType=VARCHAR},
       </if>
-      <if test="intentDes != null" >
+      <if test="intentDes != null">
         #{intentDes,jdbcType=VARCHAR},
       </if>
-      <if test="adviser != null" >
+      <if test="adviser != null">
         #{adviser,jdbcType=VARCHAR},
       </if>
-      <if test="revisitDate != null" >
+      <if test="revisitDate != null">
         #{revisitDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="createBy != null" >
+      <if test="createBy != null">
         #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null" >
+      <if test="createDate != null">
         #{createDate,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.resource.model.RevisitRecord" >
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.resource.model.RevisitRecord">
     update revisit_record
-    <set >
-      <if test="resourceId != null" >
+    <set>
+      <if test="resourceId != null">
         resource_id = #{resourceId,jdbcType=VARCHAR},
       </if>
-      <if test="intentCode != null" >
+      <if test="intentCode != null">
         intent_code = #{intentCode,jdbcType=VARCHAR},
       </if>
-      <if test="intentDes != null" >
+      <if test="intentDes != null">
         intent_des = #{intentDes,jdbcType=VARCHAR},
       </if>
-      <if test="revisitRemark != null" >
+      <if test="revisitRemark != null">
         revisit_remark = #{revisitRemark,jdbcType=VARCHAR},
       </if>
-      <if test="adviser != null" >
+      <if test="adviser != null">
         adviser = #{adviser,jdbcType=VARCHAR},
       </if>
-      <if test="revisitDate != null" >
+      <if test="revisitDate != null">
         revisit_date = #{revisitDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="createBy != null" >
+      <if test="createBy != null">
         create_by = #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null" >
+      <if test="createDate != null">
         create_date = #{createDate,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="io.renren.modules.resource.model.RevisitRecord" >
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.resource.model.RevisitRecord">
     update revisit_record
     set resource_id = #{resourceId,jdbcType=VARCHAR},
       intent_code = #{intentCode,jdbcType=VARCHAR},
@@ -137,7 +137,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-  <select id="queryList" resultType="io.renren.modules.resource.model.RevisitRecord" >
+  <select id="queryList" resultType="io.renren.modules.resource.model.RevisitRecord">
     select *
     from revisit_record
     where resource_id = #{resourceId,jdbcType=VARCHAR}

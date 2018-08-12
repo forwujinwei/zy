@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.renren.modules.resource.dao.ResourceAgreementMapper" >
+  <resultMap id="BaseResultMap" type="io.renren.modules.resource.model.ResourceAgreement" >
+    <id column="agreement_id" property="agreementId" jdbcType="VARCHAR" />
+    <result column="resource_id" property="resourceId" jdbcType="VARCHAR" />
+    <result column="allCost" property="allcost" jdbcType="INTEGER" />
+    <result column="earnest" property="earnest" jdbcType="INTEGER" />
+    <result column="final_payment" property="finalPayment" jdbcType="INTEGER" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="link_man" property="linkMan" jdbcType="VARCHAR" />
+    <result column="first_party" property="firstParty" jdbcType="VARCHAR" />
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="agreement_type_code" property="agreementTypeCode" jdbcType="VARCHAR" />
+    <result column="agreement_type_des" property="agreementTypeDes" jdbcType="VARCHAR" />
+    <result column="adviser" property="adviser" jdbcType="VARCHAR" />
+    <result column="urgent_code" property="urgentCode" jdbcType="VARCHAR" />
+    <result column="urgent_des" property="urgentDes" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    agreement_id, resource_id, allCost, earnest, final_payment, email, link_man, first_party, 
+    phone_number, address, agreement_type_code, agreement_type_des, adviser, urgent_code, 
+    urgent_des, create_by, create_date, update_by, update_date, remarks
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from resource_agreement
+    where agreement_id = #{agreementId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from resource_agreement
+    where agreement_id = #{agreementId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="io.renren.modules.resource.model.ResourceAgreement" >
+    insert into resource_agreement (agreement_id, resource_id, allCost, 
+      earnest, final_payment, email, 
+      link_man, first_party, phone_number, 
+      address, agreement_type_code, agreement_type_des, 
+      adviser, urgent_code, urgent_des, 
+      create_by, create_date, update_by, 
+      update_date, remarks)
+    values (#{agreementId,jdbcType=VARCHAR}, #{resourceId,jdbcType=VARCHAR}, #{allcost,jdbcType=INTEGER}, 
+      #{earnest,jdbcType=INTEGER}, #{finalPayment,jdbcType=INTEGER}, #{email,jdbcType=VARCHAR}, 
+      #{linkMan,jdbcType=VARCHAR}, #{firstParty,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{agreementTypeCode,jdbcType=VARCHAR}, #{agreementTypeDes,jdbcType=VARCHAR}, 
+      #{adviser,jdbcType=VARCHAR}, #{urgentCode,jdbcType=VARCHAR}, #{urgentDes,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="io.renren.modules.resource.model.ResourceAgreement" >
+    insert into resource_agreement
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="agreementId != null" >
+        agreement_id,
+      </if>
+      <if test="resourceId != null" >
+        resource_id,
+      </if>
+      <if test="allcost != null" >
+        allCost,
+      </if>
+      <if test="earnest != null" >
+        earnest,
+      </if>
+      <if test="finalPayment != null" >
+        final_payment,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="linkMan != null" >
+        link_man,
+      </if>
+      <if test="firstParty != null" >
+        first_party,
+      </if>
+      <if test="phoneNumber != null" >
+        phone_number,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="agreementTypeCode != null" >
+        agreement_type_code,
+      </if>
+      <if test="agreementTypeDes != null" >
+        agreement_type_des,
+      </if>
+      <if test="adviser != null" >
+        adviser,
+      </if>
+      <if test="urgentCode != null" >
+        urgent_code,
+      </if>
+      <if test="urgentDes != null" >
+        urgent_des,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="agreementId != null" >
+        #{agreementId,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceId != null" >
+        #{resourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="allcost != null" >
+        #{allcost,jdbcType=INTEGER},
+      </if>
+      <if test="earnest != null" >
+        #{earnest,jdbcType=INTEGER},
+      </if>
+      <if test="finalPayment != null" >
+        #{finalPayment,jdbcType=INTEGER},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="linkMan != null" >
+        #{linkMan,jdbcType=VARCHAR},
+      </if>
+      <if test="firstParty != null" >
+        #{firstParty,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="agreementTypeCode != null" >
+        #{agreementTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="agreementTypeDes != null" >
+        #{agreementTypeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="adviser != null" >
+        #{adviser,jdbcType=VARCHAR},
+      </if>
+      <if test="urgentCode != null" >
+        #{urgentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="urgentDes != null" >
+        #{urgentDes,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.resource.model.ResourceAgreement" >
+    update resource_agreement
+    <set >
+      <if test="resourceId != null" >
+        resource_id = #{resourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="allcost != null" >
+        allCost = #{allcost,jdbcType=INTEGER},
+      </if>
+      <if test="earnest != null" >
+        earnest = #{earnest,jdbcType=INTEGER},
+      </if>
+      <if test="finalPayment != null" >
+        final_payment = #{finalPayment,jdbcType=INTEGER},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="linkMan != null" >
+        link_man = #{linkMan,jdbcType=VARCHAR},
+      </if>
+      <if test="firstParty != null" >
+        first_party = #{firstParty,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null" >
+        phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="agreementTypeCode != null" >
+        agreement_type_code = #{agreementTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="agreementTypeDes != null" >
+        agreement_type_des = #{agreementTypeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="adviser != null" >
+        adviser = #{adviser,jdbcType=VARCHAR},
+      </if>
+      <if test="urgentCode != null" >
+        urgent_code = #{urgentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="urgentDes != null" >
+        urgent_des = #{urgentDes,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where agreement_id = #{agreementId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.resource.model.ResourceAgreement" >
+    update resource_agreement
+    set resource_id = #{resourceId,jdbcType=VARCHAR},
+      allCost = #{allcost,jdbcType=INTEGER},
+      earnest = #{earnest,jdbcType=INTEGER},
+      final_payment = #{finalPayment,jdbcType=INTEGER},
+      email = #{email,jdbcType=VARCHAR},
+      link_man = #{linkMan,jdbcType=VARCHAR},
+      first_party = #{firstParty,jdbcType=VARCHAR},
+      phone_number = #{phoneNumber,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      agreement_type_code = #{agreementTypeCode,jdbcType=VARCHAR},
+      agreement_type_des = #{agreementTypeDes,jdbcType=VARCHAR},
+      adviser = #{adviser,jdbcType=VARCHAR},
+      urgent_code = #{urgentCode,jdbcType=VARCHAR},
+      urgent_des = #{urgentDes,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      remarks = #{remarks,jdbcType=VARCHAR}
+    where agreement_id = #{agreementId,jdbcType=VARCHAR}
+  </update>
+
+  <select id="queryList" resultType="io.renren.modules.resource.model.ResourceAgreement" >
+    select * from resource_agreement
+    <if test="offset != null and limit != null ">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="queryTotal" resultType="int">
+    select count(1)
+    from resource_agreement
+  </select>
+</mapper>

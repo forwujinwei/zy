@@ -17,13 +17,13 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="io.renren.generation.model" targetProject="src/main/java" />
+        <javaModelGenerator targetPackage="io.renren.modules.resource.model" targetProject="src/main/java" />
 
-        <sqlMapGenerator targetPackage="mappers" targetProject="src/main/resources" />
+        <sqlMapGenerator targetPackage="mapper.resource" targetProject="src/main/resources" />
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="io.renren.generation.dao" targetProject="src/main/java" />
+        <javaClientGenerator type="XMLMAPPER" targetPackage="io.renren.modules.resource.dao" targetProject="src/main/java" />
 
-        <table tableName="revisit_record" domainObjectName="RevisitRecord"
+        <table tableName="resource_public_pool" domainObjectName="ResourcePublicPool"
                enableCountByExample="false" enableUpdateByExample="false"
                enableSelectByExample="false" enableDeleteByExample="false"
                selectByExampleQueryId="false" >

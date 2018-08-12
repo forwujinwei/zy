@@ -366,7 +366,7 @@
           and  type_code = #{typeCode,jdbcType=VARCHAR}
       </if>
       <if test="queryTypeCode != null and queryTypeCode.trim() == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
-          and  phone_number = #{queryTypeCode,jdbcType=VARCHAR}
+          and  phone_number = #{queryTypeValue,jdbcType=VARCHAR}
       </if>
       <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
           and  qq_number = #{queryTypeValue,jdbcType=VARCHAR}

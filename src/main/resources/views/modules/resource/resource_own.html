@@ -28,220 +28,279 @@
 </head>
 <body>
 <div id="rrapp" v-cloak>
-    <form role="form" class="contain">
-        <div  class="form-group form-inline row">
-            <select id="intention" v-model="condition.intentCode"  class="form-control clo-sm-3">
-                <option value="00">意向程度</option>
-                <option value="IN_001">意向特别好的</option>
-                <option value="IN_002">改名</option>
-                <option value="IN_003">执照没下来</option>
-                <option value="IN_004">字可以注册，还没有委托我</option>
-                <option value="IN_005">已经注册过了，一手标</option>
-                <option value="IN_006">其他</option>
-                <option value="IN_008">不跟踪了</option>
-                <option value="IN_009">已经签合同的资源</option>
-                <option value="IN_010">待确认</option>
-                <option value="IN_011">重复提交</option>
-            </select>
-            <select  v-model="condition.queryTypeCode" class="form-control clo-sm-2">
-                <option value="00">查询方式</option>
-                <option value="QU_001">电话</option>
-                <option value="QU_002">QQ</option>
-                <option value="QU_003">客户名称</option>
-                <option value="QU_004">顾问名称</option>
-                <option value="QU_005">商标名称</option>
-            </select>
-            <input type="text"  v-model="condition.queryTypeValue" class="form-control clo-sm-2">
-            <select name="my_jiaocha" v-model="condition.acrossCode" class="form-control" >
-                <option value="00">交叉类型</option>
-                <option value="AT_001">本站</option>
-                <option value="AT_002">盛凡</option>
-                <option value="AT_003">清上</option>
-            </select>
+    <div  v-show="showList" >
+        <form role="form" class="contain">
+            <div  class="form-group form-inline row">
+                <select id="intention" v-model="condition.intentCode"  class="form-control clo-sm-3">
+                    <option value="00">意向程度</option>
+                    <option value="IN_001">意向特别好的</option>
+                    <option value="IN_002">改名</option>
+                    <option value="IN_003">执照没下来</option>
+                    <option value="IN_004">字可以注册，还没有委托我</option>
+                    <option value="IN_005">已经注册过了，一手标</option>
+                    <option value="IN_006">其他</option>
+                    <option value="IN_008">不跟踪了</option>
+                    <option value="IN_009">已经签合同的资源</option>
+                    <option value="IN_010">待确认</option>
+                    <option value="IN_011">重复提交</option>
+                </select>
+                <select  v-model="condition.queryTypeCode" class="form-control clo-sm-2">
+                    <option value="00">查询方式</option>
+                    <option value="QU_001">电话</option>
+                    <option value="QU_002">QQ</option>
+                    <option value="QU_003">客户名称</option>
+                    <option value="QU_004">顾问名称</option>
+                    <option value="QU_005">商标名称</option>
+                </select>
+                <input type="text"  v-model="condition.queryTypeValue" class="form-control clo-sm-2">
+                <select name="my_jiaocha" v-model="condition.acrossCode" class="form-control" >
+                    <option value="00">交叉类型</option>
+                    <option value="AT_001">本站</option>
+                    <option value="AT_002">盛凡</option>
+                    <option value="AT_003">清上</option>
+                </select>
 
-            <select  v-model="condition.typeCode" class="form-control clo-sm-2">
-                <option value="00">类型</option>
-                <option value="RT_001">商标</option>
-                <option value="RT_002">专利</option>
-                <option value="RT_003">国际商标</option>
-                <option value="RT_004">国际专利</option>
-            </select>
+                <select  v-model="condition.typeCode" class="form-control clo-sm-2">
+                    <option value="00">类型</option>
+                    <option value="RT_001">商标</option>
+                    <option value="RT_002">专利</option>
+                    <option value="RT_003">国际商标</option>
+                    <option value="RT_004">国际专利</option>
+                </select>
 
-            <select  v-model="condition.infoRangeCode" class="form-control clo-sm-2">
-                <option value="00">全部信息</option>
-                <option value="IR_001">2个月内信息</option>
-                <option value="IR_002">3个月内信息</option>
-                <option value="IR_003">4个月内信息</option>
-            </select>
-        </div>
-        <div class="row">
-            <div class="col-sm-2 row">
-                <div class="col-sm-3" style="padding-left: 0px;padding-right: 0px;line-height: 34px">提交时间</div>
-                <div class="col-sm-9 form-group"  style="padding-left: 0px;padding-right: 0px;margin: 5px 0px">
-                    <input type="text"  value="" id="submitStartDate" class="form-control ">
-                </div>
+                <select  v-model="condition.infoRangeCode" class="form-control clo-sm-2">
+                    <option value="00">全部信息</option>
+                    <option value="IR_001">2个月内信息</option>
+                    <option value="IR_002">3个月内信息</option>
+                    <option value="IR_003">4个月内信息</option>
+                </select>
             </div>
+            <div class="row">
+                <div class="col-sm-2 row">
+                    <div class="col-sm-3" style="padding-left: 0px;padding-right: 0px;line-height: 34px">提交时间</div>
+                    <div class="col-sm-9 form-group"  style="padding-left: 0px;padding-right: 0px;margin: 5px 0px">
+                        <input type="text"  value="" id="submitStartDate" class="form-control ">
+                    </div>
+                </div>
 
-            <div class="col-sm-2 row">
-            <div class="col-sm-1"  style="padding-left: 0px;padding-right: 0px;line-height: 34px">到</div>
-                <div class="col-sm-9 form-group"  style="padding-left: 0px;padding-right: 0px;margin: 5px 0px">
-                    <input type="text"  value="" id="submitEndDate" class="form-control ">
+                <div class="col-sm-2 row">
+                <div class="col-sm-1"  style="padding-left: 0px;padding-right: 0px;line-height: 34px">到</div>
+                    <div class="col-sm-9 form-group"  style="padding-left: 0px;padding-right: 0px;margin: 5px 0px">
+                        <input type="text"  value="" id="submitEndDate" class="form-control ">
+                    </div>
+                </div>
+                <div class="col-sm-2 row" style="border: none">
+                    <div class="col-sm-3"  style="padding-left: 0px;padding-right: 0px;line-height: 34px">确认时间</div>
+                    <div class="col-sm-9 form-group"  style="padding-left: 0px;padding-right: 0px;margin: 5px 0px">
+                           <input type="text"  value="" id="sureStartDate" class="form-control ">
+                    </div>
+                </div>
+                <div class="col-sm-2 row">
+                    <div class="col-sm-1" style="padding-left: 0px;padding-right: 0px;line-height: 34px">到</div>
+                    <div class="col-sm-9 form-group"  style="padding-left: 0px;padding-right: 0px;margin: 5px 0px">
+                        <input type="text"  value="" id="sureEndDate" class="form-control ">
+                    </div>
+                </div>
+                <div class="row" style="float: right">
+                    <a  class="btn btn-primary" @click="query"><i class="fa fa-plus"></i>&nbsp;查询</a>
+                    <a  class="btn btn-primary" @click="addCustomer"><i class="fa fa-plus"></i>&nbsp;添加客户</a>
+                    <!--<a  class="btn btn-primary" data-toggle="modal" data-target="#addCustomer"><i class="fa fa-plus"></i>&nbsp;添加客户</a>-->
+                    <a  class="btn btn-primary" @click="addRecord"><i class="fa fa-plus"></i>&nbsp;记录</a>
+                    <a  class="btn btn-primary" @click="addAgreement"><i class="fa fa-plus"></i>&nbsp;合同</a>
                 </div>
             </div>
-            <div class="col-sm-2 row" style="border: none">
-                <div class="col-sm-3"  style="padding-left: 0px;padding-right: 0px;line-height: 34px">确认时间</div>
-                <div class="col-sm-9 form-group"  style="padding-left: 0px;padding-right: 0px;margin: 5px 0px">
-                       <input type="text"  value="" id="sureStartDate" class="form-control ">
-                </div>
-            </div>
-            <div class="col-sm-2 row">
-                <div class="col-sm-1" style="padding-left: 0px;padding-right: 0px;line-height: 34px">到</div>
-                <div class="col-sm-9 form-group"  style="padding-left: 0px;padding-right: 0px;margin: 5px 0px">
-                    <input type="text"  value="" id="sureEndDate" class="form-control ">
-                </div>
-            </div>
-            <div class="row" style="float: right">
-                <a  class="btn btn-primary" @click="query"><i class="fa fa-plus"></i>&nbsp;查询</a>
-                <a  class="btn btn-primary" data-toggle="modal" data-target="#addCustomer"><i class="fa fa-plus"></i>&nbsp;添加客户</a>
-                <a  class="btn btn-primary" data-toggle="modal" @click="addRecord"><i class="fa fa-plus"></i>&nbsp;记录</a>
-                <a  class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;合同</a>
-            </div>
-        </div>
-    </form>
-    <table id="jqGrid"></table>
-    <div id="jqGridPager"></div>
+        </form>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
     <!--添加客户 start-->
-    <div  class="modal fade" id="addCustomer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">
-                        添加客户
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal">
-                        <div class="form-group">
-                            <div class="col-sm-2 control-label">业务类型</div>
-                            <div class="col-sm-10">
-                                <select name="xssj" v-model="resource.typeCode" class="form-control clo-sm-2">
-                                    <option value="RT_001">商标</option>
-                                    <option value="RT_002">专利</option>
-                                    <option value="RT_003">国际商标</option>
-                                    <option value="RT_004">国际专利</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-2 control-label">名称</div>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" v-model="resource.name" placeholder="名称"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-2 control-label">行业/类型</div>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" v-model="resource.fieldDes" placeholder="行业/类型"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-2 control-label">联系人</div>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" v-model="resource.linkMan" placeholder="联系人"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-2 control-label">联系电话</div>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" v-model="resource.phoneNumber" placeholder="联系电话"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-2 control-label">联系QQ</div>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" v-model="resource.qqNumber" placeholder="联系QQ"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-2 control-label">来源</div>
-                            <div class="col-sm-10">
-                                <select name="xssj" v-model="resource.sourceCode" class="form-control clo-sm-2">
-                                    <option value="ST_001">商桥</option>
-                                    <option value="ST_002">电销</option>
-                                    <option value="ST_003">400</option>
-                                    <option value="ST_004">QQ</option>
-                                    <option value="ST_005">其他</option>
-                                </select>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" @click="saveOrUpdate" class="btn btn-primary">确定</button>
+    <div v-show="showAddCustomer" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">业务类型</div>
+                <div class="col-sm-10">
+                    <select name="xssj" v-model="customerResource.typeCode" class="form-control clo-sm-2">
+                        <option value="RT_001">商标</option>
+                        <option value="RT_002">专利</option>
+                        <option value="RT_003">国际商标</option>
+                        <option value="RT_004">国际专利</option>
+                    </select>
                 </div>
             </div>
-        </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="customerResource.name" placeholder="名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">行业/类型</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="customerResource.fieldDes" placeholder="行业/类型"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">联系人</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="customerResource.linkMan" placeholder="联系人"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">联系电话</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="customerResource.phoneNumber" placeholder="联系电话"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">联系QQ</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="customerResource.qqNumber" placeholder="联系QQ"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">来源</div>
+                <div class="col-sm-10">
+                    <select name="xssj" v-model="customerResource.sourceCode" class="form-control clo-sm-2">
+                        <option value="ST_001">商桥</option>
+                        <option value="ST_002">电销</option>
+                        <option value="ST_003">400</option>
+                        <option value="ST_004">QQ</option>
+                        <option value="ST_005">其他</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveResource" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
     </div>
     <!--添加客户 end-->
 
     <!--记录 start-->
-    <div  class="modal fade" id="addRecord" tabindex="-1" role="dialog" aria-labelledby="addRecordLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h4 class="modal-title" id="addRecordLabel">
-                        添加记录
-                    </h4>
+    <div v-show="showAddRecord" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-max-panel">
+            <div class="modal-body  row">
+                <div class="col-sm-8">
+                    <table id="recordGridTable"></table>
+                    <div id="recordGridPager"></div>
                 </div>
-                <div class="modal-body row" style="font-size: 12px;">
-                    <div class="col-sm-8">
-                        <table id="recordGridTable"></table>
-                        <div id="recordGridPager"></div>
+                <div class="col-sm-4">
+                    <input type="text"  v-model="revisit.resourceId" class="hidden"/>
+                    <div class="form-group" style="margin: 5px 0px">
+                        <select id="record_intention" v-model="revisit.intentCode"  class="form-control">
+                            <option value="00">意向程度</option>
+                            <option value="IN_001">意向特别好的</option>
+                            <option value="IN_002">改名</option>
+                            <option value="IN_003">执照没下来</option>
+                            <option value="IN_004">字可以注册，还没有委托我</option>
+                            <option value="IN_005">已经注册过了，一手标</option>
+                            <option value="IN_006">其他</option>
+                            <option value="IN_008">不跟踪了</option>
+                            <option value="IN_009">已经签合同的资源</option>
+                            <option value="IN_010">待确认</option>
+                            <option value="IN_011">重复提交</option>
+                        </select>
                     </div>
-                    <div class="col-sm-4">
-                        <input type="text"  v-model="revisit.resourceId" class="hidden"/>
-                        <div class="form-group" style="margin: 5px 0px">
-                            <select id="record_intention" v-model="revisit.intentCode"  class="form-control">
-                                <option value="00">意向程度</option>
-                                <option value="IN_001">意向特别好的</option>
-                                <option value="IN_002">改名</option>
-                                <option value="IN_003">执照没下来</option>
-                                <option value="IN_004">字可以注册，还没有委托我</option>
-                                <option value="IN_005">已经注册过了，一手标</option>
-                                <option value="IN_006">其他</option>
-                                <option value="IN_008">不跟踪了</option>
-                                <option value="IN_009">已经签合同的资源</option>
-                                <option value="IN_010">待确认</option>
-                                <option value="IN_011">重复提交</option>
-                            </select>
-                        </div>
-                        <div class="form-group" style="margin: 5px 0px">
-                            <label class="">回访日期</label>
-                            <div class="form-group" style="margin: 5px 0px">
-                                <input type="text"  value="" id="revisitDate" class="form-control ">
-                            </div>
-                        </div>
-                        <div class="form-group" style="margin: 5px 0px">
+                    <div class="control-label">回访日期</div>
+                    <div class="form-group" style="margin: 5px 0px">
+                        <input type="text"  value="" id="revisitDate" class="form-control" >
+                    </div>
+                    <div class="form-group" style="margin: 5px 0px">
                               <textarea class="form-control" rows="5" v-model="revisit.revisitRemark"
                                         placeholder="输入回访记"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                            <button type="button" @click="saveRvisit" class="btn btn-primary">记录</button>
-                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                        &nbsp;&nbsp; <input type="button" class="btn btn-primary" @click="saveRevisit" value="确定"/>
                     </div>
                 </div>
             </div>
-        </div>
+
+        </form>
     </div>
     <!--记录 end-->
+
+    <!--添加合同 start-->
+    <div v-show="showAddAgreement" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <input type="text"  v-model="agreement.resourceId" class="hidden"/>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">合同编号 </div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="agreement.agreementId" placeholder="名称" readonly/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">总费用</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="agreement.allcost" placeholder="总费用(单位元)"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">定金</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="agreement.earnest" placeholder="定金"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">尾款</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="agreement.finalPayment" placeholder="尾款"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">联系人</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="agreement.linkMan" placeholder="联系人"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">甲方</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="agreement.firstParty" placeholder="甲方"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">客户邮箱</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="agreement.email" placeholder="客户邮箱"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">电话</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="agreement.phoneNumber" placeholder="电话"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">地址</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="agreement.address" placeholder="地址"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">合同类型</div>
+                <div class="col-sm-10">
+                    <select name="xssj" v-model="agreement.agreementTypeCode" class="form-control clo-sm-2">
+                        <option value="AGT_001">商标</option>
+                        <option value="AGT_002">专利</option>
+                        <option value="AGT_003">版权</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveAgreement" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+    <!--添加合同 end-->
 </div>
 
 <script src="../../js/modules/resource/resource_own.js"></script>

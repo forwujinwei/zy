@@ -52,9 +52,16 @@ tbody > tr > th {font-weight: normal; }
 .form-horizontal{
 	width:550px;padding-top:20px;
 }
+.form-max-panel{
+    width:800px;padding-top:20px;
+}
 .row{
     border: none;
     padding: 5px 2px;
 }
 
 .ui-jqgrid tr.jqgrow td { white-space: normal !important; height:auto; }
+.ui-jqgrid tr.jqgrow td { text-overflow : ellipsis; }
+.jqgrid td .goods-desc .name {
+    white-space: normal;
+}

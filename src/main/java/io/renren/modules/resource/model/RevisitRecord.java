@@ -10,10 +10,8 @@ public class RevisitRecord {
     private String intentCode;
 
     private String intentDes;
-
+private String revisitRemark;
     private String adviser;
-
-    private String revisitRemark;
 
     private Date revisitDate;
 
@@ -86,6 +84,7 @@ public class RevisitRecord {
     }
 
     public String getRevisitRemark() {
+
         return revisitRemark;
     }
 
