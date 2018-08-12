@@ -24,7 +24,7 @@ import java.util.*;
  * @author jinweia.wu
  * @create 2018-08-04 10:47
  **/
-@RequestMapping("/api/resource")
+@RequestMapping("/api/resource/personal")
 @RestController
 public class ResourcePersonalPoolController {
     @Resource
@@ -81,6 +81,22 @@ public class ResourcePersonalPoolController {
         resourcePersonalPoolModel.setSureBy(username);
         resourcePersonalPoolModel.setSureDate(new Date());
         resourcePoolService.save(resourcePersonalPoolModel);
+        return R.ok();
+    }
+
+    /**
+     * 更新人工导入数据状态
+     */
+    @RequestMapping("/update")
+    public R update(@LoginUser UserEntity user, @RequestBody ResourcePersonalPoolModel resourcePersonalPoolModel){
+        ValidatorUtils.validateEntity(resourcePersonalPoolModel);
+        String username = user.getUsername();
+        resourcePersonalPoolModel.setAdviser(username);
+        resourcePersonalPoolModel.setStatusDes(DistEnum.getDesByCode(resourcePersonalPoolModel.getStatusCode()));
+        resourcePersonalPoolModel.setSureBy(username);
+        resourcePersonalPoolModel.setSureDate(new Date());
+        resourcePersonalPoolModel.setUpdateBy(username);
+        resourcePoolService.update(resourcePersonalPoolModel);
         return R.ok();
     }
 }

@@ -65,3 +65,9 @@ tbody > tr > th {font-weight: normal; }
 .jqgrid td .goods-desc .name {
     white-space: normal;
 }
+input.form-control.input-date-width{
+    width:180px;
+}
+button.btn.btn-padding-reset{
+    padding: 0 5px;
+}
