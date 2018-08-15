@@ -58,7 +58,7 @@
     }    
     
     // Needs more testing, will be rewriten for next version        
-    // getOffset function copied from jQuery lib (http://jquery.com/)
+    // getOffset function copied from jQuery element (http://jquery.com/)
     if (document.documentElement.getBoundingClientRect){
         // Get Offset using getBoundingClientRect
         // http://ejohn.org/blog/getboundingclientrect-is-awesome/

@@ -1,295 +1,215 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>我的资源1</title>
-	<meta charset="UTF-8">
-	<meta http-equiv="Expires" content="0">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Cache-control" content="no-cache">
-	<meta http-equiv="Cache" content="no-cache">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-	<link rel="stylesheet" href="../../css/bootstrap.min.css">
-	<link rel="stylesheet" href="../../css/font-awesome.min.css">
-	<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
-	<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
-	<link rel="stylesheet" href="../../css/main.css">
+    <title>放弃库</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="../../plugins/element/theme-default/index.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <script src="../../libs/jquery-3.1.1.min.js"></script>
+    <script src="../../libs/bootstrap.min.js"></script>
+    <script src="../../libs/json2.js"></script>
+    <script src="../../libs/vue.min.js"></script>
+    <script src="../../libs/vue-resource.js"></script>
+    <script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
 
-	<script src="../../libs/jquery.min.js"></script>
-	<script src="../../plugins/layer/layer.js"></script>
-	<script src="../../libs/bootstrap.min.js"></script>
-	<script src="../../libs/vue.min.js"></script>
-	<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
-	<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
-	<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
-	<script src="../../libs/moment-with-locales.js"></script>
-	<script src="../../js/common.js"></script>
-	<script src="../../plugins/laydate/laydate.js"></script>
-</head>
+    <script src="../../js/common.js"></script>
+    <script src="../../plugins/element/index.js"></script>
+
+        <style>
+            .el-select .el-input {
+                width: 110px;
+            }
+
+            .el-table .info-row {
+                background: #c9e5f5;
+            }
+
+            #top {
+                background:#20A0FF;
+                padding:5px;
+                overflow:hidden
+            }
+        </style>
+
+    </head>
 <body>
-<div id="rrapp" v-cloak>
-	<div  v-show="showList" >
-		<form role="form" class="contain">
-			<div  class="form-group form-inline row">
-				<select id="intention" v-model="condition.intentCode"  class="form-control">
-					<option value="00">意向程度</option>
-					<option value="IN_001">意向特别好的</option>
-					<option value="IN_002">改名</option>
-					<option value="IN_003">执照没下来</option>
-					<option value="IN_004">字可以注册，还没有委托我</option>
-					<option value="IN_005">已经注册过了，一手标</option>
-					<option value="IN_006">其他</option>
-					<option value="IN_008">不跟踪了</option>
-					<option value="IN_009">已经签合同的资源</option>
-					<option value="IN_010">待确认</option>
-					<option value="IN_011">重复提交</option>
-				</select>
-				<select  v-model="condition.queryTypeCode" class="form-control">
-					<option value="00">查询方式</option>
-					<option value="QU_001">电话</option>
-					<option value="QU_002">QQ</option>
-					<option value="QU_003">客户名称</option>
-					<option value="QU_004">顾问名称</option>
-					<option value="QU_005">商标名称</option>
-				</select>
-				<input type="text"  v-model="condition.queryTypeValue" class="form-control">
+<div id="test">
 
-				<select name="my_jiaocha" v-model="condition.acrossCode" class="form-control " >
-					<option value="00">交叉类型</option>
-					<option value="AT_001">本站</option>
-					<option value="AT_002">盛凡</option>
-					<option value="AT_003">清上</option>
-				</select>
+   <!-- <div id="top">
+			<span>
+				<el-button type="text" @click="add" style="color:white">添加</el-button>
+				<el-button type="text" @click="deletenames" style="color:white">批量删除</el-button>
+			</span>
+    </div>-->
 
-				<select  v-model="condition.typeCode" class="form-control ">
-					<option value="00">类型</option>
-					<option value="RT_001">商标</option>
-					<option value="RT_002">专利</option>
-					<option value="RT_003">国际商标</option>
-					<option value="RT_004">国际专利</option>
-				</select>
 
-				<select  v-model="condition.infoRangeCode" class="form-control ">
-					<option value="00">全部信息</option>
-					<option value="IR_001">2个月内信息</option>
-					<option value="IR_002">3个月内信息</option>
-					<option value="IR_003">4个月内信息</option>
-				</select>
-			</div>
-			<div class="form-group form-inline row">
-				<label class="form-inline">
-					提交时间
-					<input type="text"  value="" id="submitStartDate" class="form-control input-date-width">
-				</label>
-				<label class="form-inline">
-					到
-					<input type="text"  value="" id="submitEndDate" class="form-control input-date-width ">
-				</label>
-				<label class="form-inline">
-					确认时间
-					<input type="text"  value="" id="sureStartDate" class="form-control input-date-width">
-				</label>
+  <!--  <br/>-->
 
-				<label class="form-inline">
-					到
-					<input type="text"  value="" id="sureEndDate" class="form-control input-date-width">
-				</label>
-				<a  class="btn btn-primary" @click="query"><i class="fa fa-plus"></i>&nbsp;查询</a>
-			</div>
-		</form>
-		<table id="jqGrid"></table>
-		<div id="jqGridPager"></div>
-	</div>
-	<!--添加客户 start-->
-	<div v-show="showAddCustomer" class="panel panel-default">
-		<div class="panel-heading">{{title}}</div>
-		<form class="form-horizontal">
-			<div class="form-group">
-				<div class="col-sm-2 control-label">业务类型</div>
-				<div class="col-sm-10">
-					<select name="xssj" v-model="customerResource.typeCode" class="form-control clo-sm-2">
-						<option value="RT_001">商标</option>
-						<option value="RT_002">专利</option>
-						<option value="RT_003">国际商标</option>
-						<option value="RT_004">国际专利</option>
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">名称</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="customerResource.name" placeholder="名称"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">行业/类型</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="customerResource.fieldDes" placeholder="行业/类型"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">联系人</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="customerResource.linkMan" placeholder="联系人"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">联系电话</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="customerResource.phoneNumber" placeholder="联系电话"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">联系QQ</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="customerResource.qqNumber" placeholder="联系QQ"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">来源</div>
-				<div class="col-sm-10">
-					<select name="xssj" v-model="customerResource.sourceCode" class="form-control clo-sm-2">
-						<option value="ST_001">商桥</option>
-						<option value="ST_002">电销</option>
-						<option value="ST_003">400</option>
-						<option value="ST_004">QQ</option>
-						<option value="ST_005">其他</option>
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label"></div>
-				<input type="button" class="btn btn-primary" @click="saveResource" value="确定"/>
-				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-			</div>
-		</form>
-	</div>
-	<!--添加客户 end-->
-
-	<!--记录 start-->
-	<div v-show="showAddRecord" class="panel panel-default">
-		<div class="panel-heading">{{title}}</div>
-		<form class="form-max-panel">
-			<div class="modal-body  row">
-				<div class="col-sm-8">
-					<table id="recordGridTable"></table>
-					<div id="recordGridPager"></div>
-				</div>
-				<div class="col-sm-4">
-					<input type="text"  v-model="revisit.resourceId" class="hidden"/>
-					<div class="form-group" style="margin: 5px 0px">
-						<select id="record_intention" v-model="revisit.intentCode"  class="form-control">
-							<option value="00">意向程度</option>
-							<option value="IN_001">意向特别好的</option>
-							<option value="IN_002">改名</option>
-							<option value="IN_003">执照没下来</option>
-							<option value="IN_004">字可以注册，还没有委托我</option>
-							<option value="IN_005">已经注册过了，一手标</option>
-							<option value="IN_006">其他</option>
-							<option value="IN_008">不跟踪了</option>
-							<option value="IN_009">已经签合同的资源</option>
-							<option value="IN_010">待确认</option>
-							<option value="IN_011">重复提交</option>
-						</select>
-					</div>
-					<div class="control-label">回访日期</div>
-					<div class="form-group" style="margin: 5px 0px">
-						<input type="text"  value="" id="revisitDate" class="form-control" >
-					</div>
-					<div class="form-group" style="margin: 5px 0px">
-                              <textarea class="form-control" rows="5" v-model="revisit.revisitRemark"
-										placeholder="输入回访记"></textarea>
-					</div>
-					<div class="form-group">
-						<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-						&nbsp;&nbsp; <input type="button" class="btn btn-primary" @click="saveRevisit" value="确定"/>
-					</div>
-				</div>
-			</div>
-
-		</form>
-	</div>
-	<!--记录 end-->
-
-	<!--添加合同 start-->
-	<div v-show="showAddAgreement" class="panel panel-default">
-		<div class="panel-heading">{{title}}</div>
-		<form class="form-horizontal">
-			<input type="text"  v-model="agreement.resourceId" class="hidden"/>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">合同编号 </div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="agreement.agreementId" placeholder="名称" readonly/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">总费用</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="agreement.allcost" placeholder="总费用(单位元)"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">定金</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="agreement.earnest" placeholder="定金"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">尾款</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="agreement.finalPayment" placeholder="尾款"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">联系人</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="agreement.linkMan" placeholder="联系人"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">甲方</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="agreement.firstParty" placeholder="甲方"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">客户邮箱</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="agreement.email" placeholder="客户邮箱"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">电话</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="agreement.phoneNumber" placeholder="电话"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">地址</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="agreement.address" placeholder="地址"/>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">合同类型</div>
-				<div class="col-sm-10">
-					<select name="xssj" v-model="agreement.agreementTypeCode" class="form-control clo-sm-2">
-						<option value="AGT_001">商标</option>
-						<option value="AGT_002">专利</option>
-						<option value="AGT_003">版权</option>
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label"></div>
-				<input type="button" class="btn btn-primary" @click="saveAgreement" value="确定"/>
-				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-			</div>
-		</form>
-	</div>
-	<!--添加合同 end-->
+    <div>
+        <!--<el-input placeholder="请输入内容" v-model="criteria" style="padding-bottom:10px;">
+            <el-select v-model="select" slot="prepend" placeholder="请选择">
+                <el-option label="id" value="1"></el-option>
+                <el-option label="name" value="2"></el-option>
+            </el-select>
+            <el-button slot="append" icon="search" v-on:click="search"></el-button>
+        </el-input>
+-->
+        <div style="margin-bottom: 50px;">
+           <table class="table table-bordered" v-loading="listLoading">
+                <colgroup>
+                    <col width="18%">
+                    <col width="10%">
+                    <col width="17%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="15%">
+                    <col width="10%">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th hidden>资源ID</th>
+                    <th>名称</th>
+                    <th>类型</th>
+                    <th>领域</th>
+                    <th>联系人</th>
+                    <th>电话</th>
+                    <th>QQ</th>
+                    <th>提交时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in tableData">
+                        <td hidden>{{item.id}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.typeDes}}</td>
+                        <td>{{item.fieldDes}}</td>
+                        <td>{{item.linkMan}}</td>
+                        <td>{{item.phoneNumber}}</td>
+                        <td>{{item.qqNumber}}</td>
+                        <td>{{item.submitDate|formatterDate}}</td>
+                        <td><div class="btn-group" data-toggle="buttons-radio">
+                                <button @click="sureResource(item.id)" class="btn btn-primary btn-padding-reset">确认</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!--v-show="tableConfig.totalCount"-->
+            <div class="page-wrap bottom_footer" >
+                <el-pagination
+                        class="align-right"
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="tableConfig.pageNumber"
+                        :page-sizes="[10, 20, 50]"
+                        :page-size='tableConfig.pageSize'
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="tableConfig.totalCount">
+                </el-pagination>
+            </div>
+    </div>
 </div>
+</div>
+<script>
+    new Vue({
+        el:"#test",
+        data(){
+            return {
+                list_url:baseURL + 'api/resource/RDSP_001/list/RS_003',
+                sure_url:baseURL + 'api/resource/RDSP_001/update/sure',
+                tableData: [],
+                listLoading:false,
+                showColumn:false,
+                //表格参数
+                tableConfig: {
+                    //总数据
+                    totalCount:100,
+                    //当前页
+                    pageNumber:1,
+                    //每页条数
+                    pageSize:10,
+                },
+            }
 
-<script src="../../js/modules/resource/resource_give_up.js"></script>
+        },
+        methods: {
+            handleCurrentChange(val) {
+                this.tableConfig.pageNumber = val;
+                this.list();
+            },
+            handleSizeChange(val) {
+                this.tableConfig.pageNumber = 1;
+                this.tableConfig.pageSize = val;
+                this.list();
+            },
+            sureResource:function(id){
+                var _this=this;
+                $.ajax({
+                    type: "POST",
+                    url: this.sure_url,
+                    contentType: "application/json",
+                    data: JSON.stringify({id:id}),
+                    success: function(r){
+                        if(r.code === 0){
+                            alert('操作成功', function(){
+                                _this.list();
+                                _this.listLoading = false;
+                            });
+                        } else{
+                            alert(r.msg);
+                        }
+                    }
+                })
+            },
+            list: function(isRefreshStatus = false) {
+                this.tableData = [];
+                this.listLoading = !isRefreshStatus;
+                this.$http.get(this.list_url,{page: this.tableConfig.pageNumber, limit: this.tableConfig.pageSize}).then(function(res){
+                    this.tableData = res.data.page.list;
+                    this.tableConfig.totalCount =res.data.page.list.length;
+                    this.tableConfig.totalCount = res.data.page.totalCount;
+                    this.listLoading = false;
+                },function(){
+                    this.listLoading = false;
+                    console.log('failed');
+                });
+            }
+                /*this.$http.post(this.sure_url,{id:id}).then(function(res){
+                    if(res.data.code==0){
+                        alert("确认资源成功")
+                        this.list();
+                        this.listLoading = false;
+                    }else{
+                        alert("确认资源失败")
+                        this.listLoading = false;
+                    }
+
+                },function(){
+                    this.listLoading = false;
+                    console.log('failed');
+                });*/
+
+        },
+        mounted () {
+            this.list();
+        },
+
+        filters: {
+            formatterDate: function (value) {
+                return (value == null || value == undefined) ? "" : value.trim().substring(0, 10);
+            }
+        },
+
+    });
+
+</script>
+
 </body>
 </html>

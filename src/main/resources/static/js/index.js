@@ -6,7 +6,7 @@ var menuItem = Vue.extend({
 	          '<li :class="{active: (item.type===0 && index === 0)}">',
 				  '<a v-if="item.type === 0" href="javascript:;">',
 					  '<i v-if="item.icon != null" :class="item.icon"></i>',
-					  '<span :id="\'menu_\'+item.menuId">{{item.name}}</span>',
+					  '<span :id="\'menu_\'+item.menuId" class="item-name">{{item.name}}</span>',
 					  '<i class="fa fa-angle-left pull-right"></i>',
 				  '</a>',
 				  '<ul v-if="item.type === 0" class="treeview-menu">',
@@ -110,7 +110,7 @@ var vm = new Vue({
     updated: function(){
         //路由
         var router = new Router();
-        //为首页添加路由
+        /*//为首页添加路由
         var home_href = $("#menu-home").attr("href");
         //替换iframe的url
         router.add(home_href, function() {
@@ -118,7 +118,7 @@ var vm = new Vue({
             //替换iframe的url
             vm.main = url.replace('#', '');
             $("#menu-home").parents("li").addClass("active");
-        });
+        });*/
         routerList(router, vm.menuList);
         router.start();
     }
@@ -129,22 +129,21 @@ var vm = new Vue({
 function routerList(router, menuList){
 	for(var key in menuList){
 		var menu = menuList[key];
-		if(menu.type == 0){
-			routerList(router, menu.list);
-		}else if(menu.type == 1){
-			router.add('#'+menu.url, function() {
-				var url = window.location.hash;
-				//替换iframe的url
-			    vm.main = url.replace('#', '');
-			    //导航菜单展开
-			    $(".treeview-menu li").removeClass("active");
+        if(menu.type == 0){
+            routerList(router, menu.list);
+        }else if(menu.type == 1){
+            router.add('#'+menu.url, function() {
+                var url = window.location.hash;
+                //替换iframe的url
+                vm.main = url.replace('#', '');
+                //导航菜单展开
+                $(".treeview-menu li").removeClass("active");
                 $(".sidebar-menu li").removeClass("active");
-			    $("a[href='"+url+"']").parents("li").addClass("active");
-			    /*vm.navTitle = $("a[href='"+url+"']").text();
-			    vm.navParentNode=$("span[id=menu_"+menu.parentId+"]").text();*/
-                vm.navTitle=menu.name;
-                vm.navParentNode=menu.parentName;
-			});
-		}
+                $("a[href='"+url+"']").parents("li").addClass("active");
+                vm.navTitle=$("a[href='"+url+"']").text();
+                vm.navParentNode=$(".sidebar-menu li.active span.item-name").text();
+                vm.showNavTitle=true;
+            });
+        }
 	}
 }

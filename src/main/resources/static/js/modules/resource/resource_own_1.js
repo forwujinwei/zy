@@ -34,9 +34,9 @@ $(function () {
             { label: '顾问', name: 'adviser', width: 40 },
             { label: '操作', name: 'option', width: 80,formatter: function(value, options, row) {
                     return '<div class="btn-group" data-toggle="buttons-radio">' +
-                        '<button class="btn btn-primary btn-padding-reset">记录</button>' +
-                        '<button class="btn btn-primary btn-padding-reset">放弃</button>' +
-                        '<button class="btn btn-primary btn-padding-reset">合同</button>' +
+                        '<button class="btn btn-primary btn-padding-reset" onclick="javascript:addRecord()">记录</button>' +
+                        '<button class="btn btn-primary btn-padding-reset" onclick="javascript:cancelResource()">放弃</button>' +
+                        '<button class="btn btn-primary btn-padding-reset" onclick="javascript:addAgreement()">合同</button>' +
                         '</div>'
                 }}
         ],
@@ -69,6 +69,115 @@ $(function () {
 
 
 });
+
+function cancelResource (){
+    var rowId=$("#jqGrid").jqGrid("getGridParam","selrow");
+    if(rowId == null || rowId == '' || rowId == undefined){
+        alert("请选择一条数据");
+        return ;
+    }
+    var url = 'api/resource/RDSP_001/update/sure';
+    $.ajax({
+        type: "POST",
+        url: baseURL + url,
+        contentType: "application/json",
+        data: JSON.stringify({
+            id:rowId,
+            statusCode:'RS_002'
+        }),
+        success: function(r){
+            if(r.code === 0){
+                alert('操作成功', function(){
+                    reload();
+                });
+            } else{
+                alert(r.msg);
+            }
+        }
+    });
+
+};
+
+function addAgreement(){
+    vm.showList = false;
+    vm.showAddAgreement = true;
+    vm.title = "添加合同";
+    /*是否选中校验*/
+    var rowId=$("#jqGrid").jqGrid("getGridParam","selrow");
+    if(rowId == null || rowId == '' || rowId == undefined){
+        alert("请选择一条数据");
+        return ;
+    }
+    vm.agreement = {
+        agreementId:'ZY'+vm.getCurrentDate(),
+        resourceId:rowId,
+        allcost:null,
+        earnest:null,
+        finalPayment:null,
+        linkMan:null,
+        firstParty:null,
+        email:null,
+        phoneNumber:null,
+        address:null,
+        agreementTypeCode:'AGT_001'
+    };
+};
+function addRecord () {
+    vm.showList = false;
+    vm.showAddRecord = true;
+    vm.title = "添加记录";
+    var _this=this;
+    /*是否选中校验*/
+    var rowId=$("#jqGrid").jqGrid("getGridParam","selrow");
+    if(rowId == null || rowId == '' || rowId == undefined){
+        alert("请选择一条数据");
+        return ;
+    }
+    vm.revisit.resourceId=rowId;
+    /*设置弹窗*/
+    laydate.render({
+        elem: '#revisitDate' //指定元素
+    });
+
+    /*初始化记录表*/
+    $("#recordGridTable").jqGrid({
+        type: "GET",
+        url: _this.baseURL+'api/revisit/list/'+ _this.revisit.resourceId,
+        datatype: "json",
+        colModel: [
+            { label: '回访记录', name: 'id', hidden:true},
+            { label: '回访日期', name: 'revisitDate', width: 95, formatter: function(value, options,row){
+                    return (value == null || value == undefined) ? "" : value.trim().substring(0, 10);
+                }},
+            { label: '内容', name: 'revisitRemark', width: 420}
+        ],
+        viewrecords: false,
+        height: 300,
+        rowNum: 10,
+        rowList : [10,30,50,100,200],
+        shrinkToFit: true,
+        rownumbers: false,
+        autowidth:true,
+        pager: "#recordGridPager",
+        jsonReader : {
+            root: "page.list",
+            page: "page.currPage",
+            total: "page.totalPage",
+            records: "page.totalCount"
+        },
+        prmNames : {
+            page:"page",
+            rows:"limit",
+            order: "order"
+        },
+        gridComplete:function(){
+            //隐藏grid底部滚动条
+            $("#recordGrid").closest(".ui-jqgrid-bdiv").css({ 'overflow-y' : 'hidden','overflow-x':'hidden' });
+
+        }
+    });
+    _this.recordReload();
+};
 var vm = new Vue({
     el:'#rrapp',
     data:{

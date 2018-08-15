@@ -71,3 +71,12 @@ input.form-control.input-date-width{
 button.btn.btn-padding-reset{
     padding: 0 5px;
 }
+
+.el-table .cell, .el-table th>div{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.bottom_footer {
+    position: fixed; /*or前面的是absolute就可以用*/
+    bottom: 0px;
+}
