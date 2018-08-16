@@ -9,22 +9,21 @@
     <meta http-equiv="Cache" content="no-cache">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-	<link rel="stylesheet" href="../../css/bootstrap.min.css">
-	<link rel="stylesheet" href="../../css/font-awesome.min.css">
-	<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
-	<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
-    <link rel="stylesheet" href="../../css/main.css">
 
-	<script src="../../libs/jquery.min.js"></script>
-	<script src="../../plugins/layer/layer.js"></script>
-	<script src="../../libs/bootstrap.min.js"></script>
-	<script src="../../libs/vue.min.js"></script>
-	<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
-	<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
-	<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
-    <script src="../../libs/moment-with-locales.js"></script>
-	<script src="../../js/common.js"></script>
+    <link rel="stylesheet" href="../../plugins/element/theme-default/index.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <script src="../../libs/jquery-3.1.1.min.js"></script>
+    <script src="../../plugins/layer/layer.js"></script>
+
+    <script src="../../libs/bootstrap.min.js"></script>
+    <script src="../../libs/json2.js"></script>
+    <script src="../../libs/vue.min.js"></script>
+    <script src="../../libs/axios.min.js"></script>
+    <script src="../../js/axiso.js"></script>
     <script src="../../plugins/laydate/laydate.js"></script>
+    <script src="../../plugins/element/index.js"></script>
+    <script src="../../js/common.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -54,7 +53,7 @@
                     </select>
                     <input type="text"  v-model="condition.queryTypeValue" class="form-control">
 
-                <select name="my_jiaocha" v-model="condition.acrossCode" class="form-control " >
+                <select  v-model="condition.acrossCode" class="form-control " >
                     <option value="00">交叉类型</option>
                     <option value="AT_001">本站</option>
                     <option value="AT_002">盛凡</option>
@@ -97,8 +96,68 @@
                 <a  class="btn btn-primary" @click="query"><i class="fa fa-plus"></i>&nbsp;查询</a>
             </div>
         </form>
-        <table id="jqGrid"></table>
-        <div id="jqGridPager"></div>
+        <div style="margin-bottom: 50px;">
+            <table class="table table-bordered" v-loading="listLoading">
+                <colgroup>
+                    <col width="16%">
+                    <col width="10%">
+                    <col width="15%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="13%">
+                    <col width="16%">
+                </colgroup>
+                <thead>
+                <tr>
+                    <th hidden>资源ID</th>
+                    <th>名称</th>
+                    <th>类型</th>
+                    <th>领域</th>
+                    <th>联系人</th>
+                    <th>电话</th>
+                    <th>QQ</th>
+                    <th>提交时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="item in tableData">
+                    <td hidden>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.typeDes}}</td>
+                    <td>{{item.fieldDes}}</td>
+                    <td>{{item.linkMan}}</td>
+                    <td>{{item.phoneNumber}}</td>
+                    <td>{{item.qqNumber}}</td>
+                    <td>{{item.submitDate|formatterDate}}</td>
+                    <td>
+                        <div class="btn-group" data-toggle="buttons-radio">
+                            <button class="btn btn-primary btn-padding-reset"
+                                    @click="addRecord(item.id)">记录</button>
+                            <button class="btn btn-primary btn-padding-reset"
+                                    @click="cancelResource(item.id)">放弃</button>
+                            <button class="btn btn-primary btn-padding-reset"
+                                    @click="addAgreement(item.id,item.linkMan)">合同</button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!--v-show="tableConfig.totalCount"-->
+            <div class="page-wrap bottom_footer" >
+                <el-pagination
+                        class="align-right"
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="tableConfig.pageNumber"
+                        :page-sizes="[10, 20, 50]"
+                        :page-size='tableConfig.pageSize'
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="tableConfig.totalCount">
+                </el-pagination>
+            </div>
+        </div>
     </div>
     <!--添加客户 start-->
     <div v-show="showAddCustomer" class="panel panel-default">
@@ -157,11 +216,11 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group">
+          <!--  <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveResource" value="确定"/>
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-            </div>
+            </div>-->
         </form>
     </div>
     <!--添加客户 end-->
@@ -200,10 +259,10 @@
                               <textarea class="form-control" rows="5" v-model="revisit.revisitRemark"
                                         placeholder="输入回访记"></textarea>
                     </div>
-                    <div class="form-group">
+                   <!-- <div class="form-group">
                         <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
                         &nbsp;&nbsp; <input type="button" class="btn btn-primary" @click="saveRevisit" value="确定"/>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
@@ -280,16 +339,368 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group">
+           <!-- <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveAgreement" value="确定"/>
                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-            </div>
+            </div>-->
         </form>
     </div>
     <!--添加合同 end-->
 </div>
 
-<script src="../../js/modules/resource/resource_own_1.js"></script>
+<!--<script src="../../js/modules/resource/resource_own_1.js"></script>-->
+<script>
+    new Vue({
+        el:"#rrapp",
+        data(){
+            return {
+                list_url:baseURL + 'api/resource/RDSP_001/list/RS_002',
+                cancel_url:baseURL + 'api/resource/RDSP_001/update/cancel',
+                tableData: [],
+                listLoading:false,
+                showColumn:false,
+                //表格参数
+                tableConfig: {
+                    //总数据
+                    totalCount:100,
+                    //当前页
+                    pageNumber:1,
+                    //每页条数
+                    pageSize:10,
+                },
+                condition:{
+                    intentCode: '00',
+                    queryTypeCode: '00',
+                    queryTypeValue: null,
+                    dataSourceCode:'RDSP_001',
+                    statusCode:'RS_002',
+                    typeCode: '00',
+                    infoRange: '00',
+                    acrossCode:'00',
+                    infoRangeCode:'00',
+                    submitStartDate: null,
+                    submitEndDate: null,
+                    sureStartDate: null,
+                    sureEndDate: null
+                },
+                title:null,
+                showAddCustomer:false,
+                showAddRecord:false,
+                showAddAgreement:false,
+                showList: true,
+                resource:{
+                    id:null,
+                    name:null,
+                    typeDes:null,
+                    sourceDes:null,
+                    fieldDes:null,
+                    intentDes:null,
+                    linkMan:null,
+                    phoneNumber:null,
+                    qqNumber:null,
+                    enterWay:null,
+                    remarks:null,
+                    submitBy:null,
+                    submitDate:null,
+                    sureBy:null,
+                    sureDate:null,
+                    adviser:null,
+                    createBy:null,
+                    createDate:null,
+                    updateBy:null,
+                    updateDate:null,
+                    endRevisitDate:null
+                },
+                customerResource:{
+                    name:null,
+                    typeCode:null,
+                    sourceCode:null,
+                    fieldDes:null,
+                    linkMan:null,
+                    phoneNumber:null,
+                    qqNumber:null
+                },
+                revisit:{
+                    resourceId:null,
+                    revisitDate:null,
+                    revisitRemark:null,
+                    intentCode:'00'
+                },
+                agreement:{
+                    agreementId:null,
+                    resourceId:null,
+                    allcost:null,
+                    earnest:null,
+                    finalPayment:null,
+                    linkMan:null,
+                    firstParty:null,
+                    email:null,
+                    phoneNumber:null,
+                    address:null,
+                    agreementTypeCode:null
+                }
+            }
+
+        },
+        methods: {
+            handleCurrentChange(val) {
+                this.tableConfig.pageNumber = val;
+                this.list();
+            },
+            handleSizeChange(val) {
+                this.tableConfig.pageNumber = 1;
+                this.tableConfig.pageSize = val;
+                this.list();
+            },
+            list: function() {
+                var _this=this;
+                _this.tableData = [];
+                axios.get('api/resource/RDSP_001/list/RS_002', {
+                    params: {
+                        page: _this.tableConfig.pageNumber,
+                        limit: _this.tableConfig.pageSize
+                    }
+                }).then(function (response) {
+                        console.log(response);
+                    if(response.data.code === 0){
+                        _this.tableData = response.data.page.list;
+                        _this.tableConfig.totalCount = response.data.page.totalCount;
+                    }
+                }).catch(function (error) {
+                        console.log(error);
+                });
+            },
+            sureResource:function(id){
+                var _this=this;
+                $.ajax({
+                    type: "POST",
+                    url: _this.sure_url,
+                    contentType: "application/json",
+                    data: JSON.stringify({id:id}),
+                    success: function(r){
+                        if(r.code === 0){
+                            alert('操作成功', function(){
+                                _this.list();
+                                _this.listLoading = false;
+                            });
+                        } else{
+                            alert(r.msg);
+                        }
+                    }
+                })
+            },
+            addCustomer: function(){
+                vm.showList = false;
+                vm.showAddCustomer = true;
+                vm.title = "添加客户";
+                vm.customerResource = {
+                    name:null,
+                    typeCode:'00',
+                    sourceCode:null,
+                    fieldDes:null,
+                    linkMan:null,
+                    phoneNumber:null,
+                    qqNumber:null
+                };
+            },
+            addAgreement: function(id,linkMan){
+                var _this=this;
+                _this.showList = false;
+                _this.showAddAgreement = true;
+                _this.title = "添加合同";
+                /*是否选中校验*/
+                if(id == null || id == '' || id == undefined){
+                    alert("请选择一条数据");
+                    return ;
+                }
+                _this.agreement = {
+                    agreementId:'ZY'+vm.getCurrentDate(),
+                    resourceId:id,
+                    allcost:null,
+                    earnest:null,
+                    finalPayment:null,
+                    linkMan:linkMan,
+                    firstParty:null,
+                    email:null,
+                    phoneNumber:null,
+                    address:null,
+                    agreementTypeCode:'AGT_001'
+                };
+            },
+            addRecord: function (id) {
+                var _this=this;
+                _this.showList = false;
+                _this.showAddRecord = true;
+                _this.title = "添加记录";
+                /*是否选中校验*/
+                if(id == null || id == '' || id == undefined){
+                    alert("请选择一条数据");
+                    return ;
+                }
+                _this.revisit.resourceId=id;
+                /*设置弹窗*/
+                laydate.render({
+                    elem: '#revisitDate' //指定元素
+                });
+                //TODO
+
+            },
+            saveRevisit: function () {
+                var _this=this;
+                _this.revisit.revisitDate=$("#revisitDate").val();
+                var url = 'api/revisit/save';
+                $.ajax({
+                    type: "POST",
+                    url: _this.baseURL + url,
+                    contentType: "application/json",
+                    data: JSON.stringify(_this.revisit),
+                    success: function(r){
+                        if(r.code === 0){
+                            alert('操作成功', function(){
+                                _this.showAddRecord=false;
+                                _this.reload();
+                            });
+                        } else{
+                            alert(r.msg);
+                        }
+                    }
+                });
+            },
+            saveAgreement:function(){
+                var url = 'api/resource/agreement/save';
+                $.ajax({
+                    type: "POST",
+                    url: vm.baseURL + url,
+                    contentType: "application/json",
+                    data: JSON.stringify(vm.agreement),
+                    success: function(r){
+                        if(r.code === 0){
+                            alert('操作成功', function(){
+                                vm.showAddAgreement=false;
+                                vm.reload();
+                            });
+                        } else{
+                            alert(r.msg);
+                        }
+                    }
+                });
+
+            },
+            query: function () {
+                var _this=this;
+                _this.condition.submitStartDate=$("#submitStartDate").val();
+                _this.condition.submitEndDate=$("#submitEndDate").val();
+                _this.condition.sureStartDate= $("#sureStartDate").val();
+                _this.condition.sureEndDate=$("#sureEndDate").val();
+                $("#jqGrid").jqGrid('setGridParam',{
+                    postData:{
+                        'intentCode': _this.condition.intentCode,
+                        'queryTypeCode': _this.condition.queryTypeCode,
+                        'queryTypeCode': _this.condition.queryTypeValue,
+                        'typeCode': _this.condition.typeCode,
+                        'acrossCode': _this.condition.acrossCode,
+                        'submitStartDate': _this.condition.submitStartDate,
+                        'submitEndDate': _this.condition.submitEndDate,
+                        'sureStartDate': _this.condition.sureStartDate,
+                        'sureEndDate': _this.condition.sureEndDate,
+                        'infoRangeCode':_this.condition.infoRangeCode
+                    },
+                    page:1
+                }).trigger("reloadGrid");
+            },
+            saveResource: function () {
+                var _this=this;
+                var url = "api/resource/save";
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + url,
+                    contentType: "application/json",
+                    data: JSON.stringify(_this.customerResource),
+                    success: function(r){
+                        if(r.code === 0){
+                            alert('操作成功', function(){
+                                _this.showAddCustomer=false;
+                                _this.reload();
+                            });
+                        }else{
+                            alert(r.msg);
+                        }
+                    }
+                });
+            },
+            showError: function(logId) {
+                $.get(baseURL + "sys/scheduleLog/info/"+logId, function(r){
+                    parent.layer.open({
+                        title:'失败信息',
+                        closeBtn:0,
+                        content: r.log.error
+                    });
+                });
+            },
+            update: function () {
+                var userId = getSelectedRow();
+                if(userId == null){
+                    return ;
+                }
+
+                vm.showList = false;
+                vm.title = "修改";
+
+                vm.getUser(userId);
+                //获取角色信息
+                this.getRoleList();
+            },
+            back: function () {
+                history.go(-1);
+            },
+            reload: function () {
+                vm.showList = true;
+                vm.showAddCustomer=false;
+                vm.showAddRecord=false;
+                vm.showAddAgreement=false;
+                var page = $("#jqGrid").jqGrid('getGridParam','page');
+                $("#jqGrid").jqGrid('setGridParam',{
+                    postData:{},
+                    page:page
+                }).trigger("reloadGrid");
+            },
+            recordReload: function(){
+                vm.showAddRecord = true;
+                var page = $("#recordGridTable").jqGrid('getGridParam','page');
+                $("#recordGridTable").jqGrid('setGridParam',{
+                    postData:{},
+                    page:page
+                }).trigger("reloadGrid");
+            },
+            getCurrentDate: function(){
+                var date = new Date();
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = date.getFullYear() + month + strDate
+                    + date.getHours() +  date.getMinutes() + date.getSeconds();
+                return currentdate;
+
+            }
+        },
+        mounted () {
+            this.list();
+        },
+
+        filters: {
+            formatterDate: function (value) {
+                return (value == null || value == undefined) ? "" : value.trim().substring(0, 10);
+            }
+        },
+
+    });
+
+</script>
 </body>
 </html>

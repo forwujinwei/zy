@@ -1,7 +1,7 @@
 //jqGrid的配置信息
-$.jgrid.defaults.width = 1000;
+/*$.jgrid.defaults.width = 1000;
 $.jgrid.defaults.responsive = true;
-$.jgrid.defaults.styleUI = 'Bootstrap';
+$.jgrid.defaults.styleUI = 'Bootstrap';*/
 
 //工具集合Tools
 window.T = {};
@@ -25,7 +25,6 @@ var token = localStorage.getItem("token");
 if(token == 'null'){
     parent.location.href = baseURL + 'login.html';
 }
-
 //jquery全局配置
 $.ajaxSetup({
 	dataType: "json",
@@ -45,13 +44,13 @@ $.ajaxSetup({
 });
 
 //jqgrid全局配置
-$.extend($.jgrid.defaults, {
+/*$.extend($.jgrid.defaults, {
     ajaxGridOptions : {
         headers: {
             "token": token
         }
     }
-});
+});*/
 
 //权限判断
 function hasPermission(permission) {
