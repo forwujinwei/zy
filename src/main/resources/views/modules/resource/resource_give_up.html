@@ -12,10 +12,8 @@
     <script src="../../libs/bootstrap.min.js"></script>
     <script src="../../libs/json2.js"></script>
     <script src="../../libs/vue.min.js"></script>
-    <script src="../../libs/vue-resource.js"></script>
     <script src="../../libs/axios.min.js"></script>
     <script src="../../js/axiso.js"></script>
-    <script src="../../js/common.js"></script>
     <script src="../../plugins/element/index.js"></script>
 </head>
 <body>
@@ -83,8 +81,8 @@
         el:"#test",
         data(){
             return {
-                list_url:baseURL + 'api/resource/RDSP_001/list/RS_003',
-                sure_url:baseURL + 'api/resource/RDSP_001/update/sure',
+                list_url:'api/resource/RDSP_001/list/RS_003',
+                sure_url:'api/resource/RDSP_001/update/sure',
                 tableData: [],
                 listLoading:false,
                 showColumn:false,
@@ -112,33 +110,31 @@
             },
             sureResource:function(id){
                 var _this=this;
-                $.ajax({
-                    type: "POST",
-                    url: _this.sure_url,
-                    contentType: "application/json",
-                    data: JSON.stringify({id:id}),
-                    success: function(r){
-                        if(r.code === 0){
-                            alert('操作成功', function(){
-                                _this.list();
-                                _this.listLoading = false;
-                            });
-                        } else{
-                            alert(r.msg);
-                        }
+                axios.post(_this.sure_url,{id:id}).then(function (response) {
+                    if(response.data.code === 0){
+                        alert('操作成功', function(){
+                            _this.list();
+                            _this.listLoading = false;
+                        });
+                    }else{
+                        alert(response.data.msg);
                     }
-                })
+                }).catch(function (error) {
+                    console.log(error);
+                });
             },
-            list: function(isRefreshStatus = false) {
-                this.tableData = [];
-                this.listLoading = !isRefreshStatus;
-                this.$http.get(this.list_url,{page: this.tableConfig.pageNumber, limit: this.tableConfig.pageSize}).then(function(res){
-                    this.tableData = res.data.page.list;
-                    this.tableConfig.totalCount = res.data.page.totalCount;
-                    this.listLoading = false;
-                },function(){
-                    this.listLoading = false;
-                    console.log('failed');
+            list: function() {
+                var _this=this;
+                _this.tableData = [];
+                axios.get(
+                    _this.list_url,
+                    {params: {page: _this.tableConfig.pageNumber,
+                             limit: _this.tableConfig.pageSize}
+                }).then(function(res){
+                    _this.tableData = res.data.page.list;
+                    _this.tableConfig.totalCount = res.data.page.totalCount;
+                }).catch(function (error) {
+                    console.log(error);
                 });
             }
         },

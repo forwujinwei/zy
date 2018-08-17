@@ -23,7 +23,6 @@
     <script src="../../js/axiso.js"></script>
     <script src="../../plugins/laydate/laydate.js"></script>
     <script src="../../plugins/element/index.js"></script>
-    <script src="../../js/common.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -355,8 +354,8 @@
         el:"#rrapp",
         data(){
             return {
-                list_url:baseURL + 'api/resource/RDSP_001/list/RS_002',
-                cancel_url:baseURL + 'api/resource/RDSP_001/update/cancel',
+                list_url:'api/resource/RDSP_001/list/RS_002',
+                cancel_url:'api/resource/RDSP_001/update/cancel',
                 tableData: [],
                 listLoading:false,
                 showColumn:false,
@@ -456,7 +455,7 @@
             list: function() {
                 var _this=this;
                 _this.tableData = [];
-                axios.get('api/resource/RDSP_001/list/RS_002', {
+                axios.get(_this.list_url, {
                     params: {
                         page: _this.tableConfig.pageNumber,
                         limit: _this.tableConfig.pageSize
@@ -466,29 +465,31 @@
                     if(response.data.code === 0){
                         _this.tableData = response.data.page.list;
                         _this.tableConfig.totalCount = response.data.page.totalCount;
+                    }else{
+                        alert(response.data.msg);
                     }
                 }).catch(function (error) {
                         console.log(error);
                 });
             },
-            sureResource:function(id){
+            cancelResource:function(id){
                 var _this=this;
-                $.ajax({
-                    type: "POST",
-                    url: _this.sure_url,
-                    contentType: "application/json",
-                    data: JSON.stringify({id:id}),
-                    success: function(r){
-                        if(r.code === 0){
-                            alert('操作成功', function(){
-                                _this.list();
-                                _this.listLoading = false;
-                            });
-                        } else{
-                            alert(r.msg);
-                        }
+                axios.post('api/resource/RDSP_001/update/cancel',
+                           {id:id}
+                           ).then(function (response) {
+                    console.log(response);
+                    if(response.data.code === 0){
+                        alert('操作成功', function(){
+                            _this.list();
+                            _this.listLoading = false;
+                        });
+                    }else{
+                        alert(response.data.msg)
                     }
-                })
+                }).catch(function (error) {
+                    console.log(error);
+                });
+
             },
             addCustomer: function(){
                 vm.showList = false;

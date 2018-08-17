@@ -1,7 +1,9 @@
 //jqGrid的配置信息
-/*$.jgrid.defaults.width = 1000;
+
+$.jgrid.defaults.width = 1000;
 $.jgrid.defaults.responsive = true;
-$.jgrid.defaults.styleUI = 'Bootstrap';*/
+$.jgrid.defaults.styleUI = 'Bootstrap';
+
 
 //工具集合Tools
 window.T = {};
@@ -18,7 +20,6 @@ var url = function(name) {
 T.p = url;
 
 //请求前缀
-/*var baseURL = "/renren-fastplus/";*/
 var baseURL = "/";
 //登录token
 var token = localStorage.getItem("token");

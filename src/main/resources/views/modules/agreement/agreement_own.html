@@ -1,34 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>定时任务日志</title>
-	<meta charset="UTF-8">
-	<meta http-equiv="Expires" content="0">
-	<meta http-equiv="Pragma" content="no-cache">
-	<meta http-equiv="Cache-control" content="no-cache">
-	<meta http-equiv="Cache" content="no-cache">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-	<link rel="stylesheet" href="../../css/bootstrap.min.css">
-	<link rel="stylesheet" href="../../css/font-awesome.min.css">
-	<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
-	<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
-	<link rel="stylesheet" href="../../css/main.css">
+    <title>我的合同</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
-    <link href="https://cdn.bootcss.com/bootstrap-fileinput/4.0.0/css/fileinput.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../plugins/element/theme-default/index.css">
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <script src="../../libs/jquery-3.1.1.min.js"></script>
+    <script src="../../plugins/layer/layer.js"></script>
 
-
-	<script src="../../libs/jquery.min.js"></script>
-	<script src="../../plugins/layer/layer.js"></script>
-	<script src="../../libs/bootstrap.min.js"></script>
-	<script src="../../libs/vue.min.js"></script>
-	<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
-	<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
-	<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
-	<script src="../../libs/moment-with-locales.js"></script>
-	<script src="../../js/common.js"></script>
-	<script src="../../plugins/laydate/laydate.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap-fileinput/4.0.0/js/fileinput.min.js"></script>
+    <script src="../../libs/bootstrap.min.js"></script>
+    <script src="../../libs/json2.js"></script>
+    <script src="../../libs/vue.min.js"></script>
+    <script src="../../libs/axios.min.js"></script>
+    <script src="../../js/axiso.js"></script>
+    <script src="../../plugins/laydate/laydate.js"></script>
+    <script src="../../plugins/element/index.js"></script>
+    <script src="../../js/common.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -58,15 +53,78 @@
 					</div>
 				</div>
 				<div class="form-group" style="float: right">
-					<a  class="btn btn-primary" @click="showUpdateAgreement"><i class="fa fa-plus"></i>&nbsp;查询</a>
-					<a  class="btn btn-primary" @click="showUpdateAgreement"><i class="fa fa-plus"></i>&nbsp;下载合同</a>
-					<a  class="btn btn-primary" @click="showUpdateAgreement"><i class="fa fa-plus"></i>&nbsp;修改</a>
-					<a  class="btn btn-primary" @click="showUpdateAgreement"><i class="fa fa-plus"></i>&nbsp;操作</a>
+					<a  class="btn btn-primary" ><i class="fa fa-plus"></i>&nbsp;查询</a>
 				</div>
 			</div>
 		</form>
-		<table id="jqGrid"></table>
-		<div id="jqGridPager"></div>
+        <div style="margin-bottom: 50px;">
+            <table class="table table-bordered" v-loading="listLoading">
+                <colgroup>
+                    <col width="12%">
+                    <col width="8%">
+                    <col width="15%">
+                    <col width="6%">
+                    <col width="6%">
+                    <col width="6%">
+                    <col width="6%">
+                    <col width="8%">
+                    <col width="8%">
+                    <col width="10%">
+                    <col width="15%">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>合同编号</th>
+                        <th>类型</th>
+                        <th>名称</th>
+                        <th>总费用</th>
+                        <th>定金</th>
+                        <th>尾款</th>
+                        <th>支出</th>
+                        <th>状态</th>
+                        <th>顾问</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in tableData">
+                        <td>{{item.agreementId}}</td>
+                        <td>{{item.agreementTypeDes}}</td>
+                        <td>{{item.tradeMarkName}}</td>
+                        <td>{{item.allcost}}</td>
+                        <td>{{item.earnest}}</td>
+                        <td>{{item.finalPayment}}</td>
+                        <td>{{item.pay}}</td>
+                        <td>{{item.status}}</td>
+                        <td>{{item.adviser}}</td>
+                        <td>{{item.createDate|formatterDate}}</td>
+                        <td><div class="btn-group" data-toggle="buttons-radio">
+                            <button  class="btn btn-primary btn-padding-reset"
+                                     @click="downLoadAgreement(item.agreementId)">下载</button>
+                            <button  class="btn btn-primary btn-padding-reset"
+                                     @click="showUpdateAgreement(item.agreementId)">修改</button>
+                            <button  class="btn btn-primary btn-padding-reset"
+                                     @click="sureResource(item.agreementId)">操作</button>
+                        </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!--v-show="tableConfig.totalCount"-->
+            <div class="page-wrap bottom_footer" >
+                <el-pagination
+                        class="align-right"
+                        @size-change="handleSizeChange"
+                        @current-change="handleCurrentChange"
+                        :current-page="tableConfig.pageNumber"
+                        :page-sizes="[10, 20, 50]"
+                        :page-size='tableConfig.pageSize'
+                        layout="total, sizes, prev, pager, next, jumper"
+                        :total="tableConfig.totalCount">
+                </el-pagination>
+            </div>
+        </div>
 	</div>
 	<!--修改合同 start-->
     <div v-show="showAgreement">
@@ -75,7 +133,6 @@
             <li><a href="#tradeMarkAgreement" data-toggle="tab">商标合同</a></li>
             <li><a href="#tradeMarkInfo" data-toggle="tab">商标信息</a></li>
             <li><a href="#firstParty" data-toggle="tab">甲方</a></li>
-
         </ul>
         <div id="myTabContent" class="tab-content">
             <div class="tab-pane fade in active" id="agreement">
@@ -114,12 +171,12 @@
                     <div class="form-group">
                         <div class="col-sm-2 control-label"></div>
                         <input type="button" class="btn btn-primary" @click="updateAgreement" value="确定"/>
-                        &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                        &nbsp;&nbsp;<input type="button" class="btn btn-warning"  value="返回"/>
                     </div>
                 </form>
             </div>
             <!--商标合同-->
-            <div class="tab-pane fade" id="tradeMarkAgreement">
+           <!-- <div class="tab-pane fade" id="tradeMarkAgreement">
                 <form class="form-horizontal">
                     <div class="form-group">
                         <div class="col-sm-2 control-label">服务类型</div>
@@ -191,22 +248,21 @@
                     <div class="form-group">
                         <div class="col-sm-2 control-label"></div>
                         <input type="button" class="btn btn-primary" @click="updateAgreement" value="确定"/>
-                        &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                        &nbsp;&nbsp;<input type="button" class="btn btn-warning"  value="返回"/>
                     </div>
                 </form>
-            </div>
+            </div>-->
             <!--商标信息-->
             <div class="tab-pane fade" id="tradeMarkInfo">
                 <div  class="form-group form-inline">
                     <div class="form-group" style="float: right">
-                        <a  class="btn btn-primary" @click="showUpdateAgreement"><i class="fa fa-plus"></i>&nbsp;添加</a>
-                        <a  class="btn btn-primary" @click="showUpdateAgreement"><i class="fa fa-plus"></i>&nbsp;修改</a>
-                        <a  class="btn btn-primary" @click="showUpdateAgreement"><i class="fa fa-plus"></i>&nbsp;确认书</a>
-                        <a  class="btn btn-primary" @click="showUpdateAgreement"><i class="fa fa-plus"></i>&nbsp;删除</a>
+                        <a  class="btn btn-primary" ><i class="fa fa-plus"></i>&nbsp;添加</a>
+                        <a  class="btn btn-primary" ><i class="fa fa-plus"></i>&nbsp;修改</a>
+                        <a  class="btn btn-primary" ><i class="fa fa-plus"></i>&nbsp;确认书</a>
+                        <a  class="btn btn-primary" ><i class="fa fa-plus"></i>&nbsp;删除</a>
                     </div>
                 </div>
-                    <table id="tradeMarkjqGrid"></table>
-                    <div id="tradeMarkjqGridPager"></div>
+
             </div>
             <!--甲方-->
             <div class="tab-pane fade" id="firstParty">
@@ -270,15 +326,124 @@
                     <div class="form-group">
                         <div class="col-sm-2 control-label"></div>
                         <input type="button" class="btn btn-primary" @click="updateAgreement" value="确定"/>
-                        &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                        &nbsp;&nbsp;<input type="button" class="btn btn-warning"  value="返回"/>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-
-<script src="../../js/modules/agreement/agreement_own.js"></script>
 </body>
+
+<script>
+    new Vue({
+        el:"#rrapp",
+        data(){
+            return {
+                listLoading:false,
+                showList:true,
+                showAgreement:false,
+                tableData: [],
+                //表格参数
+                tableConfig: {
+                    //总数据
+                    totalCount: 100,
+                    //当前页
+                    pageNumber: 1,
+                    //每页条数
+                    pageSize: 10,
+                },
+                condition: {
+                    queryType: 'AQT_001',
+                    urgent: '00',
+                    queryTypeValue: null,
+                    createStartDate: null,
+                    createEndDate: null
+                },
+                agreement: {
+                    agreementId: null,
+                    allcost: null,
+                    earnest: null,
+                    finalPayment: null,
+                    pay: null
+                },
+                tradeMarkAgreement: {
+                    agreementId: null,
+                    serviceTypeCode: null,
+                    registerCost: null,
+                    designCost: null,
+                    queryCost: null,
+                    nameCost: null,
+                    hostCost: null,
+                    queryCost: null,
+                    specifyColor: null,
+                    applyTypeCode: null
+                }
+            }
+
+        },
+        methods: {
+            handleCurrentChange(val) {
+                this.tableConfig.pageNumber = val;
+                this.list();
+            },
+            handleSizeChange(val) {
+                this.tableConfig.pageNumber = 1;
+                this.tableConfig.pageSize = val;
+                this.list();
+            },
+            list: function() {
+                var _this=this;
+                _this.tableData = [];
+                axios.get('api/resource/agreement/list', {
+                    params: {
+                        page: _this.tableConfig.pageNumber,
+                        limit: _this.tableConfig.pageSize
+                    }
+                }).then(function (response) {
+                    console.log(response);
+                    if(response.data.code === 0){
+                        _this.tableData = response.data.page.list;
+                        _this.tableConfig.totalCount = response.data.page.totalCount;
+                    }else{
+                        alert(response.data.msg);
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            showUpdateAgreement:function (id) {
+
+                var _this=this;
+                _this.showList=false;
+                _this.showAgreement=true;
+                _this.agreement={
+                    agreementId: id,
+                    allcost: null,
+                    earnest: null,
+                    finalPayment: null,
+                    pay: null
+                }
+            },
+            downLoadAgreement:function(){
+
+            },
+            updateAgreement:function(){
+
+            }
+        },
+        mounted () {
+            this.list();
+        },
+
+        filters: {
+            formatterDate: function (value) {
+                return (value == null || value == undefined) ? "" : value.trim().substring(0, 10);
+            }
+        },
+
+    });
+
+</script>
+
 </html>
