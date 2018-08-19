@@ -34,7 +34,7 @@ public class ResourcePoolController {
     private ResourcePoolService resourcePoolService;
     @AuthIgnore
     @RequestMapping("/{dataSourceCode}/list/{statusCode}")
-    public R list(@PathVariable String dataSourceCode,@PathVariable String statusCode, @RequestParam(required = false) Map<String, Object> params) throws ParseException {
+    public R list(@PathVariable String dataSourceCode,@PathVariable String statusCode, @RequestParam Map<String, Object> params) throws ParseException {
         //查询列表数据
         params.put("dataSourceCode",dataSourceCode);
         params.put("statusCode",statusCode);

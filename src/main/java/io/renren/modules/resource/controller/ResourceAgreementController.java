@@ -40,7 +40,9 @@ public class ResourceAgreementController {
         resourceAgreement.setCreateBy(username);
         resourceAgreement.setUpdateBy(username);
         resourceAgreement.setAdviser(username);
-        resourceAgreement.setAgreementTypeDes(DistEnum.getDesByCode(resourceAgreement.getAgreementTypeCode()));
+        resourceAgreement.setTypeDes(DistEnum.getDesByCode(resourceAgreement.getTypeCode()));
+        resourceAgreement.setStatusCode(DistEnum.AGREEMENT_STATUS_SIGN.getTypeCode());
+        resourceAgreement.setStatusDes(DistEnum.AGREEMENT_STATUS_SIGN.getDes());
         resourceAgreement.setUrgentCode(DistEnum.URGENT_NO.getTypeCode());
         resourceAgreement.setUrgentDes(DistEnum.URGENT_NO.getDes());
         resourceAgreementService.save(resourceAgreement);
@@ -57,7 +59,7 @@ public class ResourceAgreementController {
         String username = user.getUsername();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         if(createStartDate!=null&&!"".equals(createStartDate.toString())){
-            params.put("createStartDate",dateFormat.parse(createStartDate.toString()));
+             params.put("createStartDate", dateFormat.parse(createStartDate.toString()));
         }
         if(createEndDate!=null&&!"".equals(createEndDate.toString())){
             params.put("createEndDate",dateFormat.parse(createEndDate.toString()));
@@ -68,5 +70,19 @@ public class ResourceAgreementController {
         int total = resourceAgreementService.queryTotal(query);
         PageUtils pageUtil = new PageUtils(resourcePersonalPoolList, total, query.getLimit(), query.getPage());
         return R.ok().put("page", pageUtil);
+    }
+
+    /**
+     * 保存定时任务
+     */
+    @RequestMapping("/update")
+    public R update(@LoginUser UserEntity user, @RequestBody ResourceAgreement resourceAgreement){
+        ValidatorUtils.validateEntity(resourceAgreement);
+        String username = user.getUsername();
+        resourceAgreement.setUpdateBy(username);
+        resourceAgreement.setStatusDes(DistEnum.getDesByCode(resourceAgreement.getStatusCode()));
+
+        resourceAgreementService.update(resourceAgreement);
+        return R.ok();
     }
 }

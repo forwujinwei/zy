@@ -13,6 +13,8 @@ public class ResourceAgreement {
 
     private Integer finalPayment;
 
+    private Integer pay;
+
     private String email;
 
     private String linkMan;
@@ -23,9 +25,13 @@ public class ResourceAgreement {
 
     private String address;
 
-    private String agreementTypeCode;
+    private String typeCode;
 
-    private String agreementTypeDes;
+    private String typeDes;
+
+    private String statusCode;
+
+    private String statusDes;
 
     private String adviser;
 
@@ -83,6 +89,14 @@ public class ResourceAgreement {
         this.finalPayment = finalPayment;
     }
 
+    public Integer getPay() {
+        return pay;
+    }
+
+    public void setPay(Integer pay) {
+        this.pay = pay;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -123,20 +137,36 @@ public class ResourceAgreement {
         this.address = address;
     }
 
-    public String getAgreementTypeCode() {
-        return agreementTypeCode;
+    public String getTypeCode() {
+        return typeCode;
     }
 
-    public void setAgreementTypeCode(String agreementTypeCode) {
-        this.agreementTypeCode = agreementTypeCode;
+    public void setTypeCode(String typeCode) {
+        this.typeCode = typeCode;
     }
 
-    public String getAgreementTypeDes() {
-        return agreementTypeDes;
+    public String getTypeDes() {
+        return typeDes;
     }
 
-    public void setAgreementTypeDes(String agreementTypeDes) {
-        this.agreementTypeDes = agreementTypeDes;
+    public void setTypeDes(String typeDes) {
+        this.typeDes = typeDes;
+    }
+
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String getStatusDes() {
+        return statusDes;
+    }
+
+    public void setStatusDes(String statusDes) {
+        this.statusDes = statusDes;
     }
 
     public String getAdviser() {

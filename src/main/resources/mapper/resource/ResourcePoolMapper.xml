@@ -395,16 +395,16 @@
       <if test="acrossCode != null and acrossCode.trim() != '' and acrossCode.trim() != '00'">
         and across_code = #{acrossCode,jdbcType=VARCHAR}
       </if>
-      <if test="submitStartDate != null and submitStartDate.trim() != ''">
+      <if test="submitStartDate != null">
         and  submit_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
       </if>
-      <if test="submitendDate != null and submitendDate.trim() != ''">
+      <if test="submitendDate != null">
         and  submit_date &lt;= #{submitendDate,jdbcType=TIMESTAMP}
       </if>
-      <if test="sureStartDate != null and sureStartDate.trim() != ''">
+      <if test="sureStartDate != null">
         and  sure_date &gt;= #{sureStartDate,jdbcType=TIMESTAMP}
       </if>
-      <if test="sureEndDate != null and sureEndDate.trim() != ''">
+      <if test="sureEndDate != null">
         and  sure_date &lt;= #{sureEndDate,jdbcType=TIMESTAMP}
       </if>
     </where>
@@ -447,16 +447,16 @@
       <if test="acrossCode != null and acrossCode.trim() != '' and acrossCode.trim() != '00'">
         and across_code = #{acrossCode,jdbcType=VARCHAR}
       </if>
-      <if test="submitStartDate != null and submitStartDate.trim() != ''">
+      <if test="submitStartDate != null">
         and  submit_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
       </if>
-      <if test="submitendDate != null and submitendDate.trim() != ''">
+      <if test="submitendDate != null">
         and  submit_date &lt;= #{submitendDate,jdbcType=TIMESTAMP}
       </if>
-      <if test="sureStartDate != null and sureStartDate.trim() != ''">
+      <if test="sureStartDate != null">
         and  sure_date &gt;= #{sureStartDate,jdbcType=TIMESTAMP}
       </if>
-      <if test="sureEndDate != null and sureEndDate.trim() != ''">
+      <if test="sureEndDate != null">
         and  sure_date &lt;= #{sureEndDate,jdbcType=TIMESTAMP}
       </if>
     </where>

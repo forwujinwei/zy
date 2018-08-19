@@ -23,7 +23,7 @@
 
         <javaClientGenerator type="XMLMAPPER" targetPackage="io.renren.modules.resource.dao" targetProject="src/main/java" />
 
-        <table tableName="resource_pool" domainObjectName="ResourcePoolModel"
+        <table tableName="resource_trade_mark" domainObjectName="ResourceTradeMark"
                enableCountByExample="false" enableUpdateByExample="false"
                enableSelectByExample="false" enableDeleteByExample="false"
                selectByExampleQueryId="false" >

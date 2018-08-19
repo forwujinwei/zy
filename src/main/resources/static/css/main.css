@@ -80,3 +80,10 @@ button.btn.btn-padding-reset{
     position: fixed; /*or前面的是absolute就可以用*/
     bottom: 0px;
 }
+.thumbnail{
+    width: 20px;
+    height: 20px;
+    padding:0px;
+    margin-bottom:0px;
+    border:none;
+}

@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.renren.modules.resource.dao.ResourceTradeMarkMapper" >
+  <resultMap id="BaseResultMap" type="io.renren.modules.resource.model.ResourceTradeMark" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="agreement_id" property="agreementId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="classify_code" property="classifyCode" jdbcType="VARCHAR" />
+    <result column="classify_des" property="classifyDes" jdbcType="VARCHAR" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+    <result column="status_des" property="statusDes" jdbcType="VARCHAR" />
+    <result column="doc_code" property="docCode" jdbcType="VARCHAR" />
+    <result column="doc_des" property="docDes" jdbcType="VARCHAR" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="government_img" property="governmentImg" jdbcType="VARCHAR" />
+    <result column="sure_doc_img" property="sureDocImg" jdbcType="VARCHAR" />
+    <result column="adviser" property="adviser" jdbcType="VARCHAR" />
+    <result column="apply_type_code" property="applyTypeCode" jdbcType="VARCHAR" />
+    <result column="apply_type_des" property="applyTypeDes" jdbcType="VARCHAR" />
+    <result column="protect_product" property="protectProduct" jdbcType="VARCHAR" />
+    <result column="apply_date" property="applyDate" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="delete_flag" property="deleteFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, agreement_id, name, classify_code, classify_des, status_code, status_des, doc_code, 
+    doc_des, img, government_img, sure_doc_img, adviser, apply_type_code, apply_type_des, 
+    protect_product, apply_date, create_by, create_date, update_by, update_date, remarks, 
+    delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from resource_trade_mark
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from resource_trade_mark
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="io.renren.modules.resource.model.ResourceTradeMark" >
+    insert into resource_trade_mark (id, agreement_id, name, 
+      classify_code, classify_des, status_code, 
+      status_des, doc_code, doc_des, 
+      img, government_img, sure_doc_img, 
+      adviser, apply_type_code, apply_type_des, 
+      protect_product, apply_date, create_by, 
+      create_date, update_by, update_date, 
+      remarks, delete_flag)
+    values (#{id,jdbcType=VARCHAR}, #{agreementId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{classifyCode,jdbcType=VARCHAR}, #{classifyDes,jdbcType=VARCHAR}, #{statusCode,jdbcType=VARCHAR}, 
+      #{statusDes,jdbcType=VARCHAR}, #{docCode,jdbcType=VARCHAR}, #{docDes,jdbcType=VARCHAR}, 
+      #{img,jdbcType=VARCHAR}, #{governmentImg,jdbcType=VARCHAR}, #{sureDocImg,jdbcType=VARCHAR}, 
+      #{adviser,jdbcType=VARCHAR}, #{applyTypeCode,jdbcType=VARCHAR}, #{applyTypeDes,jdbcType=VARCHAR}, 
+      #{protectProduct,jdbcType=VARCHAR}, #{applyDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{remarks,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="io.renren.modules.resource.model.ResourceTradeMark" >
+    insert into resource_trade_mark
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="agreementId != null" >
+        agreement_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="classifyCode != null" >
+        classify_code,
+      </if>
+      <if test="classifyDes != null" >
+        classify_des,
+      </if>
+      <if test="statusCode != null" >
+        status_code,
+      </if>
+      <if test="statusDes != null" >
+        status_des,
+      </if>
+      <if test="docCode != null" >
+        doc_code,
+      </if>
+      <if test="docDes != null" >
+        doc_des,
+      </if>
+      <if test="img != null" >
+        img,
+      </if>
+      <if test="governmentImg != null" >
+        government_img,
+      </if>
+      <if test="sureDocImg != null" >
+        sure_doc_img,
+      </if>
+      <if test="adviser != null" >
+        adviser,
+      </if>
+      <if test="applyTypeCode != null" >
+        apply_type_code,
+      </if>
+      <if test="applyTypeDes != null" >
+        apply_type_des,
+      </if>
+      <if test="protectProduct != null" >
+        protect_product,
+      </if>
+      <if test="applyDate != null" >
+        apply_date,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="agreementId != null" >
+        #{agreementId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="classifyCode != null" >
+        #{classifyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="classifyDes != null" >
+        #{classifyDes,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCode != null" >
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDes != null" >
+        #{statusDes,jdbcType=VARCHAR},
+      </if>
+      <if test="docCode != null" >
+        #{docCode,jdbcType=VARCHAR},
+      </if>
+      <if test="docDes != null" >
+        #{docDes,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="governmentImg != null" >
+        #{governmentImg,jdbcType=VARCHAR},
+      </if>
+      <if test="sureDocImg != null" >
+        #{sureDocImg,jdbcType=VARCHAR},
+      </if>
+      <if test="adviser != null" >
+        #{adviser,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTypeCode != null" >
+        #{applyTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTypeDes != null" >
+        #{applyTypeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="protectProduct != null" >
+        #{protectProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null" >
+        #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        #{deleteFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.resource.model.ResourceTradeMark" >
+    update resource_trade_mark
+    <set >
+      <if test="agreementId != null" >
+        agreement_id = #{agreementId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="classifyCode != null" >
+        classify_code = #{classifyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="classifyDes != null" >
+        classify_des = #{classifyDes,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCode != null" >
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDes != null" >
+        status_des = #{statusDes,jdbcType=VARCHAR},
+      </if>
+      <if test="docCode != null" >
+        doc_code = #{docCode,jdbcType=VARCHAR},
+      </if>
+      <if test="docDes != null" >
+        doc_des = #{docDes,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        img = #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="governmentImg != null" >
+        government_img = #{governmentImg,jdbcType=VARCHAR},
+      </if>
+      <if test="sureDocImg != null" >
+        sure_doc_img = #{sureDocImg,jdbcType=VARCHAR},
+      </if>
+      <if test="adviser != null" >
+        adviser = #{adviser,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTypeCode != null" >
+        apply_type_code = #{applyTypeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTypeDes != null" >
+        apply_type_des = #{applyTypeDes,jdbcType=VARCHAR},
+      </if>
+      <if test="protectProduct != null" >
+        protect_product = #{protectProduct,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null" >
+        apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null" >
+        delete_flag = #{deleteFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.resource.model.ResourceTradeMark" >
+    update resource_trade_mark
+    set agreement_id = #{agreementId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      classify_code = #{classifyCode,jdbcType=VARCHAR},
+      classify_des = #{classifyDes,jdbcType=VARCHAR},
+      status_code = #{statusCode,jdbcType=VARCHAR},
+      status_des = #{statusDes,jdbcType=VARCHAR},
+      doc_code = #{docCode,jdbcType=VARCHAR},
+      doc_des = #{docDes,jdbcType=VARCHAR},
+      img = #{img,jdbcType=VARCHAR},
+      government_img = #{governmentImg,jdbcType=VARCHAR},
+      sure_doc_img = #{sureDocImg,jdbcType=VARCHAR},
+      adviser = #{adviser,jdbcType=VARCHAR},
+      apply_type_code = #{applyTypeCode,jdbcType=VARCHAR},
+      apply_type_des = #{applyTypeDes,jdbcType=VARCHAR},
+      protect_product = #{protectProduct,jdbcType=VARCHAR},
+      apply_date = #{applyDate,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      delete_flag = #{deleteFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="queryList" resultType="io.renren.modules.resource.model.ResourceTradeMark" >
+    select * from resource_trade_mark
+    <where>
+        and delete_flag!='1'
+      <if test="agreementId != null and agreementId.trim() != ''">
+        and agreement_id = #{agreementId,jdbcType=VARCHAR}
+      </if>
+      <if test="adviser != null and adviser.trim() != ''">
+        and adviser = #{adviser,jdbcType=VARCHAR}
+      </if>
+    </where>
+    order by create_date ASC
+    <if test="offset != null and limit != null ">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="queryTotal" resultType="int">
+    select count(1)
+    from resource_trade_mark
+    <where>
+        and delete_flag!='1'
+      <if test="agreementId != null and agreementId.trim() != ''">
+          and agreement_id = #{agreementId,jdbcType=VARCHAR}
+      </if>
+      <if test="adviser != null and adviser.trim() != ''">
+          and adviser = #{adviser,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+</mapper>
