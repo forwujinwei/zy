@@ -19,8 +19,10 @@ public interface ResourceTradeMarkMapper {
 
     int updateByPrimaryKey(ResourceTradeMark record);
 
+    int queryTotal(Map<String, Object> query);
+
     List<ResourceTradeMark> queryList(Map<String, Object> query);
 
-    int queryTotal(Map<String, Object> query);
+    void updateStatusByAgreementId(String agreementId);
 
 }

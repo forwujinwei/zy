@@ -2,6 +2,7 @@ package io.renren.modules.resource.service;
 
 import io.renren.modules.resource.dao.ResourceAgreementMapper;
 import io.renren.modules.resource.model.ResourceAgreement;
+import io.renren.modules.resource.vo.ResourceAgreementVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,7 +18,7 @@ public class ResourceAgreementService {
     @Resource
     private ResourceAgreementMapper resourceAgreementMapper;
 
-   public List<ResourceAgreement> queryList(Map<String, Object> query){
+   public List<ResourceAgreementVo> queryList(Map<String, Object> query){
         return resourceAgreementMapper.queryList(query);
     }
 

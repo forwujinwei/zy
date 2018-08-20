@@ -18,6 +18,8 @@
     <result column="apply_type_code" property="applyTypeCode" jdbcType="VARCHAR" />
     <result column="apply_type_des" property="applyTypeDes" jdbcType="VARCHAR" />
     <result column="protect_product" property="protectProduct" jdbcType="VARCHAR" />
+    <result column="apply_number" property="applyNumber" jdbcType="VARCHAR" />
+    <result column="apply_by" property="applyBy" jdbcType="VARCHAR" />
     <result column="apply_date" property="applyDate" jdbcType="TIMESTAMP" />
     <result column="create_by" property="createBy" jdbcType="VARCHAR" />
     <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
@@ -29,8 +31,8 @@
   <sql id="Base_Column_List" >
     id, agreement_id, name, classify_code, classify_des, status_code, status_des, doc_code, 
     doc_des, img, government_img, sure_doc_img, adviser, apply_type_code, apply_type_des, 
-    protect_product, apply_date, create_by, create_date, update_by, update_date, remarks, 
-    delete_flag
+    protect_product, apply_number, apply_by, apply_date, create_by, create_date, update_by, 
+    update_date, remarks, delete_flag
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -48,17 +50,19 @@
       status_des, doc_code, doc_des, 
       img, government_img, sure_doc_img, 
       adviser, apply_type_code, apply_type_des, 
-      protect_product, apply_date, create_by, 
-      create_date, update_by, update_date, 
-      remarks, delete_flag)
+      protect_product, apply_number, apply_by, 
+      apply_date, create_by, create_date, 
+      update_by, update_date, remarks, 
+      delete_flag)
     values (#{id,jdbcType=VARCHAR}, #{agreementId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{classifyCode,jdbcType=VARCHAR}, #{classifyDes,jdbcType=VARCHAR}, #{statusCode,jdbcType=VARCHAR}, 
       #{statusDes,jdbcType=VARCHAR}, #{docCode,jdbcType=VARCHAR}, #{docDes,jdbcType=VARCHAR}, 
       #{img,jdbcType=VARCHAR}, #{governmentImg,jdbcType=VARCHAR}, #{sureDocImg,jdbcType=VARCHAR}, 
       #{adviser,jdbcType=VARCHAR}, #{applyTypeCode,jdbcType=VARCHAR}, #{applyTypeDes,jdbcType=VARCHAR}, 
-      #{protectProduct,jdbcType=VARCHAR}, #{applyDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
-      #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
-      #{remarks,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=VARCHAR})
+      #{protectProduct,jdbcType=VARCHAR}, #{applyNumber,jdbcType=VARCHAR}, #{applyBy,jdbcType=VARCHAR}, 
+      #{applyDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}, 
+      #{deleteFlag,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.renren.modules.resource.model.ResourceTradeMark" >
     insert into resource_trade_mark
@@ -110,6 +114,12 @@
       </if>
       <if test="protectProduct != null" >
         protect_product,
+      </if>
+      <if test="applyNumber != null" >
+        apply_number,
+      </if>
+      <if test="applyBy != null" >
+        apply_by,
       </if>
       <if test="applyDate != null" >
         apply_date,
@@ -182,6 +192,12 @@
       <if test="protectProduct != null" >
         #{protectProduct,jdbcType=VARCHAR},
       </if>
+      <if test="applyNumber != null" >
+        #{applyNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="applyBy != null" >
+        #{applyBy,jdbcType=VARCHAR},
+      </if>
       <if test="applyDate != null" >
         #{applyDate,jdbcType=TIMESTAMP},
       </if>
@@ -253,6 +269,12 @@
       <if test="protectProduct != null" >
         protect_product = #{protectProduct,jdbcType=VARCHAR},
       </if>
+      <if test="applyNumber != null" >
+        apply_number = #{applyNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="applyBy != null" >
+        apply_by = #{applyBy,jdbcType=VARCHAR},
+      </if>
       <if test="applyDate != null" >
         apply_date = #{applyDate,jdbcType=TIMESTAMP},
       </if>
@@ -294,6 +316,8 @@
       apply_type_code = #{applyTypeCode,jdbcType=VARCHAR},
       apply_type_des = #{applyTypeDes,jdbcType=VARCHAR},
       protect_product = #{protectProduct,jdbcType=VARCHAR},
+      apply_number = #{applyNumber,jdbcType=VARCHAR},
+      apply_by = #{applyBy,jdbcType=VARCHAR},
       apply_date = #{applyDate,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
@@ -304,10 +328,20 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
+
+    <update id="updateStatusByAgreementId"  parameterType="java.lang.String" >
+       update resource_trade_mark
+       set
+          status_code ='TMS_002',
+          status_des = '提交'
+        where agreement_id = #{agreementId,jdbcType=VARCHAR}
+        and delete_flag!='1'
+    </update>
+
   <select id="queryList" resultType="io.renren.modules.resource.model.ResourceTradeMark" >
     select * from resource_trade_mark
     <where>
-        and delete_flag!='1'
+      and delete_flag!='1'
       <if test="agreementId != null and agreementId.trim() != ''">
         and agreement_id = #{agreementId,jdbcType=VARCHAR}
       </if>
@@ -325,12 +359,12 @@
     select count(1)
     from resource_trade_mark
     <where>
-        and delete_flag!='1'
+      and delete_flag!='1'
       <if test="agreementId != null and agreementId.trim() != ''">
-          and agreement_id = #{agreementId,jdbcType=VARCHAR}
+        and agreement_id = #{agreementId,jdbcType=VARCHAR}
       </if>
       <if test="adviser != null and adviser.trim() != ''">
-          and adviser = #{adviser,jdbcType=VARCHAR}
+        and adviser = #{adviser,jdbcType=VARCHAR}
       </if>
     </where>
   </select>

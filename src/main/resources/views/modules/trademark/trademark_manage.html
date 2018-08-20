@@ -5,19 +5,19 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="../../plugins/element/theme-default/index.css">
 	<link rel="stylesheet" href="../../css/bootstrap.min.css">
-	<link rel="stylesheet" href="../../css/font-awesome.min.css">
-	<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
-	<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
 	<link rel="stylesheet" href="../../css/main.css">
-	<script src="../../libs/jquery.min.js"></script>
+	<script src="../../libs/jquery-3.1.1.min.js"></script>
 	<script src="../../plugins/layer/layer.js"></script>
+
 	<script src="../../libs/bootstrap.min.js"></script>
+	<script src="../../libs/json2.js"></script>
 	<script src="../../libs/vue.min.js"></script>
-	<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
-	<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
-	<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
-	<script src="../../js/common.js"></script>
+	<script src="../../libs/axios.min.js"></script>
+	<script src="../../js/axiso.js"></script>
+	<script src="../../plugins/laydate/laydate.js"></script>
+	<script src="../../plugins/element/index.js"></script>
 </head>
 <body>
 <div id="rrapp">
@@ -38,14 +38,188 @@
 				<option value="6">顾问</option>
 				<option value="7">申请方式</option>
 			</select>
-			<input type="text" class="form-control" v-model="q.jobId" @keyup.enter="query" placeholder="任务ID">
-			<a class="btn btn-default" @click="query">查询</a>
+			<input type="text" class="form-control" v-model="condition.inputValue" @keyup.enter="query" placeholder="任务ID">
+			<a class="btn btn-default">查询</a>
 		</div>
 	</div>
-	<table id="jqGrid"></table>
-	<div id="jqGridPager"></div>
+
+	<table class="table table-bordered">
+		<colgroup>
+			<col width="15%">
+			<col width="10%">
+			<col width="10%">
+			<col width="10%">
+			<col width="10%">
+			<col width="10%">
+			<col width="10%">
+			<col width="20%">
+		</colgroup>
+		<thead>
+		<tr>
+			<th>名字</th>
+			<th>分类</th>
+			<th>申请日期</th>
+			<th>申请号</th>
+			<th>状态</th>
+			<th>顾问</th>
+			<th>申请方式</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr v-for="item in tableData">
+			<td>{{item.name}}</td>
+			<td>{{item.classifyDes}}</td>
+			<td>{{item.applyDate|formatterDate}}</td>
+			<td>{{item.applyNumber}}</td>
+			<td>{{item.statusDes}}</td>
+			<td>{{item.adviser}}</td>
+			<td>{{item.applyTypeDes}}</td>
+			<td><div class="btn-group" data-toggle="buttons-radio">
+                <button  class="btn btn-primary btn-padding-reset"
+                         @click="updateTradeMark(item.id)">修改</button>
+				<button  class="btn btn-primary btn-padding-reset"
+						 @click="tradeMarkLog(item.id)">商标日志</button>
+			</div>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	<div class="page-wrap bottom_footer" >
+		<el-pagination
+				class="align-right"
+				@size-change="handleSizeChange"
+				@current-change="handleCurrentChange"
+				:current-page="tableConfig.pageNumber"
+				:page-sizes="[10, 20, 50]"
+				:page-size='tableConfig.pageSize'
+				layout="total, sizes, prev, pager, next, jumper"
+				:total="tableConfig.totalCount">
+		</el-pagination>
+	</div>
+
 </div>
 
-<script src="../../js/modules/trademark/trademark_manage.js"></script>
+
 </body>
+
+<script>
+    new Vue({
+        el:"#rrapp",
+        data(){
+            return {
+                update_agreement_url:'/api/resource/agreement/update',
+                listLoading:false,
+                title:null,
+                showList:true,
+                showAgreement:false,
+                showTradeMark:false,
+                tableData: [],
+                //表格参数
+                tradeMarkTableConfig: {
+                    //总数据
+                    totalCount: 0,
+                    //当前页
+                    pageNumber: 1,
+                    //每页条数
+                    pageSize: 10,
+                },
+                //表格参数
+                tableConfig: {
+                    //总数据
+                    totalCount: 0,
+                    //当前页
+                    pageNumber: 1,
+                    //每页条数
+                    pageSize: 10,
+                },
+                condition: {
+                    queryType: 'AQT_001',
+                    urgent: '00',
+                    queryTypeValue: null,
+                    createStartDate: null,
+                    createEndDate: null,
+                    inputValue:null
+                },
+                tradeMark:{
+                    id:null,
+                    agreementId:null,
+                    name:null,
+                    classifyCode:null,
+                    classifyDes:null,
+                    statusCode:null,
+                    statusDes:null,
+                    docCode:null,
+                    docDes:null,
+                    img:null,
+                    governmentImg:null,
+                    sureDocImg:null,
+                    adviser:null,
+                    applyTypeCode:null,
+                    applyTypeDes:null,
+                    protectProduct:null,
+                    plyDate:null,
+                    createBy:null,
+                    createDate:null,
+                    updateBy:null,
+                    dateDate:null,
+                    remarks:null,
+                    deleteFlag:null
+                }
+
+
+            }
+
+        },
+        methods: {
+            handleCurrentChange(val) {
+                this.tableConfig.pageNumber = val;
+                this.list();
+            },
+            handleSizeChange(val) {
+                this.tableConfig.pageNumber = 1;
+                this.tableConfig.pageSize = val;
+                this.list();
+            },
+            list: function() {
+                var _this=this;
+                _this.tableData = [];
+                axios.get('/api/resource/trademark/list', {
+                    params: {
+                        page: _this.tableConfig.pageNumber,
+                        limit: _this.tableConfig.pageSize
+                    }
+                }).then(function (response) {
+                    console.log(response);
+                    if(response.data.code === 0){
+                        _this.tableData = response.data.page.list;
+                        _this.tableConfig.totalCount = response.data.page.totalCount;
+                    }else{
+                        alert(response.data.msg);
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            updateTradeMark:function(id){
+
+            },
+            tradeMarkLog:function(id){
+
+            }
+
+        },
+        mounted () {
+            this.list();
+        },
+
+        filters: {
+            formatterDate: function (value) {
+                return (value == null || value == undefined) ? "" : value.trim().substring(0, 10);
+            }
+        },
+
+    });
+
+</script>
 </html>

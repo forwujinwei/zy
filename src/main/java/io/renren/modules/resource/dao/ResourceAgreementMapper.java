@@ -1,6 +1,7 @@
 package io.renren.modules.resource.dao;
 
 import io.renren.modules.resource.model.ResourceAgreement;
+import io.renren.modules.resource.vo.ResourceAgreementVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface ResourceAgreementMapper {
 
     int updateByPrimaryKey(ResourceAgreement record);
 
-    List<ResourceAgreement> queryList(Map<String, Object> query);
+    List<ResourceAgreementVo> queryList(Map<String, Object> query);
 
     int queryTotal(Map<String, Object> query);
 }

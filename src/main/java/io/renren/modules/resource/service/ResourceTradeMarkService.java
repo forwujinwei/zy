@@ -41,4 +41,8 @@ public class ResourceTradeMarkService {
     public ResourceTradeMark findById(String id) {
         return resourceTradeMarkMapper.selectByPrimaryKey(id);
     }
+
+    public void updateStatusByAgreementId(String agreementId) {
+        resourceTradeMarkMapper.updateStatusByAgreementId(agreementId);
+    }
 }

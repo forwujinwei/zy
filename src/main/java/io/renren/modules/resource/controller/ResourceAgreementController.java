@@ -9,11 +9,11 @@ import io.renren.modules.api.annotation.LoginUser;
 import io.renren.modules.api.entity.UserEntity;
 import io.renren.modules.resource.model.ResourceAgreement;
 import io.renren.modules.resource.model.ResourcePersonalPoolModel;
+import io.renren.modules.resource.model.ResourceTradeMark;
 import io.renren.modules.resource.service.ResourceAgreementService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import io.renren.modules.resource.service.ResourceTradeMarkService;
+import io.renren.modules.resource.vo.ResourceAgreementVo;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
@@ -30,6 +30,8 @@ import java.util.Map;
 public class ResourceAgreementController {
     @Resource
     private ResourceAgreementService resourceAgreementService;
+    @Resource
+    private ResourceTradeMarkService resourceTradeMarkService;
     /**
      * 保存定时任务
      */
@@ -49,7 +51,7 @@ public class ResourceAgreementController {
         return R.ok();
     }
     /**
-     * 保存定时任务
+     * 合同列表
      */
     @RequestMapping("/list")
     public R list(@LoginUser UserEntity user, @RequestParam(required = false) Map<String, Object> params) throws ParseException {
@@ -66,7 +68,7 @@ public class ResourceAgreementController {
         }
         params.put("username",username);
         Query query = new Query(params);
-        List<ResourceAgreement> resourcePersonalPoolList = resourceAgreementService.queryList(query);
+        List<ResourceAgreementVo> resourcePersonalPoolList = resourceAgreementService.queryList(query);
         int total = resourceAgreementService.queryTotal(query);
         PageUtils pageUtil = new PageUtils(resourcePersonalPoolList, total, query.getLimit(), query.getPage());
         return R.ok().put("page", pageUtil);
@@ -83,6 +85,21 @@ public class ResourceAgreementController {
         resourceAgreement.setStatusDes(DistEnum.getDesByCode(resourceAgreement.getStatusCode()));
 
         resourceAgreementService.update(resourceAgreement);
+        return R.ok();
+    }
+    /**
+     * 合同提交
+     */
+    @RequestMapping("/submit")
+    public R submit(@LoginUser UserEntity user, @RequestParam String agreementId){
+        ResourceAgreement resourceAgreement = new ResourceAgreement();
+        String username = user.getUsername();
+        resourceAgreement.setAgreementId(agreementId);
+        resourceAgreement.setUpdateBy(username);
+        resourceAgreement.setStatusCode(DistEnum.AGREEMENT_STATUS_SUBMIT.getTypeCode());
+        resourceAgreement.setStatusDes(DistEnum.AGREEMENT_STATUS_SUBMIT.getDes());
+        resourceAgreementService.update(resourceAgreement);
+        resourceTradeMarkService.updateStatusByAgreementId(agreementId);
         return R.ok();
     }
 }

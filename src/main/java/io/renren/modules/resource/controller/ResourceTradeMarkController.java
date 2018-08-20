@@ -40,13 +40,12 @@ public class ResourceTradeMarkController {
         resourceTradeMark.setClassifyDes(DistEnum.getDesByCode(resourceTradeMark.getClassifyCode()));
         resourceTradeMark.setDocCode(DistEnum.TRADE_MARK_DOC_TYPE_001.getTypeCode());
         resourceTradeMark.setDocDes(DistEnum.TRADE_MARK_DOC_TYPE_001.getDes());
-        resourceTradeMark.setStatusCode(DistEnum.TRADE_MARK_STATUS_APPLY.getTypeCode());
-        resourceTradeMark.setStatusDes(DistEnum.TRADE_MARK_STATUS_APPLY.getDes());
+        resourceTradeMark.setStatusCode(DistEnum.TRADE_MARK_STATUS_DRAFT.getTypeCode());
+        resourceTradeMark.setStatusDes(DistEnum.TRADE_MARK_STATUS_DRAFT.getDes());
         resourceTradeMark.setApplyTypeDes(DistEnum.getDesByCode(resourceTradeMark.getApplyTypeCode()));
         resourceTradeMark.setCreateBy(username);
         resourceTradeMark.setUpdateBy(username);
         resourceTradeMark.setAdviser(username);
-        resourceTradeMark.setApplyDate(new Date());
         resourceTradeMark.setDeleteFlag("0");
         resourceTradeMarkService.save(resourceTradeMark);
         return R.ok();

@@ -305,8 +305,13 @@
   </update>
 
 
-  <select id="queryList" resultType="io.renren.modules.resource.model.ResourceAgreement">
-    select * from resource_agreement
+  <select id="queryList" resultType="io.renren.modules.resource.vo.ResourceAgreementVo">
+    SELECT A.*,
+    GROUP_CONCAT(B.name SEPARATOR '|') AS tradeMarkName
+    FROM `resource_agreement` A
+        LEFT JOIN `resource_trade_mark` B
+        ON A.`agreement_id`=B.`agreement_id` AND B.`delete_flag`!='1'
+    GROUP BY agreement_id
     <if test="offset != null and limit != null ">
       limit #{offset}, #{limit}
     </if>

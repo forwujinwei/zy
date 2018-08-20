@@ -88,9 +88,14 @@
                     </thead>
                     <tbody>
                         <tr v-for="item in tableData">
-                            <td >{{item.agreementId}}</td>
+                            <td>{{item.agreementId}}</td>
                             <td>{{item.typeDes}}</td>
-                            <td>{{item.tradeMarkName}}</td>
+                            <td>
+                                <span v-for="(nameMap,index) in item.tradeMarkNameArray">
+                                      {{nameMap.name}}
+                                     <hr v-if="index<item.tradeMarkNameArray.length-1">
+                                </span>
+                            </td>
                             <td>{{item.allcost}}</td>
                             <td>{{item.earnest}}</td>
                             <td>{{item.finalPayment}}</td>
@@ -556,9 +561,9 @@
             submitAgreement:function(id){
                 var _this=this;
                 alert('提交后不可修改合同信息，是否提交', function(){
-                    axios.post(_this.update_agreement_url,{
-                        agreementId: id,
-                        statusCode:'AGS_002'
+                    axios.get('/api/resource/agreement/submit',{params:{
+                            agreementId: id,
+                        }
                     }).then(function (response) {
                             if(response.data.code === 0){
                                 alert('操作成功', function(){

@@ -35,6 +35,10 @@ public class ResourceTradeMark {
 
     private String protectProduct;
 
+    private String applyNumber;
+
+    private String applyBy;
+
     private Date applyDate;
 
     private String createBy;
@@ -175,6 +179,22 @@ public class ResourceTradeMark {
 
     public void setProtectProduct(String protectProduct) {
         this.protectProduct = protectProduct;
+    }
+
+    public String getApplyNumber() {
+        return applyNumber;
+    }
+
+    public void setApplyNumber(String applyNumber) {
+        this.applyNumber = applyNumber;
+    }
+
+    public String getApplyBy() {
+        return applyBy;
+    }
+
+    public void setApplyBy(String applyBy) {
+        this.applyBy = applyBy;
     }
 
     public Date getApplyDate() {

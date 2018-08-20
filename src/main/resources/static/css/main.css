@@ -87,3 +87,12 @@ button.btn.btn-padding-reset{
     margin-bottom:0px;
     border:none;
 }
+
+hr{
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.table tbody tr td{
+    vertical-align: middle;
+}
