@@ -45,4 +45,8 @@ public class ResourceTradeMarkService {
     public void updateStatusByAgreementId(String agreementId) {
         resourceTradeMarkMapper.updateStatusByAgreementId(agreementId);
     }
+
+    public List<ResourceTradeMark> selectByResourceId(String agreementId) {
+        return resourceTradeMarkMapper.selectByResourceId(agreementId);
+    }
 }

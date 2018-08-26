@@ -23,4 +23,6 @@ public interface ResourceAgreementMapper {
     List<ResourceAgreementVo> queryList(Map<String, Object> query);
 
     int queryTotal(Map<String, Object> query);
+
+    Map<String,String> selectFromByPrimaryKey(String agreementId);
 }

@@ -25,4 +25,5 @@ public interface ResourceTradeMarkMapper {
 
     void updateStatusByAgreementId(String agreementId);
 
+    List<ResourceTradeMark> selectByResourceId(String agreementId);
 }

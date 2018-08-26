@@ -33,4 +33,14 @@ public class ResourceAgreementService {
     public void update(ResourceAgreement resourceAgreement) {
         resourceAgreementMapper.updateByPrimaryKeySelective(resourceAgreement);
     }
+
+    public ResourceAgreement selectByPrimaryKey(String agreementId) {
+        return resourceAgreementMapper.selectByPrimaryKey(agreementId);
+
+    }
+
+    public Map<String, String> selectFromByPrimaryKey(String agreementId) {
+
+        return resourceAgreementMapper.selectFromByPrimaryKey(agreementId);
+    }
 }

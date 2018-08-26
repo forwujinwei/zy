@@ -10,6 +10,7 @@ import io.renren.modules.api.entity.UserEntity;
 import io.renren.modules.resource.model.ResourceAgreement;
 import io.renren.modules.resource.model.ResourcePersonalPoolModel;
 import io.renren.modules.resource.model.ResourceTradeMark;
+import io.renren.modules.resource.service.CommonService;
 import io.renren.modules.resource.service.ResourceAgreementService;
 import io.renren.modules.resource.service.ResourceTradeMarkService;
 import io.renren.modules.resource.vo.ResourceAgreementVo;
@@ -32,6 +33,8 @@ public class ResourceAgreementController {
     private ResourceAgreementService resourceAgreementService;
     @Resource
     private ResourceTradeMarkService resourceTradeMarkService;
+    @Resource
+    private CommonService commonService;
     /**
      * 保存定时任务
      */
@@ -91,15 +94,27 @@ public class ResourceAgreementController {
      * 合同提交
      */
     @RequestMapping("/submit")
-    public R submit(@LoginUser UserEntity user, @RequestParam String agreementId){
+    public R submit(@LoginUser UserEntity user, @RequestParam String agreementId) throws Exception {
+        //生成合同pdf
+        //获取合同信息
+        Map<String,String> agreementFormFieldMap = resourceAgreementService.selectFromByPrimaryKey(agreementId);
+
+        //获取商标信息
+        List<ResourceTradeMark> resourceTradeMarks = resourceTradeMarkService.selectByResourceId(agreementId);
+        Map<String, String> pdfNameMap = commonService.manipulatePdf(agreementFormFieldMap, resourceTradeMarks);
+        //修改数据库
         ResourceAgreement resourceAgreement = new ResourceAgreement();
         String username = user.getUsername();
         resourceAgreement.setAgreementId(agreementId);
+        resourceAgreement.setNonChapterFileName(pdfNameMap.get("nonChapterFileName"));
+        resourceAgreement.setHasChapterFileName(pdfNameMap.get("hasChapterFileName"));
         resourceAgreement.setUpdateBy(username);
         resourceAgreement.setStatusCode(DistEnum.AGREEMENT_STATUS_SUBMIT.getTypeCode());
         resourceAgreement.setStatusDes(DistEnum.AGREEMENT_STATUS_SUBMIT.getDes());
         resourceAgreementService.update(resourceAgreement);
         resourceTradeMarkService.updateStatusByAgreementId(agreementId);
+
+
         return R.ok();
     }
 }

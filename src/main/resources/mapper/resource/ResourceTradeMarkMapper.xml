@@ -368,4 +368,11 @@
       </if>
     </where>
   </select>
+
+  <select id="selectByResourceId" resultType="io.renren.modules.resource.model.ResourceTradeMark" >
+    select *
+    from resource_trade_mark
+    where agreement_id = #{agreementId,jdbcType=VARCHAR}
+
+  </select>
 </mapper>

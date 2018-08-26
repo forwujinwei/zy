@@ -23,8 +23,11 @@ spring:
             max-request-size: 100MB
             enabled: true
     # 指定静态资源的路径
+
+    mvc:
+        static-path-pattern: /**
     resources:
-        static-locations: classpath:/static/,classpath:/views/
+        static-locations: classpath:/static/,classpath:/views/,file:${web.upload-path}
     redis:
         open: false  # 是否开启redis缓存  true开启   false关闭
         database: 0

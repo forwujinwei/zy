@@ -39,6 +39,10 @@ public class ResourceAgreement {
 
     private String urgentDes;
 
+    private String nonChapterFileName;
+
+    private String hasChapterFileName;
+
     private String createBy;
 
     private Date createDate;
@@ -191,6 +195,22 @@ public class ResourceAgreement {
 
     public void setUrgentDes(String urgentDes) {
         this.urgentDes = urgentDes;
+    }
+
+    public String getNonChapterFileName() {
+        return nonChapterFileName;
+    }
+
+    public void setNonChapterFileName(String nonChapterFileName) {
+        this.nonChapterFileName = nonChapterFileName;
+    }
+
+    public String getHasChapterFileName() {
+        return hasChapterFileName;
+    }
+
+    public void setHasChapterFileName(String hasChapterFileName) {
+        this.hasChapterFileName = hasChapterFileName;
     }
 
     public String getCreateBy() {

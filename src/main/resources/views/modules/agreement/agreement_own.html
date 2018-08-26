@@ -11,12 +11,12 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
     <link rel="stylesheet" href="../../plugins/element/theme-default/index.css">
-    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap-3.3.7/css/bootstrap.css">
     <link rel="stylesheet" href="../../css/main.css">
     <script src="../../libs/jquery-3.1.1.min.js"></script>
     <script src="../../plugins/layer/layer.js"></script>
 
-    <script src="../../libs/bootstrap.min.js"></script>
+    <script src="../../plugins/bootstrap-3.3.7/js/bootstrap.js"></script>
     <script src="../../libs/json2.js"></script>
     <script src="../../libs/vue.min.js"></script>
     <script src="../../libs/axios.min.js"></script>
@@ -105,11 +105,11 @@
                             <td>{{item.createDate|formatterDate}}</td>
                             <td><div class="btn-group" data-toggle="buttons-radio">
                                 <button  class="btn btn-primary btn-padding-reset"
-                                         @click="downLoadAgreement(item.agreementId)">下载</button>
+                                         @click="downLoadAgreement(item.nonChapterFileName,item.hasChapterFileName)">下载</button>
                                 <button  class="btn btn-primary btn-padding-reset"
-                                         @click="showUpdateAgreement(item.agreementId)">修改</button>
+                                         @click="showUpdateAgreement(item.agreementId)" :disabled="item.statusCode=='AGS_002'">修改</button>
                                 <button  class="btn btn-primary btn-padding-reset"
-                                         @click="submitAgreement(item.agreementId)">提交</button>
+                                         @click="submitAgreement(item.agreementId)" :disabled="item.statusCode=='AGS_002'">提交</button>
                             </div>
                             </td>
                         </tr>
@@ -532,8 +532,11 @@
                 _this.showTradeMark=true;
 
             },
-            downLoadAgreement:function(id){
-
+            downLoadAgreement:function(nonChapterFileName,hasChapterFileName){
+               alert("<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/has/"+hasChapterFileName+"'>有章合同(支持在线打印)</a> " +
+                       "</br>"+
+                       "<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/non/"+ nonChapterFileName+"'>无章合同(支持在线打印)</a>"
+                   )
             },
             backToAgreement:function(agreementId){
                 var _this=this;
@@ -548,7 +551,7 @@
                      .then(function (response) {
                         if(response.data.code === 0){
                             alert('操作成功', function(){
-
+                                _this.list();
                             });
                         }else{
                             alert(response.data.msg);
@@ -567,7 +570,7 @@
                     }).then(function (response) {
                             if(response.data.code === 0){
                                 alert('操作成功', function(){
-
+                                    _this.list();
                                 });
                             }else{
                                 alert(response.data.msg);
@@ -577,6 +580,7 @@
                         }
                     );
                 });
+
 
             },
             downLoadSureDoc:function(id){

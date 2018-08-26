@@ -1,3 +1,6 @@
+web.upload-path: D:/app_data/
+nonChapterFileDir: D:/app_data/pdfData/non_chapter/
+hasChapterFileDir: D:/app_data/pdfData/has_chapter/
 spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource

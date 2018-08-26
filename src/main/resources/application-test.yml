@@ -1,3 +1,4 @@
+web.upload-path: D:/temp/study13/
 spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
