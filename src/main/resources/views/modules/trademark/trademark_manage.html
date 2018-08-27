@@ -1,102 +1,213 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>商标管理</title>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-	<link rel="stylesheet" href="../../plugins/element/theme-default/index.css">
-    <link rel="stylesheet" href="../../plugins/bootstrap-3.3.7/bootstrap.css">
-	<link rel="stylesheet" href="../../css/main.css">
-	<script src="../../libs/jquery-3.1.1.min.js"></script>
-	<script src="../../plugins/layer/layer.js"></script>
+    <title>商标管理</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../../plugins/element/theme-default/index.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="../../css/main.css">
+    <script src="../../libs/jquery-3.1.1.min.js"></script>
+    <script src="../../plugins/layer/layer.js"></script>
 
-	<script src="../../libs/bootstrap.min.js"></script>
-	<script src="../../libs/json2.js"></script>
-	<script src="../../libs/vue.min.js"></script>
-	<script src="../../libs/axios.min.js"></script>
-	<script src="../../js/axiso.js"></script>
-	<script src="../../plugins/laydate/laydate.js"></script>
-	<script src="../../plugins/element/index.js"></script>
+    <script src="../../plugins/bootstrap-3.3.7/js/bootstrap.js"></script>
+    <script src="../../libs/json2.js"></script>
+    <script src="../../libs/vue.min.js"></script>
+    <script src="../../libs/axios.min.js"></script>
+    <script src="../../js/axiso.js"></script>
+    <script src="../../plugins/laydate/laydate.js"></script>
+    <script src="../../plugins/element/index.js"></script>
 </head>
 <body>
 <div id="rrapp">
-	<div class="grid-btn">
-		<div class="form-group col-sm-2">
-			<select name="searchK" id="searchK">
+    <div  class="form-group form-inline row">
+        <div class="form-group">
+            <select class="form-control">
+                <option value="1">商标名称</option>
+                <option value="2">申请号</option>
+                <option value="3">申请日期</option>
+                <option value="4">联系电话</option>
+                <option value="5">联系人</option>
+                <option value="6">顾问</option>
+                <option value="7">申请方式</option>
+            </select>
+            <input type="text" class="form-control" v-model="condition.inputValue" @keyup.enter="query" placeholder="任务ID">
+            <a class="btn btn-default">查询</a>
+        </div>
+    </div>
 
-				<option value="1">商标名称</option>
-
-				<option value="2">申请号</option>
-
-				<option value="3">申请日期</option>
-
-				<option value="4">联系电话</option>
-
-				<option value="5">联系人</option>
-
-				<option value="6">顾问</option>
-				<option value="7">申请方式</option>
-			</select>
-			<input type="text" class="form-control" v-model="condition.inputValue" @keyup.enter="query" placeholder="任务ID">
-			<a class="btn btn-default">查询</a>
-		</div>
-	</div>
-
-	<table class="table table-bordered">
-		<colgroup>
-			<col width="15%">
-			<col width="10%">
-			<col width="10%">
-			<col width="10%">
-			<col width="10%">
-			<col width="10%">
-			<col width="10%">
-			<col width="20%">
-		</colgroup>
-		<thead>
-		<tr>
-			<th>名字</th>
-			<th>分类</th>
-			<th>申请日期</th>
-			<th>申请号</th>
-			<th>状态</th>
-			<th>顾问</th>
-			<th>申请方式</th>
-			<th>操作</th>
-		</tr>
-		</thead>
-		<tbody>
-		<tr v-for="item in tableData">
-			<td>{{item.name}}</td>
-			<td>{{item.classifyDes}}</td>
-			<td>{{item.applyDate|formatterDate}}</td>
-			<td>{{item.applyNumber}}</td>
-			<td>{{item.statusDes}}</td>
-			<td>{{item.adviser}}</td>
-			<td>{{item.applyTypeDes}}</td>
-			<td><div class="btn-group" data-toggle="buttons-radio">
+    <table class="table table-bordered">
+        <colgroup>
+            <col width="15%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="10%">
+            <col width="20%">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>名字</th>
+            <th>分类</th>
+            <th>申请日期</th>
+            <th>申请号</th>
+            <th>状态</th>
+            <th>顾问</th>
+            <th>申请方式</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in tableData">
+            <td>{{item.name}}</td>
+            <td>{{item.classifyDes}}</td>
+            <td>{{item.applyDate|formatterDate}}</td>
+            <td>{{item.applyNumber}}</td>
+            <td>{{item.statusDes}}</td>
+            <td>{{item.adviser}}</td>
+            <td>{{item.applyTypeDes}}</td>
+            <td><div class="btn-group" data-toggle="buttons-radio">
+                <button  class="btn btn-primary btn-padding-reset" data-toggle="modal"
+                         @click="showUpdateTradeMark(item.id)">修改</button>
                 <button  class="btn btn-primary btn-padding-reset"
-                         @click="updateTradeMark(item.id)">修改</button>
-				<button  class="btn btn-primary btn-padding-reset"
-						 @click="tradeMarkLog(item.id)">商标日志</button>
-			</div>
-			</td>
-		</tr>
-		</tbody>
-	</table>
-	<div class="page-wrap bottom_footer" >
-		<el-pagination
-				class="align-right"
-				@size-change="handleSizeChange"
-				@current-change="handleCurrentChange"
-				:current-page="tableConfig.pageNumber"
-				:page-sizes="[10, 20, 50]"
-				:page-size='tableConfig.pageSize'
-				layout="total, sizes, prev, pager, next, jumper"
-				:total="tableConfig.totalCount">
-		</el-pagination>
-	</div>
+                         @click="searchTradeMarkLog(item.id)">商标日志</button>
+            </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="page-wrap bottom_footer" >
+        <el-pagination
+                class="align-right"
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="tableConfig.pageNumber"
+                :page-sizes="[10, 20, 50]"
+                :page-size='tableConfig.pageSize'
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="tableConfig.totalCount">
+        </el-pagination>
+    </div>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        修改商标
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form  class="form-horizontal">
+                        <input type="text"  v-model="tradeMarkLog.tradeMarkId" class="form-control hidden"  >
+                        <div  class="form-group">
+                            <div class="col-sm-2 control-label">操  作</div>
+                            <div class="col-sm-10">
+                                <select  v-model="tradeMarkLog.operation" class="form-control ">
+                                    <option value="TMS_003">修改商标状态</option>
+                                    <option value="TMS_004">修改商标信息</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div  class="form-group">
+                            <div class="col-sm-2 control-label">状  态</div>
+                            <div class="col-sm-10">
+                                <select  v-model="tradeMarkLog.statusCode" class="form-control ">
+                                    <option value="00">选择状态</option>
+                                    <option value="TMS_003">申请</option>
+                                    <option value="TMS_004">下达受理</option>
+                                    <option value="TMS_005">初审公告</option>
+                                    <option value="TMS_006">驳回</option>
+                                    <option value="TMS_007">异议</option>
+                                    <option value="TMS_008">下证</option>
+                                    <option value="TMS_009">其他</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div v-show="tradeMarkLog.statusCode=='TMS_003'" class="form-group">
+                            <div class="col-sm-2 control-label">申请号</div>
+                            <div class="col-sm-10">
+                                <input type="text"  v-model="tradeMarkLog.applyNumber" class="form-control">
+                            </div>
+                        </div>
+                        <div v-show="tradeMarkLog.statusCode=='TMS_004' || tradeMarkLog.statusCode=='TMS_005' || tradeMarkLog.statusCode=='TMS_008'" class="form-group">
+                            <div class="col-sm-2 control-label">图  片</div>
+                            <div class="col-sm-10">
+                                <input type="file"  class="projectfile" v-model="tradeMarkLog.img"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">备  注</div>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="3" v-model="tradeMarkLog.remark" ></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" @click="saveTradeMarkLog">
+                        提交
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--查看日志-->
+    <div class="modal fade" id="tradeMarkLog" tabindex="-1" role="dialog" aria-labelledby="tradeMarkLogLabel" aria-hidden="true">
+        <div class="modal-dialog form-max-panel">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="tradeMarkLogLabel">
+                        商标修改日志
+                    </h4>
+                </div>
+                <div class="modal-body ">
+                    <table class="table table-bordered">
+                        <colgroup>
+                            <col width="20%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="20%">
+                            <col width="30%">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>时间</th>
+                            <th>用户</th>
+                            <th>文件</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                            <th>备注</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="log in tradeMarkLogData">
+                            <td>{{log.createDate}}</td>
+                            <td>{{log.createBy}}</td>
+                            <td>{{log.img}}</td>
+                            <td>{{log.statusDes}}</td>
+                            <td>{{log.operation}}</td>
+                            <td>{{log.remark}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -115,6 +226,7 @@
                 showAgreement:false,
                 showTradeMark:false,
                 tableData: [],
+                tradeMarkLogData: [],
                 //表格参数
                 tradeMarkTableConfig: {
                     //总数据
@@ -165,6 +277,15 @@
                     dateDate:null,
                     remarks:null,
                     deleteFlag:null
+                },
+                tradeMarkLog:{
+                    id:null,
+                    tradeMarkId:null,
+                    statusCode:'00',
+                    applyNumber:null,
+                    img:null,
+                    remark:null,
+                    operation:null
                 }
 
 
@@ -201,12 +322,47 @@
                     console.log(error);
                 });
             },
-            updateTradeMark:function(id){
-
+            showUpdateTradeMark: function(id){
+                $("#myModal").modal('show');
+                var _this=this;
+                _this.tradeMarkLog.tradeMarkId=id;
             },
-            tradeMarkLog:function(id){
+            saveTradeMarkLog:function(){
+                var _this=this;
+                axios.post('/api/tradeMark/log/save',_this.tradeMarkLog)
+                    .then(function (response) {
+                        if(response.data.code === 0){
+                            alert('操作成功', function(){
+                                $("#myModal").modal('hide');
+                                _this.list();
+                            });
+                        }else{
+                            alert(response.data.msg);
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    }
+                );
+            },
+            searchTradeMarkLog:function(tradeMarkId){
+                var _this=this;
+                _this.tradeMarkLogData = [];
+                $("#tradeMarkLog").modal('show');
+                axios.get('/api/tradeMark/log/list/'+tradeMarkId, {
+                    params: {}
+                }).then(function (response) {
+                    console.log(response);
+                    if(response.data.code === 0){
+                        _this.tradeMarkLogData = response.data.data;
+                    }else{
+                        alert(response.data.msg);
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
 
             }
+
 
         },
         mounted () {
