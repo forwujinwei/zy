@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.renren.modules.resource.dao.TradeMarkLogMapper" >
+  <resultMap id="BaseResultMap" type="io.renren.modules.resource.model.TradeMarkLog" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="trade_mark_id" property="tradeMarkId" jdbcType="VARCHAR" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+    <result column="status_des" property="statusDes" jdbcType="VARCHAR" />
+    <result column="apply_number" property="applyNumber" jdbcType="VARCHAR" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="operation_code" property="operationCode" jdbcType="VARCHAR" />
+    <result column="operation_des" property="operationDes" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, trade_mark_id, status_code, status_des, apply_number, img, operation_code, operation_des, 
+    remark, create_by, create_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from resource_trade_mark_log
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from resource_trade_mark_log
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="io.renren.modules.resource.model.TradeMarkLog" >
+    insert into resource_trade_mark_log (id, trade_mark_id, status_code, 
+      status_des, apply_number, img, 
+      operation_code, operation_des, remark, 
+      create_by, create_date)
+    values (#{id,jdbcType=VARCHAR}, #{tradeMarkId,jdbcType=VARCHAR}, #{statusCode,jdbcType=VARCHAR}, 
+      #{statusDes,jdbcType=VARCHAR}, #{applyNumber,jdbcType=VARCHAR}, #{img,jdbcType=VARCHAR}, 
+      #{operationCode,jdbcType=VARCHAR}, #{operationDes,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="io.renren.modules.resource.model.TradeMarkLog" >
+    insert into resource_trade_mark_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="tradeMarkId != null" >
+        trade_mark_id,
+      </if>
+      <if test="statusCode != null" >
+        status_code,
+      </if>
+      <if test="statusDes != null" >
+        status_des,
+      </if>
+      <if test="applyNumber != null" >
+        apply_number,
+      </if>
+      <if test="img != null" >
+        img,
+      </if>
+      <if test="operationCode != null" >
+        operation_code,
+      </if>
+      <if test="operationDes != null" >
+        operation_des,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeMarkId != null" >
+        #{tradeMarkId,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCode != null" >
+        #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDes != null" >
+        #{statusDes,jdbcType=VARCHAR},
+      </if>
+      <if test="applyNumber != null" >
+        #{applyNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="operationCode != null" >
+        #{operationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operationDes != null" >
+        #{operationDes,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.resource.model.TradeMarkLog" >
+    update resource_trade_mark_log
+    <set >
+      <if test="tradeMarkId != null" >
+        trade_mark_id = #{tradeMarkId,jdbcType=VARCHAR},
+      </if>
+      <if test="statusCode != null" >
+        status_code = #{statusCode,jdbcType=VARCHAR},
+      </if>
+      <if test="statusDes != null" >
+        status_des = #{statusDes,jdbcType=VARCHAR},
+      </if>
+      <if test="applyNumber != null" >
+        apply_number = #{applyNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        img = #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="operationCode != null" >
+        operation_code = #{operationCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operationDes != null" >
+        operation_des = #{operationDes,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.resource.model.TradeMarkLog" >
+    update resource_trade_mark_log
+    set trade_mark_id = #{tradeMarkId,jdbcType=VARCHAR},
+      status_code = #{statusCode,jdbcType=VARCHAR},
+      status_des = #{statusDes,jdbcType=VARCHAR},
+      apply_number = #{applyNumber,jdbcType=VARCHAR},
+      img = #{img,jdbcType=VARCHAR},
+      operation_code = #{operationCode,jdbcType=VARCHAR},
+      operation_des = #{operationDes,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="selectByTradeMarkId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from resource_trade_mark_log
+    where trade_mark_id = #{tradeMarkId,jdbcType=VARCHAR}
+    order by create_date desc
+  </select>
+</mapper>
