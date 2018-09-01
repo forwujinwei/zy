@@ -90,6 +90,7 @@ public class ResourceTradeMarkController {
         if(StringUtils.isNotBlank(resourceTradeMark.getDocCode())){
             resourceTradeMark.setDocDes(DistEnum.getDesByCode(resourceTradeMark.getDocCode()));
         }
+
         resourceTradeMarkService.update(resourceTradeMark);
         return R.ok();
     }

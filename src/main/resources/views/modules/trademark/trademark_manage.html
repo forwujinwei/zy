@@ -112,9 +112,9 @@
                         <div  class="form-group">
                             <div class="col-sm-2 control-label">操  作</div>
                             <div class="col-sm-10">
-                                <select  v-model="tradeMarkLog.operation" v-validate="'required'" name="操作" class="form-control ">
-                                    <option value="TMS_003">修改商标状态</option>
-                                    <option value="TMS_004">修改商标信息</option>
+                                <select  v-model="tradeMarkLog.operationCode" v-validate="'required'" name="操作" class="form-control ">
+                                    <option value="TMO_001">修改商标状态</option>
+                                    <option value="TMO_002">修改商标信息</option>
                                 </select>
                             </div>
                         </div>
@@ -201,7 +201,7 @@
                             <td>{{log.createBy}}</td>
                             <td>{{log.img}}</td>
                             <td>{{log.statusDes}}</td>
-                            <td>{{log.operation}}</td>
+                            <td>{{log.operationDes}}</td>
                             <td>{{log.remark}}</td>
                         </tr>
                         </tbody>
@@ -289,7 +289,7 @@
                     applyNumber:null,
                     img:null,
                     remark:null,
-                    operation:null
+                    operationCode:null
                 }
 
 
@@ -330,6 +330,11 @@
                 $("#myModal").modal('show');
                 var _this=this;
                 _this.tradeMarkLog.tradeMarkId=id;
+                _this.tradeMarkLog.statusCode='00',
+                _this.tradeMarkLog.applyNumber=null,
+                _this.tradeMarkLog.img=null,
+                _this.tradeMarkLog.remark=null,
+                _this.tradeMarkLog.operationCode=null
             },
             saveTradeMarkLog:function(){
                 var _this=this;

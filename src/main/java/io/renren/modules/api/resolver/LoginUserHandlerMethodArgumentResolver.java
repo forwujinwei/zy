@@ -4,6 +4,8 @@ import io.renren.modules.api.annotation.LoginUser;
 import io.renren.modules.api.entity.UserEntity;
 import io.renren.modules.api.interceptor.AuthorizationInterceptor;
 import io.renren.modules.api.service.UserService;
+import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -12,6 +14,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
+import javax.annotation.Resource;
 
 /**
  * 有@LoginUser注解的方法参数，注入当前登录用户
@@ -23,7 +27,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     @Autowired
     private UserService userService;
-
+    @Resource
+    private SysUserService sysUserService;
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.getParameterType().isAssignableFrom(UserEntity.class) && parameter.hasParameterAnnotation(LoginUser.class);
@@ -39,8 +44,11 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
         }
 
         //获取用户信息
-        UserEntity user = userService.queryObject((Long)object);
-
-        return user;
+        //UserEntity user = userService.queryObject((Long)object);
+        SysUserEntity sysUserEntity = sysUserService.queryObject((Long) object);
+       UserEntity userEntity = new UserEntity();
+        userEntity.setUserId(sysUserEntity.getUserId());
+        userEntity.setUsername(sysUserEntity.getUsername());
+        return userEntity;
     }
 }

@@ -9,9 +9,11 @@ import io.renren.modules.api.annotation.LoginUser;
 import io.renren.modules.api.entity.UserEntity;
 import io.renren.modules.resource.model.ResourceAgreement;
 import io.renren.modules.resource.model.ResourcePersonalPoolModel;
+import io.renren.modules.resource.model.ResourcePoolModel;
 import io.renren.modules.resource.model.ResourceTradeMark;
 import io.renren.modules.resource.service.CommonService;
 import io.renren.modules.resource.service.ResourceAgreementService;
+import io.renren.modules.resource.service.ResourcePoolService;
 import io.renren.modules.resource.service.ResourceTradeMarkService;
 import io.renren.modules.resource.vo.ResourceAgreementVo;
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +33,8 @@ import java.util.Map;
 @RequestMapping("/api/resource/agreement")
 @RestController
 public class ResourceAgreementController {
+    @Resource
+    private ResourcePoolService resourcePoolService;
     @Resource
     private ResourceAgreementService resourceAgreementService;
     @Resource
@@ -53,6 +57,14 @@ public class ResourceAgreementController {
         resourceAgreement.setUrgentCode(DistEnum.URGENT_NO.getTypeCode());
         resourceAgreement.setUrgentDes(DistEnum.URGENT_NO.getDes());
         resourceAgreementService.save(resourceAgreement);
+        //更新资源表
+        ResourcePoolModel resourcePoolModel = new ResourcePoolModel();
+        resourcePoolModel.setUpdateBy(username);
+        resourcePoolModel.setId(resourceAgreement.getResourceId());
+        resourcePoolModel.setAgreementId(resourceAgreement.getAgreementId());
+        resourcePoolModel.setStatusCode(DistEnum.RESOURCE_STATUS_SIGN_AGREEMENT.getTypeCode());
+        resourcePoolModel.setStatusDes(DistEnum.RESOURCE_STATUS_SIGN_AGREEMENT.getDes());
+        resourcePoolService.update(resourcePoolModel);
         return R.ok();
     }
     /**

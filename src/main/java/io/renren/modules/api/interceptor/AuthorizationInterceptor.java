@@ -5,6 +5,8 @@ import io.renren.common.exception.RRException;
 import io.renren.modules.api.annotation.AuthIgnore;
 import io.renren.modules.api.entity.TokenEntity;
 import io.renren.modules.api.service.TokenService;
+import io.renren.modules.sys.entity.SysUserTokenEntity;
+import io.renren.modules.sys.service.SysUserTokenService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private SysUserTokenService sysUserTokenService;
 
     public static final String USER_KEY = "userId";
 
@@ -54,13 +58,15 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
 
         //查询token信息
-        TokenEntity tokenEntity = tokenService.queryByToken(token);
-        if(tokenEntity == null || tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()){
+        //TokenEntity tokenEntity = tokenService.queryByToken(token);
+
+        SysUserTokenEntity sysUserTokenEntity = sysUserTokenService.queryByToken(token);
+        if(sysUserTokenEntity == null || sysUserTokenEntity.getExpireTime().getTime() < System.currentTimeMillis()){
             throw new RRException("token失效，请重新登录");
         }
 
         //设置userId到request里，后续根据userId，获取用户信息
-        request.setAttribute(USER_KEY, tokenEntity.getUserId());
+        request.setAttribute(USER_KEY, sysUserTokenEntity.getUserId());
 
         return true;
     }

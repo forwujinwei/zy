@@ -11,6 +11,7 @@ import io.renren.modules.api.entity.UserEntity;
 import io.renren.modules.resource.model.ResourcePersonalPoolModel;
 import io.renren.modules.resource.model.ResourcePoolModel;
 import io.renren.modules.resource.service.ResourcePoolService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -32,12 +33,17 @@ public class ResourcePoolController {
 
     @Resource
     private ResourcePoolService resourcePoolService;
-    @AuthIgnore
+
     @RequestMapping("/{dataSourceCode}/list/{statusCode}")
-    public R list(@PathVariable String dataSourceCode,@PathVariable String statusCode, @RequestParam Map<String, Object> params) throws ParseException {
+    public R list(@LoginUser UserEntity user, @PathVariable String dataSourceCode,@PathVariable String statusCode, @RequestParam Map<String, Object> params) throws ParseException {
         //查询列表数据
-        params.put("dataSourceCode",dataSourceCode);
+        String username = user.getUsername();
+        if(StringUtils.isBlank(username)){
+            return R.error("用户不存在，请联系管理员");
+        }
         params.put("statusCode",statusCode);
+        params.put("dataSourceCode",dataSourceCode);
+        params.put("username",username);
         Object submitStartDate = params.get("submitStartDate");
         Object submitEndDate = params.get("submitEndDate");
         Object sureStartDate = params.get("sureStartDate");
@@ -66,16 +72,23 @@ public class ResourcePoolController {
     /**
      * 保存定时任务
      */
-    @RequestMapping("/save")
-    public R save(@LoginUser UserEntity user, @RequestBody ResourcePoolModel resourcePoolModel){
+    @RequestMapping("/save/{dataSourceCode}/{resourceOption}")
+    public R save(@LoginUser UserEntity user, @PathVariable String dataSourceCode,@PathVariable String resourceOption, @RequestBody ResourcePoolModel resourcePoolModel){
         ValidatorUtils.validateEntity(resourcePoolModel);
         String username = user.getUsername();
         resourcePoolModel.setId(UUID.randomUUID().toString().replaceAll("-",""));
         resourcePoolModel.setCreateBy(username);
         resourcePoolModel.setUpdateBy(username);
         resourcePoolModel.setAdviser(username);
-        resourcePoolModel.setStatusCode(DistEnum.RESOURCE_STATUS_NO_SURE.getTypeCode());
-        resourcePoolModel.setStatusDes(DistEnum.RESOURCE_STATUS_NO_SURE.getDes());
+        resourcePoolModel.setDataSourceCode(dataSourceCode);
+        resourcePoolModel.setDataSourceDes(DistEnum.getDesByCode(dataSourceCode));
+        if(resourceOption.equals(DistEnum.RESOURCE_FROM_ENTERING.getTypeCode())){
+            resourcePoolModel.setStatusCode(DistEnum.RESOURCE_STATUS_SURE.getTypeCode());
+            resourcePoolModel.setStatusDes(DistEnum.RESOURCE_STATUS_SURE.getDes());
+        }else{
+            resourcePoolModel.setStatusCode(DistEnum.RESOURCE_STATUS_NO_SURE.getTypeCode());
+            resourcePoolModel.setStatusDes(DistEnum.RESOURCE_STATUS_NO_SURE.getDes());
+        }
         resourcePoolModel.setSourceDes(DistEnum.getDesByCode(resourcePoolModel.getSourceCode()));
         resourcePoolModel.setTypeDes(DistEnum.getDesByCode(resourcePoolModel.getTypeCode()));
         resourcePoolModel.setAcrossCode(DistEnum.ACROSS_TYPE_HOME_STATION.getTypeCode());

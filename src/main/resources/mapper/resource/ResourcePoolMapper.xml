@@ -1,339 +1,350 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="io.renren.modules.resource.dao.ResourcePoolMapper">
-  <resultMap id="BaseResultMap" type="io.renren.modules.resource.model.ResourcePoolModel">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="type_code" jdbcType="VARCHAR" property="typeCode" />
-    <result column="type_des" jdbcType="VARCHAR" property="typeDes" />
-    <result column="source_code" jdbcType="VARCHAR" property="sourceCode" />
-    <result column="source_des" jdbcType="VARCHAR" property="sourceDes" />
-    <result column="data_source_code" jdbcType="VARCHAR" property="dataSourceCode" />
-    <result column="data_source_des" jdbcType="VARCHAR" property="dataSourceDes" />
-    <result column="field_des" jdbcType="VARCHAR" property="fieldDes" />
-    <result column="status_code" jdbcType="VARCHAR" property="statusCode" />
-    <result column="status_des" jdbcType="VARCHAR" property="statusDes" />
-    <result column="across_code" jdbcType="VARCHAR" property="acrossCode" />
-    <result column="across_des" jdbcType="VARCHAR" property="acrossDes" />
-    <result column="adviser" jdbcType="VARCHAR" property="adviser" />
-    <result column="link_man" jdbcType="VARCHAR" property="linkMan" />
-    <result column="phone_number" jdbcType="VARCHAR" property="phoneNumber" />
-    <result column="qq_number" jdbcType="VARCHAR" property="qqNumber" />
-    <result column="submit_by" jdbcType="VARCHAR" property="submitBy" />
-    <result column="submit_date" jdbcType="TIMESTAMP" property="submitDate" />
-    <result column="sure_by" jdbcType="VARCHAR" property="sureBy" />
-    <result column="sure_date" jdbcType="TIMESTAMP" property="sureDate" />
-    <result column="cancel_by" jdbcType="VARCHAR" property="cancelBy" />
-    <result column="cancel_date" jdbcType="TIMESTAMP" property="cancelDate" />
-    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
-    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
-    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
-    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.renren.modules.resource.dao.ResourcePoolMapper" >
+  <resultMap id="BaseResultMap" type="io.renren.modules.resource.model.ResourcePoolModel" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="agreement_id" property="agreementId" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="type_des" property="typeDes" jdbcType="VARCHAR" />
+    <result column="source_code" property="sourceCode" jdbcType="VARCHAR" />
+    <result column="source_des" property="sourceDes" jdbcType="VARCHAR" />
+    <result column="data_source_code" property="dataSourceCode" jdbcType="VARCHAR" />
+    <result column="data_source_des" property="dataSourceDes" jdbcType="VARCHAR" />
+    <result column="field_des" property="fieldDes" jdbcType="VARCHAR" />
+    <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
+    <result column="status_des" property="statusDes" jdbcType="VARCHAR" />
+    <result column="across_code" property="acrossCode" jdbcType="VARCHAR" />
+    <result column="across_des" property="acrossDes" jdbcType="VARCHAR" />
+    <result column="adviser" property="adviser" jdbcType="VARCHAR" />
+    <result column="link_man" property="linkMan" jdbcType="VARCHAR" />
+    <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+    <result column="qq_number" property="qqNumber" jdbcType="VARCHAR" />
+    <result column="submit_by" property="submitBy" jdbcType="VARCHAR" />
+    <result column="submit_date" property="submitDate" jdbcType="TIMESTAMP" />
+    <result column="sure_by" property="sureBy" jdbcType="VARCHAR" />
+    <result column="sure_date" property="sureDate" jdbcType="TIMESTAMP" />
+    <result column="cancel_by" property="cancelBy" jdbcType="VARCHAR" />
+    <result column="cancel_date" property="cancelDate" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Base_Column_List">
-    id, name, type_code, type_des, source_code, source_des, data_source_code, data_source_des, 
-    field_des, status_code, status_des, across_code, across_des, adviser, link_man, phone_number, 
-    qq_number, submit_by, submit_date, sure_by, sure_date, cancel_by, cancel_date, create_by, 
-    create_date, update_by, update_date, remarks
+  <sql id="Base_Column_List" >
+    id, agreement_id, name, type_code, type_des, source_code, source_des, data_source_code, 
+    data_source_des, field_des, status_code, status_des, across_code, across_des, adviser, 
+    link_man, phone_number, qq_number, submit_by, submit_date, sure_by, sure_date, cancel_by, 
+    cancel_date, create_by, create_date, update_by, update_date, remarks
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
     <include refid="Base_Column_List" />
     from resource_pool
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from resource_pool
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="io.renren.modules.resource.model.ResourcePoolModel">
-    insert into resource_pool (id, name, type_code, 
-      type_des, source_code, source_des, 
-      data_source_code, data_source_des, field_des, 
-      status_code, status_des, across_code, 
-      across_des, adviser, link_man, 
-      phone_number, qq_number, submit_by, 
-      submit_date, sure_by, sure_date, 
-      cancel_by, cancel_date, create_by, 
-      create_date, update_by, update_date, 
-      remarks)
-    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{typeCode,jdbcType=VARCHAR}, 
-      #{typeDes,jdbcType=VARCHAR}, #{sourceCode,jdbcType=VARCHAR}, #{sourceDes,jdbcType=VARCHAR}, 
-      #{dataSourceCode,jdbcType=VARCHAR}, #{dataSourceDes,jdbcType=VARCHAR}, #{fieldDes,jdbcType=VARCHAR}, 
-      #{statusCode,jdbcType=VARCHAR}, #{statusDes,jdbcType=VARCHAR}, #{acrossCode,jdbcType=VARCHAR}, 
-      #{acrossDes,jdbcType=VARCHAR}, #{adviser,jdbcType=VARCHAR}, #{linkMan,jdbcType=VARCHAR}, 
-      #{phoneNumber,jdbcType=VARCHAR}, #{qqNumber,jdbcType=VARCHAR}, #{submitBy,jdbcType=VARCHAR}, 
-      #{submitDate,jdbcType=TIMESTAMP}, #{sureBy,jdbcType=VARCHAR}, #{sureDate,jdbcType=TIMESTAMP}, 
-      #{cancelBy,jdbcType=VARCHAR}, #{cancelDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
-      #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
-      #{remarks,jdbcType=VARCHAR})
+  <insert id="insert" parameterType="io.renren.modules.resource.model.ResourcePoolModel" >
+    insert into resource_pool (id, agreement_id, name, 
+      type_code, type_des, source_code, 
+      source_des, data_source_code, data_source_des, 
+      field_des, status_code, status_des, 
+      across_code, across_des, adviser, 
+      link_man, phone_number, qq_number, 
+      submit_by, submit_date, sure_by, 
+      sure_date, cancel_by, cancel_date, 
+      create_by, create_date, update_by, 
+      update_date, remarks)
+    values (#{id,jdbcType=VARCHAR}, #{agreementId,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{typeCode,jdbcType=VARCHAR}, #{typeDes,jdbcType=VARCHAR}, #{sourceCode,jdbcType=VARCHAR}, 
+      #{sourceDes,jdbcType=VARCHAR}, #{dataSourceCode,jdbcType=VARCHAR}, #{dataSourceDes,jdbcType=VARCHAR}, 
+      #{fieldDes,jdbcType=VARCHAR}, #{statusCode,jdbcType=VARCHAR}, #{statusDes,jdbcType=VARCHAR}, 
+      #{acrossCode,jdbcType=VARCHAR}, #{acrossDes,jdbcType=VARCHAR}, #{adviser,jdbcType=VARCHAR}, 
+      #{linkMan,jdbcType=VARCHAR}, #{phoneNumber,jdbcType=VARCHAR}, #{qqNumber,jdbcType=VARCHAR}, 
+      #{submitBy,jdbcType=VARCHAR}, #{submitDate,jdbcType=TIMESTAMP}, #{sureBy,jdbcType=VARCHAR}, 
+      #{sureDate,jdbcType=TIMESTAMP}, #{cancelBy,jdbcType=VARCHAR}, #{cancelDate,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="io.renren.modules.resource.model.ResourcePoolModel">
+  <insert id="insertSelective" parameterType="io.renren.modules.resource.model.ResourcePoolModel" >
     insert into resource_pool
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="name != null">
+      <if test="agreementId != null" >
+        agreement_id,
+      </if>
+      <if test="name != null" >
         name,
       </if>
-      <if test="typeCode != null">
+      <if test="typeCode != null" >
         type_code,
       </if>
-      <if test="typeDes != null">
+      <if test="typeDes != null" >
         type_des,
       </if>
-      <if test="sourceCode != null">
+      <if test="sourceCode != null" >
         source_code,
       </if>
-      <if test="sourceDes != null">
+      <if test="sourceDes != null" >
         source_des,
       </if>
-      <if test="dataSourceCode != null">
+      <if test="dataSourceCode != null" >
         data_source_code,
       </if>
-      <if test="dataSourceDes != null">
+      <if test="dataSourceDes != null" >
         data_source_des,
       </if>
-      <if test="fieldDes != null">
+      <if test="fieldDes != null" >
         field_des,
       </if>
-      <if test="statusCode != null">
+      <if test="statusCode != null" >
         status_code,
       </if>
-      <if test="statusDes != null">
+      <if test="statusDes != null" >
         status_des,
       </if>
-      <if test="acrossCode != null">
+      <if test="acrossCode != null" >
         across_code,
       </if>
-      <if test="acrossDes != null">
+      <if test="acrossDes != null" >
         across_des,
       </if>
-      <if test="adviser != null">
+      <if test="adviser != null" >
         adviser,
       </if>
-      <if test="linkMan != null">
+      <if test="linkMan != null" >
         link_man,
       </if>
-      <if test="phoneNumber != null">
+      <if test="phoneNumber != null" >
         phone_number,
       </if>
-      <if test="qqNumber != null">
+      <if test="qqNumber != null" >
         qq_number,
       </if>
-      <if test="submitBy != null">
+      <if test="submitBy != null" >
         submit_by,
       </if>
-      <if test="submitDate != null">
+      <if test="submitDate != null" >
         submit_date,
       </if>
-      <if test="sureBy != null">
+      <if test="sureBy != null" >
         sure_by,
       </if>
-      <if test="sureDate != null">
+      <if test="sureDate != null" >
         sure_date,
       </if>
-      <if test="cancelBy != null">
+      <if test="cancelBy != null" >
         cancel_by,
       </if>
-      <if test="cancelDate != null">
+      <if test="cancelDate != null" >
         cancel_date,
       </if>
-      <if test="createBy != null">
+      <if test="createBy != null" >
         create_by,
       </if>
-      <if test="createDate != null">
+      <if test="createDate != null" >
         create_date,
       </if>
-      <if test="updateBy != null">
+      <if test="updateBy != null" >
         update_by,
       </if>
-      <if test="updateDate != null">
+      <if test="updateDate != null" >
         update_date,
       </if>
-      <if test="remarks != null">
+      <if test="remarks != null" >
         remarks,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
+      <if test="agreementId != null" >
+        #{agreementId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="typeCode != null">
+      <if test="typeCode != null" >
         #{typeCode,jdbcType=VARCHAR},
       </if>
-      <if test="typeDes != null">
+      <if test="typeDes != null" >
         #{typeDes,jdbcType=VARCHAR},
       </if>
-      <if test="sourceCode != null">
+      <if test="sourceCode != null" >
         #{sourceCode,jdbcType=VARCHAR},
       </if>
-      <if test="sourceDes != null">
+      <if test="sourceDes != null" >
         #{sourceDes,jdbcType=VARCHAR},
       </if>
-      <if test="dataSourceCode != null">
+      <if test="dataSourceCode != null" >
         #{dataSourceCode,jdbcType=VARCHAR},
       </if>
-      <if test="dataSourceDes != null">
+      <if test="dataSourceDes != null" >
         #{dataSourceDes,jdbcType=VARCHAR},
       </if>
-      <if test="fieldDes != null">
+      <if test="fieldDes != null" >
         #{fieldDes,jdbcType=VARCHAR},
       </if>
-      <if test="statusCode != null">
+      <if test="statusCode != null" >
         #{statusCode,jdbcType=VARCHAR},
       </if>
-      <if test="statusDes != null">
+      <if test="statusDes != null" >
         #{statusDes,jdbcType=VARCHAR},
       </if>
-      <if test="acrossCode != null">
+      <if test="acrossCode != null" >
         #{acrossCode,jdbcType=VARCHAR},
       </if>
-      <if test="acrossDes != null">
+      <if test="acrossDes != null" >
         #{acrossDes,jdbcType=VARCHAR},
       </if>
-      <if test="adviser != null">
+      <if test="adviser != null" >
         #{adviser,jdbcType=VARCHAR},
       </if>
-      <if test="linkMan != null">
+      <if test="linkMan != null" >
         #{linkMan,jdbcType=VARCHAR},
       </if>
-      <if test="phoneNumber != null">
+      <if test="phoneNumber != null" >
         #{phoneNumber,jdbcType=VARCHAR},
       </if>
-      <if test="qqNumber != null">
+      <if test="qqNumber != null" >
         #{qqNumber,jdbcType=VARCHAR},
       </if>
-      <if test="submitBy != null">
+      <if test="submitBy != null" >
         #{submitBy,jdbcType=VARCHAR},
       </if>
-      <if test="submitDate != null">
+      <if test="submitDate != null" >
         #{submitDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="sureBy != null">
+      <if test="sureBy != null" >
         #{sureBy,jdbcType=VARCHAR},
       </if>
-      <if test="sureDate != null">
+      <if test="sureDate != null" >
         #{sureDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="cancelBy != null">
+      <if test="cancelBy != null" >
         #{cancelBy,jdbcType=VARCHAR},
       </if>
-      <if test="cancelDate != null">
+      <if test="cancelDate != null" >
         #{cancelDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="createBy != null">
+      <if test="createBy != null" >
         #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null">
+      <if test="createDate != null" >
         #{createDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateBy != null">
+      <if test="updateBy != null" >
         #{updateBy,jdbcType=VARCHAR},
       </if>
-      <if test="updateDate != null">
+      <if test="updateDate != null" >
         #{updateDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="remarks != null">
+      <if test="remarks != null" >
         #{remarks,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.resource.model.ResourcePoolModel">
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.resource.model.ResourcePoolModel" >
     update resource_pool
-    <set>
-      <if test="name != null">
+    <set >
+      <if test="agreementId != null" >
+        agreement_id = #{agreementId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="typeCode != null">
+      <if test="typeCode != null" >
         type_code = #{typeCode,jdbcType=VARCHAR},
       </if>
-      <if test="typeDes != null">
+      <if test="typeDes != null" >
         type_des = #{typeDes,jdbcType=VARCHAR},
       </if>
-      <if test="sourceCode != null">
+      <if test="sourceCode != null" >
         source_code = #{sourceCode,jdbcType=VARCHAR},
       </if>
-      <if test="sourceDes != null">
+      <if test="sourceDes != null" >
         source_des = #{sourceDes,jdbcType=VARCHAR},
       </if>
-      <if test="dataSourceCode != null">
+      <if test="dataSourceCode != null" >
         data_source_code = #{dataSourceCode,jdbcType=VARCHAR},
       </if>
-      <if test="dataSourceDes != null">
+      <if test="dataSourceDes != null" >
         data_source_des = #{dataSourceDes,jdbcType=VARCHAR},
       </if>
-      <if test="fieldDes != null">
+      <if test="fieldDes != null" >
         field_des = #{fieldDes,jdbcType=VARCHAR},
       </if>
-      <if test="statusCode != null">
+      <if test="statusCode != null" >
         status_code = #{statusCode,jdbcType=VARCHAR},
       </if>
-      <if test="statusDes != null">
+      <if test="statusDes != null" >
         status_des = #{statusDes,jdbcType=VARCHAR},
       </if>
-      <if test="acrossCode != null">
+      <if test="acrossCode != null" >
         across_code = #{acrossCode,jdbcType=VARCHAR},
       </if>
-      <if test="acrossDes != null">
+      <if test="acrossDes != null" >
         across_des = #{acrossDes,jdbcType=VARCHAR},
       </if>
-      <if test="adviser != null">
+      <if test="adviser != null" >
         adviser = #{adviser,jdbcType=VARCHAR},
       </if>
-      <if test="linkMan != null">
+      <if test="linkMan != null" >
         link_man = #{linkMan,jdbcType=VARCHAR},
       </if>
-      <if test="phoneNumber != null">
+      <if test="phoneNumber != null" >
         phone_number = #{phoneNumber,jdbcType=VARCHAR},
       </if>
-      <if test="qqNumber != null">
+      <if test="qqNumber != null" >
         qq_number = #{qqNumber,jdbcType=VARCHAR},
       </if>
-      <if test="submitBy != null">
+      <if test="submitBy != null" >
         submit_by = #{submitBy,jdbcType=VARCHAR},
       </if>
-      <if test="submitDate != null">
+      <if test="submitDate != null" >
         submit_date = #{submitDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="sureBy != null">
+      <if test="sureBy != null" >
         sure_by = #{sureBy,jdbcType=VARCHAR},
       </if>
-      <if test="sureDate != null">
+      <if test="sureDate != null" >
         sure_date = #{sureDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="cancelBy != null">
+      <if test="cancelBy != null" >
         cancel_by = #{cancelBy,jdbcType=VARCHAR},
       </if>
-      <if test="cancelDate != null">
+      <if test="cancelDate != null" >
         cancel_date = #{cancelDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="createBy != null">
+      <if test="createBy != null" >
         create_by = #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null">
+      <if test="createDate != null" >
         create_date = #{createDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateBy != null">
+      <if test="updateBy != null" >
         update_by = #{updateBy,jdbcType=VARCHAR},
       </if>
-      <if test="updateDate != null">
+      <if test="updateDate != null" >
         update_date = #{updateDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="remarks != null">
+      <if test="remarks != null" >
         remarks = #{remarks,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="io.renren.modules.resource.model.ResourcePoolModel">
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.resource.model.ResourcePoolModel" >
     update resource_pool
-    set name = #{name,jdbcType=VARCHAR},
+    set agreement_id = #{agreementId,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
       type_code = #{typeCode,jdbcType=VARCHAR},
       type_des = #{typeDes,jdbcType=VARCHAR},
       source_code = #{sourceCode,jdbcType=VARCHAR},
@@ -362,103 +373,106 @@
       remarks = #{remarks,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <select id="queryList" resultType="io.renren.modules.resource.model.ResourcePersonalPoolModel" >
-    select * from resource_pool
-    <where>
-      <if test="intentCode != null and intentCode.trim() != '' and intentCode.trim() != '00'">
-        and  intent_code = #{intentCode,jdbcType=VARCHAR}
-      </if>
-      <if test="typeCode != null and typeCode.trim() != '00'">
-        and  type_code = #{typeCode,jdbcType=VARCHAR}
-      </if>
-      <if test="statusCode != null and statusCode.trim() != '00'">
-        and  status_code = #{statusCode,jdbcType=VARCHAR}
-      </if>
-      <if test="dataSourceCode != null and dataSourceCode.trim() != ''">
-        and  data_source_code = #{dataSourceCode,jdbcType=VARCHAR}
-      </if>
-      <if test="queryTypeCode != null and queryTypeCode.trim() == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
-        and  phone_number = #{queryTypeValue,jdbcType=VARCHAR}
-      </if>
-      <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
-        and  qq_number = #{queryTypeValue,jdbcType=VARCHAR}
-      </if>
-      <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_003' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
-        and  link_man = #{queryTypeValue,jdbcType=VARCHAR}
-      </if>
-      <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_004' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
-        and  adviser = #{queryTypeValue,jdbcType=VARCHAR}
-      </if>
-      <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_005' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
-        and `name` = #{queryTypeValue,jdbcType=VARCHAR}
-      </if>
-      <if test="acrossCode != null and acrossCode.trim() != '' and acrossCode.trim() != '00'">
-        and across_code = #{acrossCode,jdbcType=VARCHAR}
-      </if>
-      <if test="submitStartDate != null">
-        and  submit_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
-      </if>
-      <if test="submitendDate != null">
-        and  submit_date &lt;= #{submitendDate,jdbcType=TIMESTAMP}
-      </if>
-      <if test="sureStartDate != null">
-        and  sure_date &gt;= #{sureStartDate,jdbcType=TIMESTAMP}
-      </if>
-      <if test="sureEndDate != null">
-        and  sure_date &lt;= #{sureEndDate,jdbcType=TIMESTAMP}
-      </if>
-    </where>
-    <if test="offset != null and limit != null ">
-      limit #{offset}, #{limit}
-    </if>
-  </select>
 
-  <select id="queryTotal" resultType="int">
-    select count(1)
-    from resource_pool
-    <where>
-      <if test="intentCode != null and intentCode.trim() != '' and intentCode.trim() != '00'">
-        and  intent_code = #{intentCode,jdbcType=VARCHAR}
-      </if>
-      <if test="typeCode != null and typeCode.trim() != '00'">
-        and  type_code = #{typeCode,jdbcType=VARCHAR}
-      </if>
-      <if test="statusCode != null and statusCode.trim() != '00'">
-        and  status_code = #{statusCode,jdbcType=VARCHAR}
-      </if>
-      <if test="dataSourceCode != null and dataSourceCode.trim() != ''">
-        and  data_source_code = #{dataSourceCode,jdbcType=VARCHAR}
-      </if>
-      <if test="queryTypeCode != null and queryTypeCode.trim() == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
-        and  phone_number = #{queryTypeCode,jdbcType=VARCHAR}
-      </if>
-      <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
-        and  qq_number = #{queryTypeValue,jdbcType=VARCHAR}
-      </if>
-      <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_003' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
-        and  link_man = #{queryTypeValue,jdbcType=VARCHAR}
-      </if>
-      <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_004' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
-        and  adviser = #{queryTypeValue,jdbcType=VARCHAR}
-      </if>
-      <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_005' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
-        and `name` = #{queryTypeValue,jdbcType=VARCHAR}
-      </if>
-      <if test="acrossCode != null and acrossCode.trim() != '' and acrossCode.trim() != '00'">
-        and across_code = #{acrossCode,jdbcType=VARCHAR}
-      </if>
-      <if test="submitStartDate != null">
-        and  submit_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
-      </if>
-      <if test="submitendDate != null">
-        and  submit_date &lt;= #{submitendDate,jdbcType=TIMESTAMP}
-      </if>
-      <if test="sureStartDate != null">
-        and  sure_date &gt;= #{sureStartDate,jdbcType=TIMESTAMP}
-      </if>
-      <if test="sureEndDate != null">
-        and  sure_date &lt;= #{sureEndDate,jdbcType=TIMESTAMP}
-      </if>
-    </where>
-  </select>
+    <select id="queryList" resultType="io.renren.modules.resource.model.ResourcePersonalPoolModel" >
+        select * from resource_pool
+        <where>
+            adviser = #{username,jdbcType=VARCHAR}
+            <if test="intentCode != null and intentCode.trim() != '' and intentCode.trim() != '00'">
+                and  intent_code = #{intentCode,jdbcType=VARCHAR}
+            </if>
+            <if test="typeCode != null and typeCode.trim() != '00'">
+                and  type_code = #{typeCode,jdbcType=VARCHAR}
+            </if>
+            <if test="statusCode != null and statusCode.trim() != '00'">
+                and  status_code = #{statusCode,jdbcType=VARCHAR}
+            </if>
+            <if test="dataSourceCode != null and dataSourceCode.trim() != ''">
+                and  data_source_code = #{dataSourceCode,jdbcType=VARCHAR}
+            </if>
+            <if test="queryTypeCode != null and queryTypeCode.trim() == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+                and  phone_number = #{queryTypeValue,jdbcType=VARCHAR}
+            </if>
+            <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+                and  qq_number = #{queryTypeValue,jdbcType=VARCHAR}
+            </if>
+            <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_003' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+                and  link_man = #{queryTypeValue,jdbcType=VARCHAR}
+            </if>
+            <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_004' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+                and  adviser = #{queryTypeValue,jdbcType=VARCHAR}
+            </if>
+            <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_005' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+                and `name` = #{queryTypeValue,jdbcType=VARCHAR}
+            </if>
+            <if test="acrossCode != null and acrossCode.trim() != '' and acrossCode.trim() != '00'">
+                and across_code = #{acrossCode,jdbcType=VARCHAR}
+            </if>
+            <if test="submitStartDate != null">
+                and  submit_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="submitendDate != null">
+                and  submit_date &lt;= #{submitendDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="sureStartDate != null">
+                and  sure_date &gt;= #{sureStartDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="sureEndDate != null">
+                and  sure_date &lt;= #{sureEndDate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+        <if test="offset != null and limit != null ">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="queryTotal" resultType="int">
+        select count(1)
+        from resource_pool
+        <where>
+            adviser = #{username,jdbcType=VARCHAR}
+            <if test="intentCode != null and intentCode.trim() != '' and intentCode.trim() != '00'">
+                and  intent_code = #{intentCode,jdbcType=VARCHAR}
+            </if>
+            <if test="typeCode != null and typeCode.trim() != '00'">
+                and  type_code = #{typeCode,jdbcType=VARCHAR}
+            </if>
+            <if test="statusCode != null and statusCode.trim() != '00'">
+                and  status_code = #{statusCode,jdbcType=VARCHAR}
+            </if>
+            <if test="dataSourceCode != null and dataSourceCode.trim() != ''">
+                and  data_source_code = #{dataSourceCode,jdbcType=VARCHAR}
+            </if>
+            <if test="queryTypeCode != null and queryTypeCode.trim() == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+                and  phone_number = #{queryTypeCode,jdbcType=VARCHAR}
+            </if>
+            <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+                and  qq_number = #{queryTypeValue,jdbcType=VARCHAR}
+            </if>
+            <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_003' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+                and  link_man = #{queryTypeValue,jdbcType=VARCHAR}
+            </if>
+            <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_004' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+                and  adviser = #{queryTypeValue,jdbcType=VARCHAR}
+            </if>
+            <if test="queryTypeValue != null and queryTypeCode.trim() == 'QU_005' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+                and `name` = #{queryTypeValue,jdbcType=VARCHAR}
+            </if>
+            <if test="acrossCode != null and acrossCode.trim() != '' and acrossCode.trim() != '00'">
+                and across_code = #{acrossCode,jdbcType=VARCHAR}
+            </if>
+            <if test="submitStartDate != null">
+                and  submit_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="submitendDate != null">
+                and  submit_date &lt;= #{submitendDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="sureStartDate != null">
+                and  sure_date &gt;= #{sureStartDate,jdbcType=TIMESTAMP}
+            </if>
+            <if test="sureEndDate != null">
+                and  sure_date &lt;= #{sureEndDate,jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
 </mapper>

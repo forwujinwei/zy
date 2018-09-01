@@ -5,6 +5,8 @@ import java.util.Date;
 public class ResourcePoolModel {
     private String id;
 
+    private String agreementId;
+
     private String name;
 
     private String typeCode;
@@ -65,6 +67,14 @@ public class ResourcePoolModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getAgreementId() {
+        return agreementId;
+    }
+
+    public void setAgreementId(String agreementId) {
+        this.agreementId = agreementId;
     }
 
     public String getName() {

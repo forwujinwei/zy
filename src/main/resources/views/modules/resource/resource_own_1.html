@@ -31,7 +31,7 @@
     <div  v-show="showList" >
         <form role="form" class="contain">
             <div  class="form-group form-inline row">
-                <a  class="btn btn-primary " @click="addCustomer"><i class="glyphicon glyphicon-plus"></i>&nbsp;添加客户</a>
+               <!-- <a  class="btn btn-primary " @click="addCustomer"><i class="glyphicon glyphicon-plus"></i>&nbsp;添加客户</a>-->
                 <select id="intention" v-model="condition.intentCode"  class="form-control">
                     <option value="00">意向程度</option>
                     <option value="IN_001">意向特别好的</option>
@@ -162,7 +162,7 @@
                                     @click="addRecord(item.id)">记录</button>
                             <button class="btn btn-primary btn-padding-reset"
                                     @click="cancelResource(item.id)">放弃</button>
-                            <button class="btn btn-primary btn-padding-reset"
+                            <button class="btn btn-primary btn-padding-reset" :disabled="item.statusCode=='RS_004'"
                                     @click="addAgreement(item.id,item.linkMan)">合同</button>
                         </div>
                     </td>
@@ -613,9 +613,10 @@
                 var _this=this;
                 axios.post(url,_this.agreement).then(function (response) {
                     if(response.data.code === 0){
-                        alert('操作成功', function(){
+                        alert('操作成功,请在我的合同里面查看', function(){
                             _this.showAddAgreement=false;
-                            _this.reload();
+                            _this.showList = true;
+                            _this.list();
                         });
                     }else{
                         alert(response.data.msg)
@@ -631,22 +632,18 @@
             },
             saveResource: function () {
                 var _this=this;
-                var url = "api/resource/save";
-                $.ajax({
-                    type: "POST",
-                    url: baseURL + url,
-                    contentType: "application/json",
-                    data: JSON.stringify(_this.customerResource),
-                    success: function(r){
-                        if(r.code === 0){
-                            alert('操作成功', function(){
-                                _this.showAddCustomer=false;
-                                _this.reload();
-                            });
-                        }else{
-                            alert(r.msg);
-                        }
+                axios.post('api/resource/save',_this.customerResource).then(function (response) {
+                    if(response.data.code === 0){
+                        alert('操作成功,资源在我的资源1中显示', function(){
+                            _this.showAddCustomer=false;
+                            _this.showList = true;
+                            _this.list();
+                        });
+                    }else{
+                        alert(response.data.msg)
                     }
+                }).catch(function (error) {
+                    console.log(error);
                 });
             },
             back: function () {
@@ -654,10 +651,10 @@
             },
             reload: function () {
                 var _this=this;
-                _this.showList = true;
                 _this.showAddCustomer=false;
                 _this.showAddRecord=false;
                 _this.showAddAgreement=false;
+                _this.showList = true;
                 _this.list();
             },
             recordReload: function(){

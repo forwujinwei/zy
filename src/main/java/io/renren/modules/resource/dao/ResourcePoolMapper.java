@@ -24,4 +24,5 @@ public interface ResourcePoolMapper {
     List<ResourcePersonalPoolModel> queryList(Map<String, Object> query);
 
     int queryTotal(Map<String, Object> query);
+
 }

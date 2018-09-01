@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,7 +46,12 @@ public class TradeMarkLogController {
             resourceTradeMark.setId(tradeMarkLog.getTradeMarkId());
             resourceTradeMark.setStatusCode(tradeMarkLog.getStatusCode());
             resourceTradeMark.setStatusDes(DistEnum.getDesByCode(tradeMarkLog.getStatusCode()));
-            resourceTradeMark.setApplyNumber(tradeMarkLog.getApplyNumber());
+            if(tradeMarkLog.getStatusCode().equals(DistEnum.TRADE_MARK_STATUS_APPLY.getTypeCode())){
+                resourceTradeMark.setApplyBy(username);
+                resourceTradeMark.setApplyDate(new Date());
+                resourceTradeMark.setApplyNumber(tradeMarkLog.getApplyNumber());
+            }
+
             resourceTradeMarkService.update(resourceTradeMark);
         }
         return R.ok();
