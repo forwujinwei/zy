@@ -14,11 +14,13 @@ import io.renren.modules.resource.service.CommonService;
 import io.renren.modules.resource.service.ResourceAgreementService;
 import io.renren.modules.resource.service.ResourceTradeMarkService;
 import io.renren.modules.resource.vo.ResourceAgreementVo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +71,11 @@ public class ResourceAgreementController {
         if(createEndDate!=null&&!"".equals(createEndDate.toString())){
             params.put("createEndDate",dateFormat.parse(createEndDate.toString()));
         }
-        params.put("username",username);
+        if(StringUtils.isNotBlank(params.get("statusCode").toString())){
+            String[] statusCodes = params.get("statusCode").toString().split(",");
+            params.put("statusCodeList",statusCodes);
+        }
+        params.put("adviser",username);
         Query query = new Query(params);
         List<ResourceAgreementVo> resourcePersonalPoolList = resourceAgreementService.queryList(query);
         int total = resourceAgreementService.queryTotal(query);

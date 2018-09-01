@@ -96,3 +96,9 @@ hr{
 .table tbody tr td{
     vertical-align: middle;
 }
+.alert {
+    padding: 5px;
+    margin-bottom: 0px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}

@@ -46,13 +46,13 @@
                 <tbody>
                     <tr v-for="item in tableData">
                         <td hidden>{{item.id}}</td>
-                        <td>{{item.name}}</td>
-                        <td>{{item.typeDes}}</td>
-                        <td>{{item.fieldDes}}</td>
-                        <td>{{item.linkMan}}</td>
-                        <td>{{item.phoneNumber}}</td>
-                        <td>{{item.qqNumber}}</td>
-                        <td>{{item.submitDate|formatterDate}}</td>
+                        <td>********</td>
+                        <td>********</td>
+                        <td>********</td>
+                        <td>********</td>
+                        <td>********</td>
+                        <td>********</td>
+                        <td>********</td>
                         <td><div class="btn-group" data-toggle="buttons-radio">
                                 <button  class="btn btn-primary btn-padding-reset"
                                          @click="sureResource(item.id)">确认</button>
@@ -112,7 +112,7 @@
                 var _this=this;
                 axios.post(_this.sure_url,{id:id}).then(function (response) {
                     if(response.data.code === 0){
-                        alert('操作成功', function(){
+                        alert('操作成功,资源将在我的资源1里显示', function(){
                             _this.list();
                             _this.listLoading = false;
                         });

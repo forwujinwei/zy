@@ -23,6 +23,8 @@
     <script src="../../js/axiso.js"></script>
     <script src="../../plugins/laydate/laydate.js"></script>
     <script src="../../plugins/element/index.js"></script>
+    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/vee-validate.min.js"></script>
+    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/locale/zh_CN.js"></script>
 </head>
 <body>
     <div id="rrapp">
@@ -41,16 +43,26 @@
                         <option value="IN_004">名称</option>
                     </select>
                     <input type="text"  v-model="condition.queryTypeValue" class="form-control">
-                    <div class="form-group">
-                        <span class="control-label" >日期</span>
-                        <div class="form-group"  style="padding-left: 0px;padding-right: 0px;margin: 5px 0px">
-                            <input type="text"  value="" id="createStartDate" class="form-control ">
-                        </div>
-                        <span class="control-label">到</span>
-                        <div class="form-group">
-                            <input type="text"  value="" id="createEndDate" class="form-control ">
-                        </div>
-                    </div>
+                    <span class="form-inline">
+                    <span class="demonstration">提交时间</span>
+                    <el-date-picker
+                            v-model="condition.createStartDate"
+                            type="date"
+                            placeholder="选择日期"
+                            @change="getSubmitStartDate"
+                            value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </span>
+                    <span class="form-inline">
+                    <span class="demonstration">到</span>
+                    <el-date-picker
+                            v-model="condition.createEndDate"
+                            type="date"
+                            placeholder="选择日期"
+                            @change="getSubmitEndDate"
+                            value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </span>
                     <div class="form-group" style="float: right">
                         <a  class="btn btn-primary" ><i class="fa fa-plus"></i>&nbsp;查询</a>
                     </div>
@@ -143,31 +155,35 @@
                         <div class="form-group">
                             <div class="col-sm-2 control-label">合同编号 </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" v-model="agreement.agreementId" placeholder="名称" readonly/>
+                                <input type="text" class="form-control" v-model="agreement.agreementId"   readonly/>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-2 control-label">总费用</div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" v-model="agreement.allcost" placeholder="总费用(单位元)"/>
+                                <input type="text" class="form-control" v-model="agreement.allcost"  v-validate="'required|numeric'" name="总费用" placeholder="总费用(单位元)"/>
+                                <div v-show="errors.has('总费用')" class="alert alert-danger">{{ errors.first('总费用') }}</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-2 control-label">定金</div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" v-model="agreement.earnest" placeholder="定金(单位元)"/>
+                                <input type="text" class="form-control" v-model="agreement.earnest" v-validate="'required|numeric'" name="定金" placeholder="定金(单位元)"/>
+                                <div v-show="errors.has('定金')" class="alert alert-danger">{{ errors.first('定金') }}</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-2 control-label">尾款</div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" v-model="agreement.finalPayment" placeholder="尾款(单位元)"/>
+                                <input type="text" class="form-control" v-model="agreement.finalPayment" v-validate="'required|numeric'" name="尾款" placeholder="尾款(单位元)"/>
+                                <div v-show="errors.has('尾款')" class="alert alert-danger">{{ errors.first('尾款') }}</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-2 control-label">支出</div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" v-model="agreement.pay" placeholder="支出(单位元)"/>
+                                <input type="text" class="form-control" v-model="agreement.pay" v-validate="'required|numeric'" name="支出" placeholder="支出(单位元)"/>
+                                <div v-show="errors.has('支出')" class="alert alert-danger">{{ errors.first('支出') }}</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -242,55 +258,91 @@
                         <input type="text"  v-model="agreement.resourceId" class="hidden"/>
                         <div class="form-group">
                             <div class="col-sm-2  control-label">联系人 </div>
-                            <input type="text" class="col-sm-10 form-control" v-model="tradeMarkAgreement.agreementId" />
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" v-validate="'required'" name="联系人" v-model="tradeMarkAgreement.agreementId" />
+                                <div v-show="errors.has('联系人')" class="alert alert-danger">{{ errors.first('联系人') }}</div>
+                            </div>
+
                         </div>
+
                         <div class="form-group">
                             <div class="control-label col-sm-2">甲方</div>
-                            <input type="text" class="form-control col-sm-10" v-model="tradeMarkAgreement.registerCost" />
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control " v-validate="'required'" name="甲方" v-model="tradeMarkAgreement.registerCost" />
+                                <div v-show="errors.has('甲方')" class="alert alert-danger">{{ errors.first('甲方') }}</div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">邮箱</div>
-                            <input type="text" class="form-control col-sm-10" v-model="tradeMarkAgreement.designCost"/>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" v-validate="'required|email'" name="邮箱" v-model="tradeMarkAgreement.designCost"/>
+                                <div v-show="errors.has('邮箱')" class="alert alert-danger">{{ errors.first('邮箱') }}</div>
+                            </div>
+
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">电话</div>
-                            <input type="text" class="form-control col-sm-10" v-model="tradeMarkAgreement.queryCost" />
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control " v-validate="'required'" name="电话" v-model="tradeMarkAgreement.queryCost" />
+                                <div v-show="errors.has('电话')" class="alert alert-danger">{{ errors.first('电话') }}</div>
+                            </div>
+
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">地址</div>
-                            <input type="text" class="form-control col-sm-10" v-model="tradeMarkAgreement.nameCost" />
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control " v-validate="'required'" name="地址" v-model="tradeMarkAgreement.nameCost" />
+                                <div v-show="errors.has('地址')" class="alert alert-danger">{{ errors.first('地址') }}</div>
+                            </div>
+
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">身份证</div>
-                            <input type="file" name="image" class="projectfile"/>
+                            <div class="col-sm-10">
+                                <input type="file" name="image" class="projectfile"/>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">执照</div>
-                            <input type="file" name="image" class="projectfile"/>
+                            <div class="col-sm-10">
+                                <input type="file" name="image" class="projectfile"/>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">确认书</div>
-                            <input type="file" name="image" class="projectfile"/>
+                            <div class="col-sm-10">
+                                <input type="file" name="image" class="projectfile"/>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">委托书</div>
-                            <input type="file" name="image" class="projectfile"/>
+                            <div class="col-sm-10">
+                                <input type="file" name="image" class="projectfile"/>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">合同(第一页)</div>
-                            <input type="file" name="image" class="projectfile"/>
+                            <div class="col-sm-10">
+                                <input type="file" name="image" class="projectfile"/>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">合同(第二页)</div>
-                            <input type="file" name="image" class="projectfile"/>
+                            <div class="col-sm-10">
+                                <input type="file" name="image" class="projectfile"/>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">合同(第三页)</div>
-                            <input type="file" name="image" class="projectfile"/>
+                            <div class="col-sm-10">
+                                <input type="file" name="image" class="projectfile"/>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">合同(第四页)</div>
-                            <input type="file" name="image" class="projectfile"/>
+                            <div class="col-sm-10">
+                                <input type="file" name="image" class="projectfile"/>
+                            </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-2 control-label"></div>
@@ -310,7 +362,8 @@
                 <div class="form-group">
                     <div class="col-sm-2 control-label">商标名称</div>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" v-model="tradeMarkInfo.name"/>
+                        <input type="text" class="form-control" v-validate="'required'" name="商标名称" v-model="tradeMarkInfo.name"/>
+                        <div v-show="errors.has('商标名称')" class="alert alert-danger">{{ errors.first('商标名称') }}</div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -341,25 +394,27 @@
                 <div class="form-group">
                     <div class="col-sm-2 control-label">商标分类</div>
                     <div class="col-sm-10">
-                        <select  v-model="tradeMarkInfo.classifyCode" class="form-control clo-sm-2">
+                        <select  v-model="tradeMarkInfo.classifyCode" v-validate="'required'" name="商标分类" class="form-control clo-sm-2">
                             <option v-for="item in tradeMarkClassifyData" :value="item.code">{{item.des}}</option>
                         </select>
+                        <div v-show="errors.has('商标分类')" class="alert alert-danger">{{ errors.first('商标分类') }}</div>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-2 control-label">商标类型</div>
                     <div class="col-sm-10">
-                        <select  v-model="tradeMarkInfo.docCode" class="form-control clo-sm-2">
+                        <select  v-model="tradeMarkInfo.docCode" v-validate="'required'" name="商标类型" class="form-control clo-sm-2">
                             <option value="TMDT_001">文字</option>
                             <option value="TMDT_002">图像</option>
                             <option value="TMDT_003">文字+图像</option>
                         </select>
+                        <div v-show="errors.has('商标类型')" class="alert alert-danger">{{ errors.first('商标类型') }}</div>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-2 control-label">保护产品</div>
                     <div class="col-sm-10">
-                        <textarea class="form-control" rows="3" v-model="tradeMarkInfo.protectProduct" placeholder="用英文的逗号,不然生成合同会出现错误"></textarea>
+                        <textarea class="form-control" rows="3" v-model="tradeMarkInfo.protectProduct"  placeholder="用英文的逗号,不然生成合同会出现错误"></textarea>
                     </div>
                 </div>
                 <div class="form-group">
@@ -374,6 +429,8 @@
 </body>
 
 <script>
+    Vue.use(VeeValidate);
+    VeeValidate.Validator.localize('zh_CN');
     new Vue({
         el:"#rrapp",
         data(){
@@ -463,6 +520,7 @@
                 _this.tableData = [];
                 axios.get('api/resource/agreement/list', {
                     params: {
+                        statusCode:'AGS_001,AGS_002',
                         page: _this.tableConfig.pageNumber,
                         limit: _this.tableConfig.pageSize
                     }
@@ -657,7 +715,13 @@
                         console.log(error);
                     }
                 );
-            }
+            },
+            getSubmitEndDate:function(val){
+                this.condition.createEndDate=val;
+            },
+            getSubmitStartDate:function(val){
+                this.condition.createStartDate=val;
+            },
 
         },
         mounted () {

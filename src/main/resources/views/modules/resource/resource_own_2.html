@@ -23,7 +23,8 @@
     <script src="../../js/axiso.js"></script>
     <script src="../../plugins/laydate/laydate.js"></script>
     <script src="../../plugins/element/index.js"></script>
-    <script src="../../js/common.js"></script>
+    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/vee-validate.min.js"></script>
+    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/locale/zh_CN.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
@@ -76,23 +77,46 @@
                 </select>
             </div>
             <div class="form-group form-inline row">
-                <label class="form-inline">
-                    提交时间
-                    <input type="text"  value="" id="submitStartDate" class="form-control input-date-width">
-                </label>
-                <label class="form-inline">
-                    到
-                    <input type="text"  value="" id="submitEndDate" class="form-control input-date-width ">
-                </label>
-                <label class="form-inline">
-                    确认时间
-                    <input type="text"  value="" id="sureStartDate" class="form-control input-date-width">
-                </label>
-
-                <label class="form-inline">
-                    到
-                    <input type="text"  value="" id="sureEndDate" class="form-control input-date-width">
-                </label>
+                <span class="form-inline">
+                    <span class="demonstration">提交时间</span>
+                    <el-date-picker
+                            v-model="condition.submitStartDate"
+                            type="date"
+                            placeholder="选择日期"
+                            @change="getSubmitStartDate"
+                            value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </span>
+                <span class="form-inline">
+                    <span class="demonstration">到</span>
+                    <el-date-picker
+                            v-model="condition.submitEndDate"
+                            type="date"
+                            placeholder="选择日期"
+                            @change="getSubmitEndDate"
+                            value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </span>
+                <span class="form-inline">
+                    <span class="demonstration">确认时间</span>
+                    <el-date-picker
+                            v-model="condition.sureStartDate"
+                            type="date"
+                            placeholder="选择日期"
+                            @change="getSureStartDate"
+                            value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </span>
+                <span class="form-inline">
+                    <span class="demonstration">到</span>
+                    <el-date-picker
+                            v-model="condition.sureEndDate"
+                            type="date"
+                            placeholder="选择日期"
+                            @change="getSureEndDate"
+                            value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </span>
                 <a  class="btn btn-primary" @click="query"><i class="fa fa-plus"></i>&nbsp;查询</a>
             </div>
         </form>
@@ -142,7 +166,6 @@
                 </tr>
                 </tbody>
             </table>
-            <!--v-show="tableConfig.totalCount"-->
             <div class="page-wrap bottom_footer" >
                 <el-pagination
                         class="align-right"
@@ -214,11 +237,11 @@
                     </select>
                 </div>
             </div>
-            <!--  <div class="form-group">
-                  <div class="col-sm-2 control-label"></div>
-                  <input type="button" class="btn btn-primary" @click="saveResource" value="确定"/>
-                  &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-              </div>-->
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveResource" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
         </form>
     </div>
     <!--添加客户 end-->
@@ -257,10 +280,10 @@
                               <textarea class="form-control" rows="5" v-model="revisit.revisitRemark"
                                         placeholder="输入回访记"></textarea>
                     </div>
-                    <!-- <div class="form-group">
-                         <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-                         &nbsp;&nbsp; <input type="button" class="btn btn-primary" @click="saveRevisit" value="确定"/>
-                     </div>-->
+                    <div class="form-group">
+                        <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                        &nbsp;&nbsp; <input type="button" class="btn btn-primary" @click="saveRevisit" value="确定"/>
+                    </div>
                 </div>
             </div>
 
@@ -276,92 +299,102 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">合同编号 </div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.agreementId" placeholder="名称" readonly/>
+                    <input type="text" class="form-control" v-model="agreement.agreementId" />
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">总费用</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.allcost" placeholder="总费用(单位元)"/>
+                    <input type="text" class="form-control" v-model="agreement.allcost" v-validate="'required|numeric'" name="总费用" placeholder="总费用(单位元)"/>
+                    <div v-show="errors.has('总费用')" class="alert alert-danger">{{ errors.first('总费用') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">定金</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.earnest" placeholder="定金"/>
+                    <input type="text" class="form-control" v-model="agreement.earnest" v-validate="'required|numeric'" name="定金" placeholder="定金"/>
+                    <div v-show="errors.has('定金')" class="alert alert-danger">{{ errors.first('定金') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">尾款</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.finalPayment" placeholder="尾款"/>
+                    <input type="text" class="form-control" v-model="agreement.finalPayment" v-validate="'required|numeric'" name="尾款" placeholder="尾款"/>
+                    <div v-show="errors.has('尾款')" class="alert alert-danger">{{ errors.first('尾款') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">联系人</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.linkMan" placeholder="联系人"/>
+                    <input type="text" class="form-control" v-model="agreement.linkMan" v-validate="'required'" name="联系人" placeholder="联系人"/>
+                    <div v-show="errors.has('联系人')" class="alert alert-danger">{{ errors.first('联系人') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">甲方</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.firstParty" placeholder="甲方"/>
+                    <input type="text" class="form-control" v-model="agreement.firstParty" v-validate="'required'" name="甲方" placeholder="甲方"/>
+                    <div v-show="errors.has('甲方')" class="alert alert-danger">{{ errors.first('甲方') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">客户邮箱</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.email" placeholder="客户邮箱"/>
+                    <input type="text" class="form-control" v-model="agreement.email" v-validate="'required|email'" name="客户邮箱" placeholder="客户邮箱"/>
+                    <div v-show="errors.has('客户邮箱')" class="alert alert-danger">{{ errors.first('客户邮箱') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">电话</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.phoneNumber" placeholder="电话"/>
+                    <input type="text" class="form-control" v-model="agreement.phoneNumber" v-validate="'required'" name="电话" placeholder="电话"/>
+                    <div v-show="errors.has('电话')" class="alert alert-danger">{{ errors.first('电话') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">地址</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.address" placeholder="地址"/>
+                    <input type="text" class="form-control" v-model="agreement.address" v-validate="'required'" name="地址" placeholder="地址"/>
+                    <div v-show="errors.has('地址')" class="alert alert-danger">{{ errors.first('地址') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">合同类型</div>
                 <div class="col-sm-10">
-                    <select name="xssj" v-model="agreement.agreementTypeCode" class="form-control clo-sm-2">
+                    <select  v-model="agreement.typeCode" v-validate="'required'" name="合同类型" class="form-control clo-sm-2">
                         <option value="AGT_001">商标</option>
                         <option value="AGT_002">专利</option>
                         <option value="AGT_003">版权</option>
                     </select>
+                    <div v-show="errors.has('合同类型')" class="alert alert-danger">{{ errors.first('合同类型') }}</div>
                 </div>
             </div>
-            <!-- <div class="form-group">
-                 <div class="col-sm-2 control-label"></div>
-                 <input type="button" class="btn btn-primary" @click="saveAgreement" value="确定"/>
-                 &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-             </div>-->
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveAgreement" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
         </form>
     </div>
     <!--添加合同 end-->
 </div>
 
-<!--<script src="../../js/modules/resource/resource_own_1.js"></script>-->
 <script>
+    Vue.use(VeeValidate);
+    VeeValidate.Validator.localize('zh_CN');
     new Vue({
         el:"#rrapp",
         data(){
             return {
-                list_url:baseURL + 'api/resource/RDSP_002/list/RS_002',
-                cancel_url:baseURL + 'api/resource/RDSP_002/update/cancel',
+                list_url:'api/resource/RDSP_002/list/RS_002',
+                cancel_url:'api/resource/RDSP_002/update/cancel',
                 tableData: [],
                 listLoading:false,
                 showColumn:false,
                 //表格参数
                 tableConfig: {
                     //总数据
-                    totalCount:100,
+                    totalCount:0,
                     //当前页
                     pageNumber:1,
                     //每页条数
@@ -371,7 +404,7 @@
                     intentCode: '00',
                     queryTypeCode: '00',
                     queryTypeValue: null,
-                    dataSourceCode:'RDSP_001',
+                    dataSourceCode:'RDSP_002',
                     statusCode:'RS_002',
                     typeCode: '00',
                     infoRange: '00',
@@ -428,6 +461,7 @@
                 agreement:{
                     agreementId:null,
                     resourceId:null,
+                    statusCode:null,
                     allcost:null,
                     earnest:null,
                     finalPayment:null,
@@ -436,7 +470,7 @@
                     email:null,
                     phoneNumber:null,
                     address:null,
-                    agreementTypeCode:null
+                    typeCode:null
                 }
             }
 
@@ -454,13 +488,20 @@
             list: function() {
                 var _this=this;
                 _this.tableData = [];
-                axios.get('api/resource/RDSP_002/list/RS_002', {
-                    params: {
+                axios.get(_this.list_url,{params:{
                         page: _this.tableConfig.pageNumber,
-                        limit: _this.tableConfig.pageSize
-                    }
-                }).then(function (response) {
-                    console.log(response);
+                        limit: _this.tableConfig.pageSize,
+                        intentCode: _this.condition.intentCode,
+                        queryTypeCode: _this.condition.queryTypeCode,
+                        queryTypeCode: _this.condition.queryTypeValue,
+                        typeCode: _this.condition.typeCode,
+                        acrossCode: _this.condition.acrossCode,
+                        submitStartDate: _this.condition.submitStartDate,
+                        submitEndDate: _this.condition.submitEndDate,
+                        sureStartDate: _this.condition.sureStartDate,
+                        sureEndDate: _this.condition.sureEndDate,
+                        infoRangeCode:_this.condition.infoRangeCode
+                    }}).then(function (response) {
                     if(response.data.code === 0){
                         _this.tableData = response.data.page.list;
                         _this.tableConfig.totalCount = response.data.page.totalCount;
@@ -471,30 +512,31 @@
                     console.log(error);
                 });
             },
-            sureResource:function(id){
+            cancelResource:function(id){
                 var _this=this;
-                $.ajax({
-                    type: "POST",
-                    url: _this.sure_url,
-                    contentType: "application/json",
-                    data: JSON.stringify({id:id}),
-                    success: function(r){
-                        if(r.code === 0){
-                            alert('操作成功', function(){
-                                _this.list();
-                                _this.listLoading = false;
-                            });
-                        } else{
-                            alert(r.msg);
-                        }
+                axios.post('api/resource/RDSP_002/update/cancel',
+                    {id:id}
+                ).then(function (response) {
+                    console.log(response);
+                    if(response.data.code === 0){
+                        alert('操作成功,资源将在放弃库里显示', function(){
+                            _this.list();
+                            _this.listLoading = false;
+                        });
+                    }else{
+                        alert(response.data.msg)
                     }
-                })
+                }).catch(function (error) {
+                    console.log(error);
+                });
+
             },
             addCustomer: function(){
-                vm.showList = false;
-                vm.showAddCustomer = true;
-                vm.title = "添加客户";
-                vm.customerResource = {
+                var _this=this;
+                _this.showList = false;
+                _this.showAddCustomer = true;
+                _this.title = "添加客户";
+                _this.customerResource = {
                     name:null,
                     typeCode:'00',
                     sourceCode:null,
@@ -515,17 +557,18 @@
                     return ;
                 }
                 _this.agreement = {
-                    agreementId:'ZY'+vm.getCurrentDate(),
+                    agreementId:'ZY'+_this.getCurrentDate(),
                     resourceId:id,
                     allcost:null,
                     earnest:null,
                     finalPayment:null,
                     linkMan:linkMan,
                     firstParty:null,
+                    statusCode:'AGS_001',
                     email:null,
                     phoneNumber:null,
                     address:null,
-                    agreementTypeCode:'AGT_001'
+                    agreementTypeCode:'AGT_003'
                 };
             },
             addRecord: function (id) {
@@ -549,65 +592,39 @@
             saveRevisit: function () {
                 var _this=this;
                 _this.revisit.revisitDate=$("#revisitDate").val();
-                var url = 'api/revisit/save';
-                $.ajax({
-                    type: "POST",
-                    url: _this.baseURL + url,
-                    contentType: "application/json",
-                    data: JSON.stringify(_this.revisit),
-                    success: function(r){
-                        if(r.code === 0){
-                            alert('操作成功', function(){
-                                _this.showAddRecord=false;
-                                _this.reload();
-                            });
-                        } else{
-                            alert(r.msg);
-                        }
+                axios.post('api/revisit/save',_this.revisit).then(function (response) {
+                    if(response.data.code === 0){
+                        alert('操作成功', function(){
+                            _this.showAddRecord=false;
+                            _this.reload();
+                        });
+                    }else{
+                        alert(response.data.msg)
                     }
+                }).catch(function (error) {
+                    console.log(error);
                 });
             },
             saveAgreement:function(){
                 var url = 'api/resource/agreement/save';
-                $.ajax({
-                    type: "POST",
-                    url: vm.baseURL + url,
-                    contentType: "application/json",
-                    data: JSON.stringify(vm.agreement),
-                    success: function(r){
-                        if(r.code === 0){
-                            alert('操作成功', function(){
-                                vm.showAddAgreement=false;
-                                vm.reload();
-                            });
-                        } else{
-                            alert(r.msg);
-                        }
+                var _this=this;
+                axios.post(url,_this.agreement).then(function (response) {
+                    if(response.data.code === 0){
+                        alert('操作成功', function(){
+                            _this.showAddAgreement=false;
+                            _this.reload();
+                        });
+                    }else{
+                        alert(response.data.msg)
                     }
+                }).catch(function (error) {
+                    console.log(error);
                 });
 
             },
             query: function () {
                 var _this=this;
-                _this.condition.submitStartDate=$("#submitStartDate").val();
-                _this.condition.submitEndDate=$("#submitEndDate").val();
-                _this.condition.sureStartDate= $("#sureStartDate").val();
-                _this.condition.sureEndDate=$("#sureEndDate").val();
-                $("#jqGrid").jqGrid('setGridParam',{
-                    postData:{
-                        'intentCode': _this.condition.intentCode,
-                        'queryTypeCode': _this.condition.queryTypeCode,
-                        'queryTypeCode': _this.condition.queryTypeValue,
-                        'typeCode': _this.condition.typeCode,
-                        'acrossCode': _this.condition.acrossCode,
-                        'submitStartDate': _this.condition.submitStartDate,
-                        'submitEndDate': _this.condition.submitEndDate,
-                        'sureStartDate': _this.condition.sureStartDate,
-                        'sureEndDate': _this.condition.sureEndDate,
-                        'infoRangeCode':_this.condition.infoRangeCode
-                    },
-                    page:1
-                }).trigger("reloadGrid");
+                _this.list();
             },
             saveResource: function () {
                 var _this=this;
@@ -629,40 +646,21 @@
                     }
                 });
             },
-            update: function () {
-                var userId = getSelectedRow();
-                if(userId == null){
-                    return ;
-                }
-
-                vm.showList = false;
-                vm.title = "修改";
-
-                vm.getUser(userId);
-                //获取角色信息
-                this.getRoleList();
-            },
             back: function () {
                 history.go(-1);
             },
             reload: function () {
-                vm.showList = true;
-                vm.showAddCustomer=false;
-                vm.showAddRecord=false;
-                vm.showAddAgreement=false;
-                var page = $("#jqGrid").jqGrid('getGridParam','page');
-                $("#jqGrid").jqGrid('setGridParam',{
-                    postData:{},
-                    page:page
-                }).trigger("reloadGrid");
+                var _this=this;
+                _this.showList = true;
+                _this.showAddCustomer=false;
+                _this.showAddRecord=false;
+                _this.showAddAgreement=false;
+                _this.list();
             },
             recordReload: function(){
-                vm.showAddRecord = true;
-                var page = $("#recordGridTable").jqGrid('getGridParam','page');
-                $("#recordGridTable").jqGrid('setGridParam',{
-                    postData:{},
-                    page:page
-                }).trigger("reloadGrid");
+                var _this=this;
+                _this.showAddRecord = true;
+                //TODO
             },
             getCurrentDate: function(){
                 var date = new Date();
@@ -678,12 +676,27 @@
                     + date.getHours() +  date.getMinutes() + date.getSeconds();
                 return currentdate;
 
+            },
+            getSureEndDate:function(val){
+                this.condition.sureEndDate=val;
+            },
+            getSureStartDate:function(val){
+                this.condition.sureStartDate=val;
+            },
+            getSubmitEndDate:function(val){
+                this.condition.submitEndDate=val;
+            },
+            getSubmitStartDate:function(val){
+                this.condition.submitStartDate=val;
+            },
+            reload:function(){
+
             }
+
         },
         mounted () {
             this.list();
         },
-
         filters: {
             formatterDate: function (value) {
                 return (value == null || value == undefined) ? "" : value.trim().substring(0, 10);

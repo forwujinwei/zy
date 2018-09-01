@@ -368,7 +368,13 @@
     GROUP_CONCAT(B.name SEPARATOR '|') AS tradeMarkName
     FROM `resource_agreement` A
     LEFT JOIN `resource_trade_mark` B
-    ON A.`agreement_id`=B.`agreement_id` AND B.`delete_flag`!='1'
+    ON A.`agreement_id`=B.`agreement_id`
+    AND B.`delete_flag`!='1'
+    WHERE A.status_code in
+    <foreach collection="statusCodeList" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    AND A.adviser=#{adviser,jdbcType=VARCHAR}
     GROUP BY agreement_id
     <if test="offset != null and limit != null ">
       limit #{offset}, #{limit}
@@ -378,5 +384,7 @@
   <select id="queryTotal" resultType="int">
     select count(1)
     from resource_agreement
+    where  status_code  in (#{statusCode,jdbcType=VARCHAR})
+    AND adviser=#{adviser,jdbcType=VARCHAR}
   </select>
 </mapper>

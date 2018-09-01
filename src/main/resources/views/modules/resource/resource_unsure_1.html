@@ -47,13 +47,13 @@
             <tbody>
             <tr v-for="item in tableData">
                 <td hidden>{{item.id}}</td>
-                <td>{{item.name}}</td>
-                <td>{{item.typeDes}}</td>
-                <td>{{item.fieldDes}}</td>
-                <td>{{item.linkMan}}</td>
-                <td>{{item.phoneNumber}}</td>
-                <td>{{item.qqNumber}}</td>
-                <td>{{item.submitDate|formatterDate}}</td>
+                <td>********</td>
+                <td>********</td>
+                <td>********</td>
+                <td>********</td>
+                <td>********</td>
+                <td>********</td>
+                <td>********</td>
                 <td><div class="btn-group" data-toggle="buttons-radio">
                     <button @click="sureResource(item.id)" class="btn btn-primary btn-padding-reset">确认</button>
                 </div>
@@ -109,7 +109,7 @@
                 this.list();
             },
             sureResource:function(id){
-                var _this=this;
+                /*var _this=this;
                 $.ajax({
                     type: "POST",
                     url: _this.sure_url,
@@ -117,15 +117,31 @@
                     data: JSON.stringify({id:id}),
                     success: function(r){
                         if(r.code === 0){
-                            alert('操作成功', function(){
+                            alert('资源将在我的资源1中显示', function(){
                                 _this.list();
                                 _this.listLoading = false;
                             });
                         } else{
-                            alert(r.msg);
+                            alert("操作失败，请重试");
                         }
                     }
-                })
+                })*/
+
+
+                var _this=this;
+                axios.post(_this.sure_url,{id:id})
+                    .then(function (response) {
+                        if(response.data.code === 0){
+                            alert('资源将在我的资源1中显示', function(){
+                                _this.list();
+                            });
+                        }else{
+                            alert(response.data.msg);
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    }
+                );
             },
             list: function() {
                 var _this=this;

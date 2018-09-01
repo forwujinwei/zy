@@ -23,12 +23,15 @@
     <script src="../../js/axiso.js"></script>
     <script src="../../plugins/laydate/laydate.js"></script>
     <script src="../../plugins/element/index.js"></script>
+    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/vee-validate.min.js"></script>
+    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/locale/zh_CN.js"></script>
 </head>
 <body>
 <div id="rrapp" v-cloak>
     <div  v-show="showList" >
         <form role="form" class="contain">
             <div  class="form-group form-inline row">
+                <a  class="btn btn-primary" @click="addCustomer"><i class="fa fa-plus"></i>&nbsp;添加客户</a>
                 <select id="intention" v-model="condition.intentCode"  class="form-control">
                     <option value="00">意向程度</option>
                     <option value="IN_001">意向特别好的</option>
@@ -305,59 +308,68 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">总费用</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.allcost" placeholder="总费用(单位元)"/>
+                    <input type="text" class="form-control" v-model="agreement.allcost" v-validate="'required|numeric'" name="总费用" placeholder="总费用(单位元)"/>
+                    <div v-show="errors.has('总费用')" class="alert alert-danger">{{ errors.first('总费用') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">定金</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.earnest" placeholder="定金"/>
+                    <input type="text" class="form-control" v-model="agreement.earnest" v-validate="'required|numeric'" name="定金" placeholder="定金"/>
+                    <div v-show="errors.has('定金')" class="alert alert-danger">{{ errors.first('定金') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">尾款</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.finalPayment" placeholder="尾款"/>
+                    <input type="text" class="form-control" v-model="agreement.finalPayment" v-validate="'required|numeric'" name="尾款" placeholder="尾款"/>
+                    <div v-show="errors.has('尾款')" class="alert alert-danger">{{ errors.first('尾款') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">联系人</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.linkMan" placeholder="联系人"/>
+                    <input type="text" class="form-control" v-model="agreement.linkMan" v-validate="'required'" name="联系人" placeholder="联系人"/>
+                    <div v-show="errors.has('联系人')" class="alert alert-danger">{{ errors.first('联系人') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">甲方</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.firstParty" placeholder="甲方"/>
+                    <input type="text" class="form-control" v-model="agreement.firstParty" v-validate="'required'" name="甲方" placeholder="甲方"/>
+                    <div v-show="errors.has('甲方')" class="alert alert-danger">{{ errors.first('甲方') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">客户邮箱</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.email" placeholder="客户邮箱"/>
+                    <input type="text" class="form-control" v-model="agreement.email" v-validate="'required|email'" name="客户邮箱" placeholder="客户邮箱"/>
+                    <div v-show="errors.has('客户邮箱')" class="alert alert-danger">{{ errors.first('客户邮箱') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">电话</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.phoneNumber" placeholder="电话"/>
+                    <input type="text" class="form-control" v-model="agreement.phoneNumber" v-validate="'required'" name="电话" placeholder="电话"/>
+                    <div v-show="errors.has('电话')" class="alert alert-danger">{{ errors.first('电话') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">地址</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="agreement.address" placeholder="地址"/>
+                    <input type="text" class="form-control" v-model="agreement.address" v-validate="'required'" name="地址" placeholder="地址"/>
+                    <div v-show="errors.has('地址')" class="alert alert-danger">{{ errors.first('地址') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">合同类型</div>
                 <div class="col-sm-10">
-                    <select name="xssj" v-model="agreement.typeCode" class="form-control clo-sm-2">
+                    <select  v-model="agreement.typeCode" v-validate="'required'" name="合同类型" class="form-control clo-sm-2">
                         <option value="AGT_001">商标</option>
                         <option value="AGT_002">专利</option>
                         <option value="AGT_003">版权</option>
                     </select>
+                    <div v-show="errors.has('合同类型')" class="alert alert-danger">{{ errors.first('合同类型') }}</div>
                 </div>
             </div>
             <div class="form-group">
@@ -371,6 +383,8 @@
 </div>
 
 <script>
+    Vue.use(VeeValidate);
+    VeeValidate.Validator.localize('zh_CN');
     new Vue({
         el:"#rrapp",
         data(){
@@ -508,7 +522,7 @@
                            ).then(function (response) {
                     console.log(response);
                     if(response.data.code === 0){
-                        alert('操作成功', function(){
+                        alert('操作成功,资源将在放弃库里显示', function(){
                             _this.list();
                             _this.listLoading = false;
                         });

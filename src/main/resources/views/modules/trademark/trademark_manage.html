@@ -18,6 +18,8 @@
     <script src="../../js/axiso.js"></script>
     <script src="../../plugins/laydate/laydate.js"></script>
     <script src="../../plugins/element/index.js"></script>
+    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/vee-validate.min.js"></script>
+    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/locale/zh_CN.js"></script>
 </head>
 <body>
 <div id="rrapp">
@@ -110,7 +112,7 @@
                         <div  class="form-group">
                             <div class="col-sm-2 control-label">操  作</div>
                             <div class="col-sm-10">
-                                <select  v-model="tradeMarkLog.operation" class="form-control ">
+                                <select  v-model="tradeMarkLog.operation" v-validate="'required'" name="操作" class="form-control ">
                                     <option value="TMS_003">修改商标状态</option>
                                     <option value="TMS_004">修改商标信息</option>
                                 </select>
@@ -119,7 +121,7 @@
                         <div  class="form-group">
                             <div class="col-sm-2 control-label">状  态</div>
                             <div class="col-sm-10">
-                                <select  v-model="tradeMarkLog.statusCode" class="form-control ">
+                                <select  v-model="tradeMarkLog.statusCode" v-validate="'required'" name="状态" class="form-control ">
                                     <option value="00">选择状态</option>
                                     <option value="TMS_003">申请</option>
                                     <option value="TMS_004">下达受理</option>
@@ -215,6 +217,8 @@
 </body>
 
 <script>
+    Vue.use(VeeValidate);
+    VeeValidate.Validator.localize('zh_CN');
     new Vue({
         el:"#rrapp",
         data(){
