@@ -31,7 +31,7 @@
     <div  v-show="showList" >
         <form role="form" class="contain">
             <div  class="form-group form-inline row">
-                <a  class="btn btn-primary" @click="addCustomer"><i class="fa fa-plus"></i>&nbsp;添加客户</a>
+                <a  class="btn btn-primary " @click="addCustomer"><i class="glyphicon glyphicon-plus"></i>&nbsp;添加客户</a>
                 <select id="intention" v-model="condition.intentCode"  class="form-control">
                     <option value="00">意向程度</option>
                     <option value="IN_001">意向特别好的</option>
@@ -118,7 +118,7 @@
                             value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </span>
-                <a  class="btn btn-primary" @click="query"><i class="fa fa-plus"></i>&nbsp;查询</a>
+                <a  class="btn btn-primary" @click="query"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</a>
             </div>
         </form>
         <div style="margin-bottom: 50px;">
