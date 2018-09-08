@@ -1,74 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>退回合同</title>
-    <meta charset="UTF-8">
-    <meta http-equiv="Expires" content="0">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Cache-control" content="no-cache">
-    <meta http-equiv="Cache" content="no-cache">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<title>我的合同</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="Expires" content="0">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Cache" content="no-cache">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
-    <link rel="stylesheet" href="../../plugins/element/theme-default/index.css">
-    <link rel="stylesheet" href="../../plugins/bootstrap-3.3.7/css/bootstrap.css">
-    <link rel="stylesheet" href="../../css/main.css">
-    <script src="../../libs/jquery-3.1.1.min.js"></script>
-    <script src="../../plugins/layer/layer.js"></script>
+	<link rel="stylesheet" href="../../plugins/element/theme-default/index.css">
+	<link rel="stylesheet" href="../../plugins/bootstrap-3.3.7/css/bootstrap.css">
+	<link rel="stylesheet" href="../../css/main.css">
+	<script src="../../libs/jquery-3.1.1.min.js"></script>
+	<script src="../../plugins/layer/layer.js"></script>
 
-    <script src="../../plugins/bootstrap-3.3.7/js/bootstrap.js"></script>
-    <script src="../../libs/json2.js"></script>
-    <script src="../../libs/vue.min.js"></script>
-    <script src="../../libs/axios.min.js"></script>
-    <script src="../../js/axiso.js"></script>
-    <script src="../../plugins/laydate/laydate.js"></script>
-    <script src="../../plugins/element/index.js"></script>
-    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/vee-validate.min.js"></script>
-    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/locale/zh_CN.js"></script>
+	<script src="../../plugins/bootstrap-3.3.7/js/bootstrap.js"></script>
+	<script src="../../libs/json2.js"></script>
+	<script src="../../libs/vue.min.js"></script>
+	<script src="../../libs/axios.min.js"></script>
+	<script src="../../js/axiso.js"></script>
+	<script src="../../plugins/laydate/laydate.js"></script>
+	<script src="../../plugins/element/index.js"></script>
+	<script src="https://cdn.bootcss.com/vee-validate/2.0.9/vee-validate.min.js"></script>
+	<script src="https://cdn.bootcss.com/vee-validate/2.0.9/locale/zh_CN.js"></script>
 </head>
 <body>
 <div id="rrapp">
-    <div  v-show="showList" >
-        <form role="form" class="contain">
-            <div  class="form-group form-inline row">
-                <select  v-model="condition.urgent" class="form-control">
-                    <option value="00">所有</option>
-                    <option value="QU_001">加急</option>
-                    <option value="QU_002">不加急</option>
-                </select>
-	            <select id="intention" v-model="condition.queryTypeCode"  class="form-control">
+	<div  v-show="showList" >
+		<form role="form" class="contain">
+			<div  class="form-group form-inline row">
+				<select  v-model="condition.urgent" class="form-control">
+					<option value="00">所有</option>
+					<option value="QU_001">加急</option>
+					<option value="QU_002">不加急</option>
+				</select>
+				<select id="intention" v-model="condition.queryTypeCode"  class="form-control">
 					<option value="IN_001">合同号</option>
 					<option value="IN_002">联系人</option>
 					<option value="IN_003">顾问</option>
 					<option value="IN_004">名称</option>
 				</select>
 				<input type="text"  v-model="condition.queryTypeValue" class="form-control">
-	            <span class="form-inline">
+				<span class="form-inline">
                     <span class="demonstration">提交时间</span>
                     <el-date-picker
-		                    v-model="condition.createStartDate"
-		                    type="date"
-		                    placeholder="选择日期"
-		                    @change="getStartDate"
-		                    value-format="yyyy-MM-dd">
+                           v-model="condition.createStartDate"
+                           type="date"
+                           placeholder="选择日期"
+                            @change="getSubmitStartDate"
+                            value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </span>
-	            <span class="form-inline">
+                <span class="form-inline">
                     <span class="demonstration">到</span>
                     <el-date-picker
-		                    v-model="condition.createEndDate"
-		                    type="date"
-		                    placeholder="选择日期"
-		                    @change="getEndDate"
-		                    value-format="yyyy-MM-dd">
+                            v-model="condition.createEndDate"
+                           type="date"
+                          placeholder="选择日期"
+                        @change="getSubmitEndDate"
+                          value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </span>
-				<div class="form-group" >
-					<a  class="btn btn-primary" ><i class="glyphicon glyphicon-search"></i>&nbsp;查询</a>
-				</div>
-			</div>
-		</form>
-		<div style="margin-bottom: 50px;">
+        		<div class="form-group">
+        			<a  class="btn btn-primary" ><i class="glyphicon glyphicon-search"></i>&nbsp;查询</a>
+        		</div>
+        	</div>
+        </form>
+        <div style="margin-bottom: 50px;">
 			<table class="table table-bordered" v-loading="listLoading">
 				<colgroup>
 					<col width="12%">
@@ -255,7 +255,7 @@
 			<!--甲方-->
 			<div class="tab-pane fade" id="firstParty">
 				<form class="form-horizontal">
-					<input type="text"  v-model="agreement.resourceId" class="hidden"/>
+					<input type="text"  v-model="agreement.agreementId" class="hidden"/>
 					<div class="form-group">
 						<div class="col-sm-2  control-label">联系人 </div>
 						<div class="col-sm-10">
@@ -296,54 +296,122 @@
 						</div>
 
 					</div>
+
 					<div class="form-group">
 						<div class="control-label col-sm-2">身份证</div>
 						<div class="col-sm-10">
-							<input type="file" name="image" class="projectfile"/>
+							<el-upload
+									class="upload-demo"
+									ref="upload"
+									:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+									:on-preview="handlePreview"
+									:on-remove="handleRemove"
+									:file-list="fileList"
+									:limit="2"
+									:auto-upload="false">
+								<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+								<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+								<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+							</el-upload>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="control-label col-sm-2">执照</div>
 						<div class="col-sm-10">
-							<input type="file" name="image" class="projectfile"/>
+							<el-upload
+									class="upload-demo"
+									ref="upload"
+									:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+									:on-preview="handlePreview"
+									:on-remove="handleRemove"
+									:file-list="fileList"
+									:limit="2"
+									:auto-upload="false">
+								<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+								<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+								<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+							</el-upload>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="control-label col-sm-2">确认书</div>
 						<div class="col-sm-10">
-							<input type="file" name="image" class="projectfile"/>
+							<el-upload
+									class="upload-demo"
+									ref="upload"
+									:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+									:on-preview="handlePreview"
+									:on-remove="handleRemove"
+									:file-list="fileList"
+									:limit="1"
+									:auto-upload="false">
+								<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+								<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+								<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+							</el-upload>
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="control-label col-sm-2">委托书</div>
 						<div class="col-sm-10">
-							<input type="file" name="image" class="projectfile"/>
+							<el-upload
+									class="upload-demo"
+									ref="upload"
+									:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+									:on-preview="handlePreview"
+									:on-remove="handleRemove"
+									:file-list="fileList"
+									:limit="1"
+									:auto-upload="false">
+								<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+								<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+								<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+							</el-upload>
 						</div>
 					</div>
 					<div class="form-group">
-						<div class="control-label col-sm-2">合同(第一页)</div>
-						<div class="col-sm-10">
-							<input type="file" name="image" class="projectfile"/>
+						<div class="row">
+							<div class="control-label col-sm-2">合同</div>
+							<div class="col-sm-10 control-label " style="text-align: left;color: darkred">(请按照合同页码顺序上传，上传后自动生成pdf)</div>
 						</div>
-					</div>
-					<div class="form-group">
-						<div class="control-label col-sm-2">合同(第二页)</div>
-						<div class="col-sm-10">
-							<input type="file" name="image" class="projectfile"/>
+						<div class="row">
+							<div class="col-sm-2"></div>
+							<div class="col-sm-10">
+								<el-upload
+										class="upload-demo"
+										ref="upload"
+										:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+										:on-preview="handlePreview"
+										:on-remove="handleRemove"
+										:file-list="fileList"
+										:limit="6"
+										:auto-upload="false">
+									<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+									<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+									<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，单张图片且不超过500kb</div>
+								</el-upload>
+							</div>
 						</div>
+
 					</div>
-					<div class="form-group">
-						<div class="control-label col-sm-2">合同(第三页)</div>
-						<div class="col-sm-10">
-							<input type="file" name="image" class="projectfile"/>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="control-label col-sm-2">合同(第四页)</div>
-						<div class="col-sm-10">
-							<input type="file" name="image" class="projectfile"/>
-						</div>
-					</div>
+					<!--<div class="form-group">
+                        <div class="control-label col-sm-2">合同(第二页)</div>
+                        <div class="col-sm-10">
+                            <input type="file" name="image" class="projectfile"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="control-label col-sm-2">合同(第三页)</div>
+                        <div class="col-sm-10">
+                            <input type="file" name="image" class="projectfile"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="control-label col-sm-2">合同(第四页)</div>
+                        <div class="col-sm-10">
+                            <input type="file" name="image" class="projectfile"/>
+                        </div>
+                    </div>-->
 					<div class="form-group">
 						<div class="col-sm-2 control-label"></div>
 						<input type="button" class="btn btn-primary" @click="updateAgreement" value="确定"/>
@@ -376,19 +444,55 @@
 			<div class="form-group">
 				<div class="col-sm-2 control-label">图片</div>
 				<div class="col-sm-10">
-					<input type="file"  class="projectfile" v-model="tradeMarkInfo.img"/>
+					<el-upload
+							class="upload-demo"
+							ref="upload"
+							:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList"
+							:limit="1"
+							:auto-upload="false">
+						<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+						<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+						<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+					</el-upload>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-2 control-label">商标局图片</div>
 				<div class="col-sm-10">
-					<input type="file" class="projectfile" v-model="tradeMarkInfo.governmentImg"/>
+					<el-upload
+							class="upload-demo"
+							ref="upload"
+							:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList"
+							:limit="1"
+							:auto-upload="false">
+						<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+						<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+						<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+					</el-upload>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-2 control-label">客户确认书</div>
 				<div class="col-sm-10">
-					<input type="file" class="projectfile" v-model="tradeMarkInfo.sureDocImg"/>
+					<el-upload
+							class="upload-demo"
+							ref="upload"
+							:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:file-list="fileList"
+							:limit="1"
+							:auto-upload="false">
+						<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+						<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+						<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+					</el-upload>
 				</div>
 			</div>
 			<div class="form-group">
@@ -435,6 +539,7 @@
         el:"#rrapp",
         data(){
             return {
+                fileList: [],
                 update_agreement_url:'/api/resource/agreement/update',
                 listLoading:false,
                 title:null,
@@ -506,6 +611,15 @@
 
         },
         methods: {
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file) {
+                console.log(file);
+            },
             handleCurrentChange(val) {
                 this.tableConfig.pageNumber = val;
                 this.list();
@@ -525,7 +639,6 @@
                         limit: _this.tableConfig.pageSize
                     }
                 }).then(function (response) {
-                    console.log(response);
                     if(response.data.code === 0){
                         _this.tableData = response.data.page.list;
                         _this.tableConfig.totalCount = response.data.page.totalCount;
@@ -716,11 +829,11 @@
                     }
                 );
             },
-            getEndDate:function(val){
-                this.condition.createStartDate=val;
-            },
-            getStartDate:function(val){
+            getSubmitEndDate:function(val){
                 this.condition.createEndDate=val;
+            },
+            getSubmitStartDate:function(val){
+                this.condition.createStartDate=val;
             },
 
         },

@@ -34,6 +34,7 @@ public class ResourcePoolController {
     @Resource
     private ResourcePoolService resourcePoolService;
 
+
     @RequestMapping("/{dataSourceCode}/list/{statusCode}")
     public R list(@LoginUser UserEntity user, @PathVariable String dataSourceCode,@PathVariable String statusCode, @RequestParam Map<String, Object> params) throws ParseException {
         //查询列表数据
@@ -68,7 +69,6 @@ public class ResourcePoolController {
         PageUtils pageUtil = new PageUtils(resourcePersonalPoolList, total, query.getLimit(), query.getPage());
         return R.ok().put("page", pageUtil);
     }
-
     /**
      * 保存定时任务
      */

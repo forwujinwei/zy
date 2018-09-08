@@ -255,7 +255,7 @@
                 <!--甲方-->
                 <div class="tab-pane fade" id="firstParty">
                     <form class="form-horizontal">
-                        <input type="text"  v-model="agreement.resourceId" class="hidden"/>
+                        <input type="text"  v-model="agreement.agreementId" class="hidden"/>
                         <div class="form-group">
                             <div class="col-sm-2  control-label">联系人 </div>
                             <div class="col-sm-10">
@@ -296,37 +296,105 @@
                             </div>
 
                         </div>
+
                         <div class="form-group">
                             <div class="control-label col-sm-2">身份证</div>
                             <div class="col-sm-10">
-                                <input type="file" name="image" class="projectfile"/>
+                                <el-upload
+                                        class="upload-demo"
+                                        ref="upload"
+                                        :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+                                        :on-preview="handlePreview"
+                                        :on-remove="handleRemove"
+                                        :file-list="fileList"
+                                        :limit="2"
+                                        :auto-upload="false">
+                                   <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                </el-upload>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">执照</div>
                             <div class="col-sm-10">
-                                <input type="file" name="image" class="projectfile"/>
+                                <el-upload
+                                        class="upload-demo"
+                                        ref="upload"
+                                        :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+                                        :on-preview="handlePreview"
+                                        :on-remove="handleRemove"
+                                        :file-list="fileList"
+                                        :limit="2"
+                                        :auto-upload="false">
+                                    <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                </el-upload>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">确认书</div>
                             <div class="col-sm-10">
-                                <input type="file" name="image" class="projectfile"/>
+                                <el-upload
+                                        class="upload-demo"
+                                        ref="upload"
+                                        :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+                                        :on-preview="handlePreview"
+                                        :on-remove="handleRemove"
+                                        :file-list="fileList"
+                                        :limit="1"
+                                        :auto-upload="false">
+                                    <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                </el-upload>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">委托书</div>
                             <div class="col-sm-10">
-                                <input type="file" name="image" class="projectfile"/>
+                                <el-upload
+                                        class="upload-demo"
+                                        ref="upload"
+                                        :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+                                        :on-preview="handlePreview"
+                                        :on-remove="handleRemove"
+                                        :file-list="fileList"
+                                        :limit="1"
+                                        :auto-upload="false">
+                                    <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                </el-upload>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="control-label col-sm-2">合同(第一页)</div>
-                            <div class="col-sm-10">
-                                <input type="file" name="image" class="projectfile"/>
+                            <div class="row">
+                                <div class="control-label col-sm-2">合同</div>
+                                <div class="col-sm-10 control-label " style="text-align: left;color: darkred">(请按照合同页码顺序上传，上传后自动生成pdf)</div>
                             </div>
+                          <div class="row">
+                              <div class="col-sm-2"></div>
+                              <div class="col-sm-10">
+                                  <el-upload
+                                          class="upload-demo"
+                                          ref="upload"
+                                          :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+                                          :on-preview="handlePreview"
+                                          :on-remove="handleRemove"
+                                          :file-list="fileList"
+                                          :limit="6"
+                                          :auto-upload="false">
+                                      <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                                      <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，单张图片且不超过500kb</div>
+                                  </el-upload>
+                              </div>
+                          </div>
+
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <div class="control-label col-sm-2">合同(第二页)</div>
                             <div class="col-sm-10">
                                 <input type="file" name="image" class="projectfile"/>
@@ -343,7 +411,7 @@
                             <div class="col-sm-10">
                                 <input type="file" name="image" class="projectfile"/>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="form-group">
                             <div class="col-sm-2 control-label"></div>
                             <input type="button" class="btn btn-primary" @click="updateAgreement" value="确定"/>
@@ -376,19 +444,55 @@
                 <div class="form-group">
                     <div class="col-sm-2 control-label">图片</div>
                     <div class="col-sm-10">
-                        <input type="file"  class="projectfile" v-model="tradeMarkInfo.img"/>
+                        <el-upload
+                                class="upload-demo"
+                                ref="upload"
+                                :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+                                :on-preview="handlePreview"
+                                :on-remove="handleRemove"
+                                :file-list="fileList"
+                                :limit="1"
+                                :auto-upload="false">
+                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                        </el-upload>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-2 control-label">商标局图片</div>
                     <div class="col-sm-10">
-                        <input type="file" class="projectfile" v-model="tradeMarkInfo.governmentImg"/>
+                        <el-upload
+                                class="upload-demo"
+                                ref="upload"
+                                :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+                                :on-preview="handlePreview"
+                                :on-remove="handleRemove"
+                                :file-list="fileList"
+                                :limit="1"
+                                :auto-upload="false">
+                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                        </el-upload>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-2 control-label">客户确认书</div>
                     <div class="col-sm-10">
-                        <input type="file" class="projectfile" v-model="tradeMarkInfo.sureDocImg"/>
+                        <el-upload
+                                class="upload-demo"
+                                ref="upload"
+                                :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
+                                :on-preview="handlePreview"
+                                :on-remove="handleRemove"
+                                :file-list="fileList"
+                                :limit="1"
+                                :auto-upload="false">
+                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                        </el-upload>
                     </div>
                 </div>
                 <div class="form-group">
@@ -435,6 +539,7 @@
         el:"#rrapp",
         data(){
             return {
+                fileList: [],
                 update_agreement_url:'/api/resource/agreement/update',
                 listLoading:false,
                 title:null,
@@ -506,6 +611,15 @@
 
         },
         methods: {
+            submitUpload() {
+                this.$refs.upload.submit();
+            },
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file) {
+                console.log(file);
+            },
             handleCurrentChange(val) {
                 this.tableConfig.pageNumber = val;
                 this.list();
@@ -525,7 +639,6 @@
                         limit: _this.tableConfig.pageSize
                     }
                 }).then(function (response) {
-                    console.log(response);
                     if(response.data.code === 0){
                         _this.tableData = response.data.page.list;
                         _this.tableConfig.totalCount = response.data.page.totalCount;

@@ -64,7 +64,8 @@ public enum DistEnum {
 
     AGREEMENT_STATUS_SIGN("AGS_001","签订","AGREEMENT_STATUS"),
     AGREEMENT_STATUS_SUBMIT("AGS_002","已提交","AGREEMENT_STATUS"),
-    AGREEMENT_STATUS_BACK("AGS_003","退回","AGREEMENT_STATUS"),
+    AGREEMENT_STATUS_BACK("AGS_003","驳回","AGREEMENT_STATUS"),
+    AGREEMENT_STATUS_AGREE("AGS_004","通过","AGREEMENT_STATUS"),
 
     URGENT_YES("UY_001","加急","URGENT"),
     URGENT_NO("UY_002","不加急","URGENT"),
@@ -141,6 +142,11 @@ public enum DistEnum {
     /*修改商标操作*/
     TRADE_MARK_OPERATION_001("TMO_001","修改商标状态","TRADE_MARK_OPERATION"),
     TRADE_MARK_OPERATION_002("TMO_002","修改商标信息","TRADE_MARK_OPERATION"),
+
+    /*打款状态*/
+    ACCOUNT_STATUS_001("AS_001","已打款","account_status"),
+    ACCOUNT_STATUS_002("AS_002","已退款","account_status"),
+    ACCOUNT_STATUS_003("AS_003","已归档","account_status"),
 
     ;
 

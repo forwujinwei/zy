@@ -110,15 +110,6 @@ var vm = new Vue({
     updated: function(){
         //路由
         var router = new Router();
-        /*//为首页添加路由
-        var home_href = $("#menu-home").attr("href");
-        //替换iframe的url
-        router.add(home_href, function() {
-            var url = window.location.hash;
-            //替换iframe的url
-            vm.main = url.replace('#', '');
-            $("#menu-home").parents("li").addClass("active");
-        });*/
         routerList(router, vm.menuList);
         router.start();
     }
