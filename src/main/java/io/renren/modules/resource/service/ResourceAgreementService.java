@@ -43,4 +43,8 @@ public class ResourceAgreementService {
 
         return resourceAgreementMapper.selectFromByPrimaryKey(agreementId);
     }
+
+    public ResourceAgreement getAgreementById(String agreementId) {
+        return resourceAgreementMapper.selectByPrimaryKey(agreementId);
+    }
 }

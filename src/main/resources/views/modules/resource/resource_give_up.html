@@ -81,7 +81,7 @@
         el:"#test",
         data(){
             return {
-                list_url:'api/resource/RDSP_001/list/RS_003',
+                list_url:'api/resource/RDSP_001/list',
                 sure_url:'api/resource/RDSP_001/update/sure',
                 tableData: [],
                 listLoading:false,
@@ -128,7 +128,9 @@
                 _this.tableData = [];
                 axios.get(
                     _this.list_url,
-                    {params: {page: _this.tableConfig.pageNumber,
+                    {params: {
+                            statusCode:'RS_003',
+                        page: _this.tableConfig.pageNumber,
                              limit: _this.tableConfig.pageSize}
                 }).then(function(res){
                     _this.tableData = res.data.page.list;

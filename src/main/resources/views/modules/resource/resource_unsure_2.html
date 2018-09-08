@@ -127,8 +127,9 @@
             list: function() {
                 var _this=this;
                 _this.tableData = [];
-                axios.get('api/resource/RDSP_002/list/RS_001', {
+                axios.get('api/resource/RDSP_002/list', {
                     params: {
+                        statusCode:'RS_001',
                         page: _this.tableConfig.pageNumber,
                         limit: _this.tableConfig.pageSize
                     }

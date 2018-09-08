@@ -384,8 +384,11 @@
             <if test="typeCode != null and typeCode.trim() != '00'">
                 and  type_code = #{typeCode,jdbcType=VARCHAR}
             </if>
-            <if test="statusCode != null and statusCode.trim() != '00'">
-                and  status_code = #{statusCode,jdbcType=VARCHAR}
+            <if test="statusCode != null">
+                and status_code in
+                <foreach collection="statusCode" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
             </if>
             <if test="dataSourceCode != null and dataSourceCode.trim() != ''">
                 and  data_source_code = #{dataSourceCode,jdbcType=VARCHAR}
@@ -437,8 +440,11 @@
             <if test="typeCode != null and typeCode.trim() != '00'">
                 and  type_code = #{typeCode,jdbcType=VARCHAR}
             </if>
-            <if test="statusCode != null and statusCode.trim() != '00'">
-                and  status_code = #{statusCode,jdbcType=VARCHAR}
+            <if test="statusCode != null">
+                and  status_code in
+                <foreach collection="statusCode" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
             </if>
             <if test="dataSourceCode != null and dataSourceCode.trim() != ''">
                 and  data_source_code = #{dataSourceCode,jdbcType=VARCHAR}

@@ -72,8 +72,8 @@
             <td>{{item.adviser}}</td>
             <td>{{item.applyTypeDes}}</td>
             <td><div class="btn-group" data-toggle="buttons-radio">
-                <button  class="btn btn-primary btn-padding-reset" data-toggle="modal"
-                         @click="showUpdateTradeMark(item.id)">修改</button>
+                <!--<button  class="btn btn-primary btn-padding-reset" data-toggle="modal"
+                         @click="showUpdateTradeMark(item.id)">修改</button>-->
                 <button  class="btn btn-primary btn-padding-reset"
                          @click="searchTradeMarkLog(item.id)">商标日志</button>
             </div>
@@ -338,6 +338,13 @@
             },
             saveTradeMarkLog:function(){
                 var _this=this;
+                _this.$validator.validate().then(result => {
+                    if (!result) {
+                        alert('请正确填写表单数据', function(){
+                            return ;
+                        });
+                    }
+                });
                 axios.post('/api/tradeMark/log/save',_this.tradeMarkLog)
                     .then(function (response) {
                         if(response.data.code === 0){

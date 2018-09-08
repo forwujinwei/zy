@@ -94,6 +94,15 @@ public class ResourceAgreementController {
         PageUtils pageUtil = new PageUtils(resourcePersonalPoolList, total, query.getLimit(), query.getPage());
         return R.ok().put("page", pageUtil);
     }
+    /**
+     * 合同列表
+     */
+    @RequestMapping("/get/{agreementId}")
+    public R getAgreementById(@LoginUser UserEntity user,@PathVariable String agreementId) {
+        //查询列表数据
+        ResourceAgreement resourceAgreement = resourceAgreementService.getAgreementById(agreementId);
+        return R.ok().put("data", resourceAgreement);
+    }
 
     /**
      * 保存定时任务

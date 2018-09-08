@@ -188,54 +188,62 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label">业务类型</div>
                 <div class="col-sm-10">
-                    <select name="xssj" v-model="customerResource.typeCode" class="form-control clo-sm-2">
+                    <select  v-model="customerResource.typeCode" v-validate="'required'" name="资源业务类型" class="form-control clo-sm-2">
                         <option value="RT_001">商标</option>
                         <option value="RT_002">专利</option>
                         <option value="RT_003">国际商标</option>
                         <option value="RT_004">国际专利</option>
                     </select>
+                    <div v-show="errors.has('资源业务类型')" class="alert alert-danger">{{ errors.first('资源业务类型') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">名称</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="customerResource.name" placeholder="名称"/>
+                    <input type="text" class="form-control" v-model="customerResource.name" v-validate="'required'" name="资源名称" placeholder="名称"/>
+                    <div v-show="errors.has('资源名称')" class="alert alert-danger">{{ errors.first('资源名称') }}</div>
                 </div>
+
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">行业/类型</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="customerResource.fieldDes" placeholder="行业/类型"/>
+                    <input type="text" class="form-control" v-model="customerResource.fieldDes" v-validate="'required'" name="行业/类型" placeholder="行业/类型"/>
+                    <div v-show="errors.has('行业/类型')" class="alert alert-danger">{{ errors.first('行业/类型') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">联系人</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="customerResource.linkMan" placeholder="联系人"/>
+                    <input type="text" class="form-control" v-model="customerResource.linkMan" v-validate="'required'" name="客户联系人" placeholder="联系人"/>
+                    <div v-show="errors.has('客户联系人')" class="alert alert-danger">{{ errors.first('客户联系人') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">联系电话</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="customerResource.phoneNumber" placeholder="联系电话"/>
+                    <input type="text" class="form-control" v-model="customerResource.phoneNumber" v-validate="'required'" name="客户联系电话"  placeholder="联系电话"/>
+                    <div v-show="errors.has('客户联系电话')" class="alert alert-danger">{{ errors.first('客户联系电话') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">联系QQ</div>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" v-model="customerResource.qqNumber" placeholder="联系QQ"/>
+                    <input type="text" class="form-control" v-model="customerResource.qqNumber" v-validate="'required'" name="联系QQ" placeholder="联系QQ"/>
+                    <div v-show="errors.has('联系QQ')" class="alert alert-danger">{{ errors.first('联系QQ') }}</div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-2 control-label">来源</div>
                 <div class="col-sm-10">
-                    <select name="xssj" v-model="customerResource.sourceCode" class="form-control clo-sm-2">
+                    <select  v-model="customerResource.sourceCode" v-validate="'required'" name="资源来源" class="form-control clo-sm-2">
                         <option value="ST_001">商桥</option>
                         <option value="ST_002">电销</option>
                         <option value="ST_003">400</option>
                         <option value="ST_004">QQ</option>
                         <option value="ST_005">其他</option>
                     </select>
+                    <div v-show="errors.has('资源来源')" class="alert alert-danger">{{ errors.first('资源来源') }}</div>
                 </div>
             </div>
             <div class="form-group">
@@ -387,7 +395,7 @@
         el:"#rrapp",
         data(){
             return {
-                list_url:'api/resource/RDSP_002/list/RS_002',
+                list_url:'api/resource/RDSP_002/list',
                 cancel_url:'api/resource/RDSP_002/update/cancel',
                 tableData: [],
                 listLoading:false,
@@ -406,7 +414,7 @@
                     queryTypeCode: '00',
                     queryTypeValue: null,
                     dataSourceCode:'RDSP_002',
-                    statusCode:'RS_002',
+                    statusCode:'RS_002,RS_004',
                     typeCode: '00',
                     infoRange: '00',
                     acrossCode:'00',
@@ -490,6 +498,7 @@
                 var _this=this;
                 _this.tableData = [];
                 axios.get(_this.list_url,{params:{
+                        statusCode:_this.condition.statusCode,
                         page: _this.tableConfig.pageNumber,
                         limit: _this.tableConfig.pageSize,
                         intentCode: _this.condition.intentCode,
@@ -539,7 +548,7 @@
                 _this.title = "添加客户";
                 _this.customerResource = {
                     name:null,
-                    typeCode:'00',
+                    typeCode:null,
                     sourceCode:null,
                     fieldDes:null,
                     linkMan:null,
@@ -609,18 +618,36 @@
             saveAgreement:function(){
                 var url = 'api/resource/agreement/save';
                 var _this=this;
-                axios.post(url,_this.agreement).then(function (response) {
-                    if(response.data.code === 0){
-                        alert('操作成功', function(){
-                            _this.showAddAgreement=false;
-                            _this.reload();
-                        });
-                    }else{
-                        alert(response.data.msg)
-                    }
-                }).catch(function (error) {
-                    console.log(error);
-                });
+                var agreementId = _this.agreement.agreementId;
+                var resourceId = _this.agreement.resourceId;
+                var allcost = _this.agreement.allcost;
+                var earnest = _this.agreement.earnest;
+                var finalPayment = _this.agreement.finalPayment;
+                var linkMan = _this.agreement.linkMan;
+                var firstParty = _this.agreement.firstParty;
+                var email = _this.agreement.email;
+                var phoneNumber = _this.agreement.phoneNumber;
+                var address = _this.agreement.address;
+                var typeCode = _this.agreement.typeCode;
+                if (!(agreementId&&resourceId&&allcost&&earnest&&finalPayment&&linkMan&&firstParty&&email&&phoneNumber&&address&&typeCode)) {
+                    alert('请正确填写表单数据', function(){
+                        _this.$validator.validate().then(result => {});
+                        return ;
+                    });
+                }else {
+                    axios.post(url, _this.agreement).then(function (response) {
+                        if (response.data.code === 0) {
+                            alert('操作成功', function () {
+                                _this.showAddAgreement = false;
+                                _this.reload();
+                            });
+                        } else {
+                            alert(response.data.msg)
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
 
             },
             query: function () {
@@ -629,19 +656,36 @@
             },
             saveResource: function () {
                 var _this=this;
-                axios.post('api/resource/save/RDSP_002/RFE_001',_this.customerResource).then(function (response) {
-                    if(response.data.code === 0){
-                        alert('操作成功,资源在我的资源1中显示', function(){
-                            _this.showAddCustomer=false;
-                            _this.showList = true;
-                            _this.list();
-                        });
-                    }else{
-                        alert(response.data.msg)
-                    }
-                }).catch(function (error) {
-                    console.log(error);
-                });
+
+                var linkMan = _this.customerResource.linkMan;
+                var fieldDes = _this.customerResource.fieldDes;
+                var name = _this.customerResource.name;
+                var phoneNumber = _this.customerResource.phoneNumber;
+                var qqNumber = _this.customerResource.qqNumber;
+                var sourceCode = _this.customerResource.sourceCode;
+                var typeCode = _this.customerResource.typeCode;
+                if (!(linkMan&&fieldDes&&name&&phoneNumber&&qqNumber&&sourceCode&&typeCode)) {
+                    alert('请正确填写表单数据', function(){
+                        _this.$validator.validate().then(result => {});
+                        return ;
+                    });
+                }else{
+                    axios.post('api/resource/save/RDSP_002/RFE_001',_this.customerResource).then(function (response) {
+                        if(response.data.code === 0){
+                            alert('操作成功,资源在我的资源2中显示', function(){
+                                _this.showAddCustomer=false;
+                                _this.showList = true;
+                                _this.list();
+                            });
+                        }else{
+                            alert(response.data.msg)
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+
+
             },
             back: function () {
                 history.go(-1);

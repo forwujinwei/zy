@@ -188,7 +188,7 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-2 control-label"></div>
-                            <input type="button" class="btn btn-primary" @click="updateAgreement" value="确定"/>
+                            <input type="button" class="btn btn-primary" @click="updateAgreement('1')" value="确定"/>
                             &nbsp;&nbsp;<input type="button" class="btn btn-warning"  value="返回"/>
                         </div>
                     </form>
@@ -259,7 +259,7 @@
                         <div class="form-group">
                             <div class="col-sm-2  control-label">联系人 </div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" v-validate="'required'" name="联系人" v-model="tradeMarkAgreement.agreementId" />
+                                <input type="text" class="form-control" v-validate="'required'" name="联系人" v-model="agreement.linkMan" />
                                 <div v-show="errors.has('联系人')" class="alert alert-danger">{{ errors.first('联系人') }}</div>
                             </div>
 
@@ -268,14 +268,14 @@
                         <div class="form-group">
                             <div class="control-label col-sm-2">甲方</div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control " v-validate="'required'" name="甲方" v-model="tradeMarkAgreement.registerCost" />
+                                <input type="text" class="form-control " v-validate="'required'" name="甲方" v-model="agreement.firstParty" />
                                 <div v-show="errors.has('甲方')" class="alert alert-danger">{{ errors.first('甲方') }}</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="control-label col-sm-2">邮箱</div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" v-validate="'required|email'" name="邮箱" v-model="tradeMarkAgreement.designCost"/>
+                                <input type="text" class="form-control" v-validate="'required|email'" name="邮箱" v-model="agreement.email"/>
                                 <div v-show="errors.has('邮箱')" class="alert alert-danger">{{ errors.first('邮箱') }}</div>
                             </div>
 
@@ -283,7 +283,7 @@
                         <div class="form-group">
                             <div class="control-label col-sm-2">电话</div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control " v-validate="'required'" name="电话" v-model="tradeMarkAgreement.queryCost" />
+                                <input type="text" class="form-control " v-validate="'required'" name="电话" v-model="agreement.phoneNumber" />
                                 <div v-show="errors.has('电话')" class="alert alert-danger">{{ errors.first('电话') }}</div>
                             </div>
 
@@ -291,7 +291,7 @@
                         <div class="form-group">
                             <div class="control-label col-sm-2">地址</div>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control " v-validate="'required'" name="地址" v-model="tradeMarkAgreement.nameCost" />
+                                <input type="text" class="form-control " v-validate="'required'" name="地址" v-model="agreement.address" />
                                 <div v-show="errors.has('地址')" class="alert alert-danger">{{ errors.first('地址') }}</div>
                             </div>
 
@@ -394,27 +394,9 @@
                           </div>
 
                         </div>
-                        <!--<div class="form-group">
-                            <div class="control-label col-sm-2">合同(第二页)</div>
-                            <div class="col-sm-10">
-                                <input type="file" name="image" class="projectfile"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="control-label col-sm-2">合同(第三页)</div>
-                            <div class="col-sm-10">
-                                <input type="file" name="image" class="projectfile"/>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="control-label col-sm-2">合同(第四页)</div>
-                            <div class="col-sm-10">
-                                <input type="file" name="image" class="projectfile"/>
-                            </div>
-                        </div>-->
                         <div class="form-group">
                             <div class="col-sm-2 control-label"></div>
-                            <input type="button" class="btn btn-primary" @click="updateAgreement" value="确定"/>
+                            <input type="button" class="btn btn-primary" @click="updateAgreement('2')" value="确定"/>
                             &nbsp;&nbsp;<input type="button" class="btn btn-warning"  value="返回"/>
                         </div>
                     </form>
@@ -579,7 +561,12 @@
                     allcost: null,
                     earnest: null,
                     finalPayment: null,
-                    pay: null
+                    pay: null,
+                    linkMan:null,
+                    firstParty:null,
+                    email:null,
+                    phoneNumber:null,
+                    address:null
                 },
                 tradeMarkAgreement: {
                     agreementId: null,
@@ -654,13 +641,7 @@
                 _this.showList=false;
                 _this.showAgreement=true;
                 _this.title='修改商标';
-                _this.agreement={
-                    agreementId: id,
-                    allcost: null,
-                    earnest: null,
-                    finalPayment: null,
-                    pay: null
-                }
+                _this.getAgreementById(id);
                 _this.tradeMarkInfo.agreementId=id;
                 _this.listTradeMark(id);
                 _this.getTrademarkClassify();
@@ -716,21 +697,59 @@
                 _this.showTradeMark=false;
                 $('#myTab a[href="#tradeMarkInfo"]').tab('show')
             },
-            updateAgreement:function(){
+            getAgreementById:function(id){
                 var _this=this;
-                axios.post(_this.update_agreement_url,_this.agreement)
+                axios.get('/api/resource/agreement/get/'+id)
                      .then(function (response) {
-                        if(response.data.code === 0){
-                            alert('操作成功', function(){
+                    if(response.data.code === 0){
+                        _this.agreement=response.data.data;
+                    }
+                }).catch(function (error) {
+                        console.log(error);
+                    }
+                );
+
+            },
+            updateAgreement:function(val){
+                var _this=this;
+                if(val==1){
+                    var agreementId = _this.agreement.agreementId;
+                    var allcost = _this.agreement.allcost;
+                    var earnest = _this.agreement.earnest;
+                    var finalPayment = _this.agreement.finalPayment;
+                    var pay = _this.agreement.pay;
+                    if (!(agreementId&&allcost&&earnest&&finalPayment&&pay)) {
+                        alert('请正确填写表单数据', function(){
+                            _this.$validator.validate().then(result => {});
+                            return ;
+                        });
+                    }
+                }else{
+                    var linkMan = _this.agreement.linkMan;
+                    var firstParty = _this.agreement.firstParty;
+                    var email = _this.agreement.email;
+                    var phoneNumber = _this.agreement.phoneNumber;
+                    var address = _this.agreement.address;
+                    if (!(linkMan&&firstParty&&email&&phoneNumber&&address)) {
+                        alert('请正确填写表单数据', function(){
+                            _this.$validator.validate().then(result => {});
+                            return ;
+                        });
+                    }
+                }
+                axios.post(_this.update_agreement_url, _this.agreement)
+                    .then(function (response) {
+                        if (response.data.code === 0) {
+                            alert('操作成功', function () {
                                 _this.list();
                             });
-                        }else{
+                        } else {
                             alert(response.data.msg);
                         }
                     }).catch(function (error) {
                         console.log(error);
                     }
-                 );
+                );
             },
             submitAgreement:function(id){
                 var _this=this;
@@ -758,25 +777,37 @@
 
             },
             saveOrupdateTradeMark:function(id){
+
                 var _this=this;
                 var baseUrl='/api/resource/trademark';
                 var url=(id!=''&&id!=null)?baseUrl+'/update':baseUrl+'/save';
-                axios.post(url,_this.tradeMarkInfo).then(function (response) {
-                    if(response.data.code === 0){
-                        alert('操作成功', function(){
-                            _this.showList=false;
-                            _this.showAgreement=true;
-                            _this.showTradeMark=false;
-                            _this.listTradeMark(_this.tradeMarkInfo.agreementId);
+                var agreementId = _this.tradeMarkInfo.agreementId;
+                var name = _this.tradeMarkInfo.name;
+                var classifyCode = _this.tradeMarkInfo.classifyCode;
+                var docCode = _this.tradeMarkInfo.docCode;
+                if (!(agreementId&&name&&classifyCode&&docCode)) {
+                    alert('请正确填写表单数据', function(){
+                        _this.$validator.validate().then(result => {});
+                        return ;
+                    });
+                }else {
+                    axios.post(url, _this.tradeMarkInfo).then(function (response) {
+                        if (response.data.code === 0) {
+                            alert('操作成功', function () {
+                                _this.showList = false;
+                                _this.showAgreement = true;
+                                _this.showTradeMark = false;
+                                _this.listTradeMark(_this.tradeMarkInfo.agreementId);
 
-                        });
-                    }else{
-                        alert(response.data.msg);
-                    }
-                }).catch(function (error) {
-                        console.log(error);
-                    }
-                );
+                            });
+                        } else {
+                            alert(response.data.msg);
+                        }
+                    }).catch(function (error) {
+                            console.log(error);
+                        }
+                    );
+                }
 
             },
             deleteTradeMark:function(id){

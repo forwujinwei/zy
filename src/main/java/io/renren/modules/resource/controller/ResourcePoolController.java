@@ -35,14 +35,18 @@ public class ResourcePoolController {
     private ResourcePoolService resourcePoolService;
 
 
-    @RequestMapping("/{dataSourceCode}/list/{statusCode}")
-    public R list(@LoginUser UserEntity user, @PathVariable String dataSourceCode,@PathVariable String statusCode, @RequestParam Map<String, Object> params) throws ParseException {
+    @RequestMapping("/{dataSourceCode}/list")
+    public R list(@LoginUser UserEntity user, @PathVariable String dataSourceCode,@RequestParam Map<String, Object> params) throws ParseException {
         //查询列表数据
         String username = user.getUsername();
         if(StringUtils.isBlank(username)){
             return R.error("用户不存在，请联系管理员");
         }
-        params.put("statusCode",statusCode);
+        Object statusCode = params.get("statusCode");
+        if(statusCode!=null&&!statusCode.toString().equals("00")){
+            String[] statusCodes = statusCode.toString().split(",");
+            params.put("statusCode",statusCodes);
+        }
         params.put("dataSourceCode",dataSourceCode);
         params.put("username",username);
         Object submitStartDate = params.get("submitStartDate");
