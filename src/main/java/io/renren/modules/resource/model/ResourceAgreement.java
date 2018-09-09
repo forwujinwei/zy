@@ -43,6 +43,8 @@ public class ResourceAgreement {
 
     private String hasChapterFileName;
 
+    private String finalFileName;
+
     private String createBy;
 
     private Date createDate;
@@ -211,6 +213,14 @@ public class ResourceAgreement {
 
     public void setHasChapterFileName(String hasChapterFileName) {
         this.hasChapterFileName = hasChapterFileName;
+    }
+
+    public String getFinalFileName() {
+        return finalFileName;
+    }
+
+    public void setFinalFileName(String finalFileName) {
+        this.finalFileName = finalFileName;
     }
 
     public String getCreateBy() {

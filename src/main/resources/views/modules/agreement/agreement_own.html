@@ -117,7 +117,7 @@
                             <td>{{item.createDate|formatterDate}}</td>
                             <td><div class="btn-group" data-toggle="buttons-radio">
                                 <button  class="btn btn-primary btn-padding-reset"
-                                         @click="downLoadAgreement(item.nonChapterFileName,item.hasChapterFileName)">下载</button>
+                                         @click="downLoadAgreement(item.nonChapterFileName,item.hasChapterFileName)" :disabled="item.statusCode=='AGS_001'">下载</button>
                                 <button  class="btn btn-primary btn-padding-reset"
                                          @click="showUpdateAgreement(item.agreementId)" :disabled="item.statusCode=='AGS_002'">修改</button>
                                 <button  class="btn btn-primary btn-padding-reset"
@@ -300,35 +300,26 @@
                         <div class="form-group">
                             <div class="control-label col-sm-2">身份证</div>
                             <div class="col-sm-10">
-                                <el-upload
+                                 <el-upload
                                         class="upload-demo"
-                                        ref="upload"
-                                        :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-                                        :on-preview="handlePreview"
-                                        :on-remove="handleRemove"
-                                        :file-list="fileList"
-                                        :limit="2"
-                                        :auto-upload="false">
-                                   <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                        :action='"http://localhost:8080/api/file/upload/icdImg/"+agreement.agreementId'
+                                        :file-list="uploadFile.icdImgList">
+                                    <el-button size="small" type="primary">点击上传</el-button>
                                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                                 </el-upload>
                             </div>
                         </div>
-                        <div class="form-group">
+
+
+
+                       <div class="form-group">
                             <div class="control-label col-sm-2">执照</div>
                             <div class="col-sm-10">
                                 <el-upload
                                         class="upload-demo"
-                                        ref="upload"
-                                        :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-                                        :on-preview="handlePreview"
-                                        :on-remove="handleRemove"
-                                        :file-list="fileList"
-                                        :limit="2"
-                                        :auto-upload="false">
-                                    <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                        :action='"http://localhost:8080/api/file/upload/licenseImg/"+agreement.agreementId'
+                                        :file-list="uploadFile.licenseImgList">
+                                    <el-button size="small" type="primary">点击上传</el-button>
                                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                                 </el-upload>
                             </div>
@@ -338,15 +329,9 @@
                             <div class="col-sm-10">
                                 <el-upload
                                         class="upload-demo"
-                                        ref="upload"
-                                        :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-                                        :on-preview="handlePreview"
-                                        :on-remove="handleRemove"
-                                        :file-list="fileList"
-                                        :limit="1"
-                                        :auto-upload="false">
-                                    <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                        :action='"http://localhost:8080/api/file/upload/agreementSureDocImg/"+agreement.agreementId'
+                                        :file-list="uploadFile.sureDocList">
+                                    <el-button size="small" type="primary">点击上传</el-button>
                                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                                 </el-upload>
                             </div>
@@ -356,15 +341,9 @@
                             <div class="col-sm-10">
                                 <el-upload
                                         class="upload-demo"
-                                        ref="upload"
-                                        :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-                                        :on-preview="handlePreview"
-                                        :on-remove="handleRemove"
-                                        :file-list="fileList"
-                                        :limit="1"
-                                        :auto-upload="false">
-                                    <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                                    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                        :action='"http://localhost:8080/api/file/upload/proxyImg/"+agreement.agreementId'
+                                        :file-list="uploadFile.proxyImgList">
+                                    <el-button size="small" type="primary">点击上传</el-button>
                                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                                 </el-upload>
                             </div>
@@ -379,25 +358,18 @@
                               <div class="col-sm-10">
                                   <el-upload
                                           class="upload-demo"
-                                          ref="upload"
-                                          :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-                                          :on-preview="handlePreview"
-                                          :on-remove="handleRemove"
-                                          :file-list="fileList"
-                                          :limit="6"
-                                          :auto-upload="false">
-                                      <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                                      <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-                                      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，单张图片且不超过500kb</div>
+                                          :action='"http://localhost:8080/api/file/upload/agreementFile/"+agreement.agreementId'
+                                          :file-list="uploadFile.agreementFileList">
+                                      <el-button size="small" type="primary">点击上传</el-button>
+                                      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                                   </el-upload>
                               </div>
                           </div>
-
                         </div>
                         <div class="form-group">
                             <div class="col-sm-2 control-label"></div>
                             <input type="button" class="btn btn-primary" @click="updateAgreement('2')" value="确定"/>
-                            &nbsp;&nbsp;<input type="button" class="btn btn-warning"  value="返回"/>
+                            &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="back" value="返回"/>
                         </div>
                     </form>
                 </div>
@@ -407,8 +379,6 @@
         <div v-show="showTradeMark" class="panel panel-default">
             <div class="panel-heading">{{title}}</div>
             <form class="form-horizontal">
-                <input type="text"  v-model="tradeMarkInfo.id" class="hidden"/>
-                <input type="text"  v-model="tradeMarkInfo.agreementId" class="hidden"/>
                 <div class="form-group">
                     <div class="col-sm-2 control-label">商标名称</div>
                     <div class="col-sm-10">
@@ -428,15 +398,9 @@
                     <div class="col-sm-10">
                         <el-upload
                                 class="upload-demo"
-                                ref="upload"
-                                :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-                                :on-preview="handlePreview"
-                                :on-remove="handleRemove"
-                                :file-list="fileList"
-                                :limit="1"
-                                :auto-upload="false">
-                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                :action='"http://localhost:8080/api/file/upload/tradeMarkImg/"+tradeMarkInfo.id'
+                                :file-list="uploadFile.imgList">
+                            <el-button size="small" type="primary">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
                     </div>
@@ -446,33 +410,21 @@
                     <div class="col-sm-10">
                         <el-upload
                                 class="upload-demo"
-                                ref="upload"
-                                :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-                                :on-preview="handlePreview"
-                                :on-remove="handleRemove"
-                                :file-list="fileList"
-                                :limit="1"
-                                :auto-upload="false">
-                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                :action='"http://localhost:8080/api/file/upload/governmentImg/"+tradeMarkInfo.id'
+                                :file-list="uploadFile.governmentImgList">
+                            <el-button size="small" type="primary">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
                     </div>
                 </div>
-                <div class="form-group">
+               <div class="form-group">
                     <div class="col-sm-2 control-label">客户确认书</div>
                     <div class="col-sm-10">
                         <el-upload
                                 class="upload-demo"
-                                ref="upload"
-                                :action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-                                :on-preview="handlePreview"
-                                :on-remove="handleRemove"
-                                :file-list="fileList"
-                                :limit="1"
-                                :auto-upload="false">
-                            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                            <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                :action='"http://localhost:8080/api/file/upload/trademarkSureDoc/"+tradeMarkInfo.id'
+                                :file-list="uploadFile.trademarkSureDocList">
+                            <el-button size="small" type="primary">点击上传</el-button>
                             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                         </el-upload>
                     </div>
@@ -505,7 +457,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-2 control-label"></div>
-                    <input type="button" class="btn btn-primary" @click="saveOrupdateTradeMark(tradeMarkInfo.id)" value="确定"/>
+                    <input type="button" class="btn btn-primary" @click="saveOrupdateTradeMark()" value="确定"/>
                     &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="backToAgreement(tradeMarkInfo.agreementId)" value="返回"/>
                 </div>
             </form>
@@ -548,6 +500,16 @@
                     pageNumber: 1,
                     //每页条数
                     pageSize: 10,
+                },
+                uploadFile:{
+                    icdImgList:[],
+                    licenseImgList:[],
+                    trademarkSureDocList:[],
+                    proxyImgList:[],
+                    agreementFileList:[],
+                    imgList:[],
+                    governmentImgList:[],
+                    sureDocList:[]
                 },
                 condition: {
                     queryType: 'AQT_001',
@@ -598,9 +560,7 @@
 
         },
         methods: {
-            submitUpload() {
-                this.$refs.upload.submit();
-            },
+
             handleRemove(file, fileList) {
                 console.log(file, fileList);
             },
@@ -664,24 +624,35 @@
                         }
                     );
                 }else{
-                    _this.tradeMarkInfo={
-                        id:'',
-                        agreementId:agreementId,
-                        name:'',
-                        remarks:'',
-                        img:null,
-                        governmentImg:null,
-                        sureDocImg:null,
-                        classifyCode:'',
-                        classifyDes:'',
-                        docCode:'TMDT_041',
-                        docDes:'',
-                        protectProduct:'',
-                    }
+                    var uuid='';
+                    axios.get('/api/common/uuid',null)
+                        .then(function (response) {
+                            if(response.data.code === 0){
+                               uuid=response.data.data;
+                                _this.tradeMarkInfo.id=uuid;
+                            }else{
+                                return;
+                            }
+                        }).catch(function (error) {
+                            console.log(error);
+                        }
+                    );
+                    _this.tradeMarkInfo.agreementId=agreementId;
+                    _this.tradeMarkInfo.name='';
+                    _this.tradeMarkInfo.remarks='';
+                    _this.tradeMarkInfo.img=null;
+                    _this.tradeMarkInfo.governmentImg=null;
+                    _this.tradeMarkInfo.sureDocImg=null;
+                    _this.tradeMarkInfo.classifyCode='';
+                    _this.tradeMarkInfo.classifyDes='';
+                    _this.tradeMarkInfo.docCode='TMDT_041';
+                    _this.tradeMarkInfo.docDes='';
+                    _this.tradeMarkInfo.protectProduct='';
                 }
                 _this.showList=false;
                 _this.showAgreement=false;
                 _this.showTradeMark=true;
+                console.log(_this.tradeMarkInfo)
 
             },
             downLoadAgreement:function(nonChapterFileName,hasChapterFileName){
@@ -776,11 +747,11 @@
             downLoadSureDoc:function(id){
 
             },
-            saveOrupdateTradeMark:function(id){
+            saveOrupdateTradeMark:function(){
 
                 var _this=this;
                 var baseUrl='/api/resource/trademark';
-                var url=(id!=''&&id!=null)?baseUrl+'/update':baseUrl+'/save';
+                var url=baseUrl+'/save';
                 var agreementId = _this.tradeMarkInfo.agreementId;
                 var name = _this.tradeMarkInfo.name;
                 var classifyCode = _this.tradeMarkInfo.classifyCode;
@@ -865,6 +836,10 @@
             },
             getSubmitStartDate:function(val){
                 this.condition.createStartDate=val;
+            },
+            back: function () {
+                history.go(-1);
+                this.list();
             },
 
         },

@@ -158,8 +158,8 @@
                     <td>{{item.submitDate|formatterDate}}</td>
                     <td>
                         <div class="btn-group" data-toggle="buttons-radio">
-                            <button class="btn btn-primary btn-padding-reset"
-                                    @click="addRecord(item.id)">记录</button>
+                            <!--<button class="btn btn-primary btn-padding-reset"
+                                    @click="addRecord(item.id)">记录</button>-->
                             <button class="btn btn-primary btn-padding-reset"
                                     @click="cancelResource(item.id)">放弃</button>
                             <button class="btn btn-primary btn-padding-reset" :disabled="item.statusCode=='RS_004'"
@@ -250,7 +250,7 @@
           <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveResource" value="确定"/>
-                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="back" value="返回"/>
             </div>
         </form>
     </div>
@@ -291,8 +291,8 @@
                                         placeholder="输入回访记"></textarea>
                     </div>
                    <div class="form-group">
-                        <input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-                        &nbsp;&nbsp; <input type="button" class="btn btn-primary" @click="saveRevisit" value="确定"/>
+                         <input type="button" class="btn btn-primary" @click="saveRevisit" value="确定"/>&nbsp;&nbsp;
+                       <input type="button" class="btn btn-warning" @click="back" value="返回"/>
                     </div>
                 </div>
             </div>
@@ -382,7 +382,7 @@
             <div class="form-group">
                 <div class="col-sm-2 control-label"></div>
                 <input type="button" class="btn btn-primary" @click="saveAgreement" value="确定"/>
-                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="back" value="返回"/>
             </div>
         </form>
     </div>

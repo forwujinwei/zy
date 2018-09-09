@@ -36,18 +36,30 @@ public class ResourceTradeMarkController {
     public R save(@LoginUser UserEntity user, @RequestBody ResourceTradeMark resourceTradeMark){
         ValidatorUtils.validateEntity(resourceTradeMark);
         String username = user.getUsername();
-        resourceTradeMark.setId(CommonMethod.getUUID());
-        resourceTradeMark.setClassifyDes(DistEnum.getDesByCode(resourceTradeMark.getClassifyCode()));
-        resourceTradeMark.setDocCode(DistEnum.TRADE_MARK_DOC_TYPE_001.getTypeCode());
-        resourceTradeMark.setDocDes(DistEnum.TRADE_MARK_DOC_TYPE_001.getDes());
-        resourceTradeMark.setStatusCode(DistEnum.TRADE_MARK_STATUS_DRAFT.getTypeCode());
-        resourceTradeMark.setStatusDes(DistEnum.TRADE_MARK_STATUS_DRAFT.getDes());
-        resourceTradeMark.setApplyTypeDes(DistEnum.getDesByCode(resourceTradeMark.getApplyTypeCode()));
-        resourceTradeMark.setCreateBy(username);
-        resourceTradeMark.setUpdateBy(username);
-        resourceTradeMark.setAdviser(username);
-        resourceTradeMark.setDeleteFlag("0");
-        resourceTradeMarkService.save(resourceTradeMark);
+        ResourceTradeMark tradeMark = resourceTradeMarkService.selectByPrimaryKey(resourceTradeMark.getId());
+        if(tradeMark!=null){
+            resourceTradeMark.setUpdateBy(username);
+            if(StringUtils.isNotBlank(resourceTradeMark.getClassifyCode())){
+                resourceTradeMark.setClassifyDes(DistEnum.getDesByCode(resourceTradeMark.getClassifyCode()));
+            }
+            if(StringUtils.isNotBlank(resourceTradeMark.getDocCode())){
+                resourceTradeMark.setDocDes(DistEnum.getDesByCode(resourceTradeMark.getDocCode()));
+            }
+
+            resourceTradeMarkService.update(resourceTradeMark);
+        }else{
+            resourceTradeMark.setClassifyDes(DistEnum.getDesByCode(resourceTradeMark.getClassifyCode()));
+            resourceTradeMark.setDocCode(DistEnum.TRADE_MARK_DOC_TYPE_001.getTypeCode());
+            resourceTradeMark.setDocDes(DistEnum.TRADE_MARK_DOC_TYPE_001.getDes());
+            resourceTradeMark.setStatusCode(DistEnum.TRADE_MARK_STATUS_DRAFT.getTypeCode());
+            resourceTradeMark.setStatusDes(DistEnum.TRADE_MARK_STATUS_DRAFT.getDes());
+            resourceTradeMark.setApplyTypeDes(DistEnum.getDesByCode(resourceTradeMark.getApplyTypeCode()));
+            resourceTradeMark.setCreateBy(username);
+            resourceTradeMark.setUpdateBy(username);
+            resourceTradeMark.setAdviser(username);
+            resourceTradeMark.setDeleteFlag("0");
+            resourceTradeMarkService.save(resourceTradeMark);
+        }
         return R.ok();
     }
     /**

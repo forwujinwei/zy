@@ -2,12 +2,17 @@ package io.renren.modules;
 
 import io.renren.common.utils.R;
 import io.renren.modules.api.annotation.AuthIgnore;
+import io.renren.modules.resource.model.ResourcePoolModel;
+import io.renren.modules.resource.model.ResourceTradeMark;
+import io.renren.modules.resource.service.ResourcePoolService;
+import io.renren.modules.resource.service.ResourceTradeMarkService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -22,11 +27,15 @@ import java.util.List;
 @RequestMapping("/api/file")
 @RestController
 public class FileController {
-    private static final String fileDir="D:\\app_data\\imgData\\";
+    private static final String fileBaseDir="D:\\app_data\\imgData\\";
     private static final Logger log = LoggerFactory.getLogger(FileController.class);
+    @Resource
+    private ResourceTradeMarkService resourceTradeMarkService;
+    @Resource
+    private ResourcePoolService resourcePoolService;
     @AuthIgnore
-    @RequestMapping(value = "/upload/{agreementId}/{index}")
-    public R upload(@PathVariable String agreementId,@PathVariable String index,MultipartFile file) {
+    @RequestMapping(value = "/upload/{operation}/{id}")
+    public R upload(@PathVariable String id,@PathVariable String operation,MultipartFile file) {
         try {
             if (file.isEmpty()) {
                 return R.error("文件为空");
@@ -36,15 +45,49 @@ public class FileController {
             log.info("上传的文件名为：" + fileName);
             // 获取文件的后缀名
             String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            String filePath = "";
+            if("tradeMarkImg".equals(operation)){//商标图片
+                filePath="tradeMarkImg"+"\\tradeMark_img_"+id;
+                ResourceTradeMark resourceTradeMark = new ResourceTradeMark();
+                resourceTradeMark.setId(id);
+                resourceTradeMark.setImg(filePath);
+                resourceTradeMarkService.update(resourceTradeMark);
+            }else if("agreementFile".equals(operation)){//合同
+                filePath="agreementFile"+"\\agreement_"+id+"_"+System.currentTimeMillis();
+            }else if("agreementSureDocImg".equals(operation)){//合同确认书
+                filePath="agreementSureDocImg"+"\\agreement_sure_doc_"+id;
+            }else if("governmentImg".equals(operation)){//商标局图片
+                filePath="governmentImg"+"\\tradeMark_government_"+id;
+                ResourceTradeMark resourceTradeMark = new ResourceTradeMark();
+                resourceTradeMark.setId(id);
+                resourceTradeMark.setGovernmentImg(filePath);
+                resourceTradeMarkService.update(resourceTradeMark);
+            }else if("icdImg".equals(operation)){//身份证
+                filePath="icdImg"+"\\icd_"+id+"_"+System.currentTimeMillis();
+            }else if("licenseImg".equals(operation)){//执照
+                filePath="licenseImg"+"\\license_"+id;
+            }else if("proxyImg".equals(operation)){//委托书
+                filePath="proxyImg"+"\\proxy_"+id;
+            }else if("trademarkSureDoc".equals(operation)){//商标确认书
+                filePath="trademarkSureDoc"+"\\tradeMark_sureDoc_"+id;
+                ResourceTradeMark resourceTradeMark = new ResourceTradeMark();
+                resourceTradeMark.setId(id);
+                resourceTradeMark.setSureDocImg(filePath);
+                resourceTradeMarkService.update(resourceTradeMark);
+            }
+
+
             log.info("文件的后缀名为：" + suffixName);
             // 设置文件存储路径
-            String filePath = fileDir;
-            String path = filePath + agreementId+"_"+index+suffixName;
+            String path = fileBaseDir+filePath +suffixName;
             File dest = new File(path);
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
                 // 新建文件夹
                 dest.getParentFile().mkdirs();
+            }
+            if(dest.exists()){
+                dest.deleteOnExit();
             }
             // 文件写入
             file.transferTo(dest);

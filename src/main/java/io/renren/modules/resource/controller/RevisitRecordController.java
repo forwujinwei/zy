@@ -71,13 +71,6 @@ public class RevisitRecordController {
         revisitRecord.setCreateBy(username);
         revisitRecord.setResourceId(resourceId);
         revisitRecordService.save(revisitRecord);
-        ResourcePersonalPoolModel resourcePersonalPoolModel = new ResourcePersonalPoolModel();
-        resourcePersonalPoolModel.setId(resourceId);
-        resourcePersonalPoolModel.setIntentCode(intentCode);
-        resourcePersonalPoolModel.setIntentDes(DistEnum.getDesByCode(intentCode));
-        resourcePersonalPoolModel.setEndRevisitDate(revisitDate);
-        resourcePersonalPoolModel.setUpdateBy(username);
-        resourcePersonalPoolService.update(resourcePersonalPoolModel);
         return R.ok();
     }
 

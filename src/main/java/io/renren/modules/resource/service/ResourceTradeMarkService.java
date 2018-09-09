@@ -49,4 +49,7 @@ public class ResourceTradeMarkService {
     public List<ResourceTradeMark> selectByResourceId(String agreementId) {
         return resourceTradeMarkMapper.selectByResourceId(agreementId);
     }
+    public ResourceTradeMark selectByPrimaryKey(String id) {
+        return resourceTradeMarkMapper.selectByPrimaryKey(id);
+    }
 }

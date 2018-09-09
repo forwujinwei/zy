@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * 公共controller
@@ -21,5 +22,10 @@ public class CommonController {
     public R getTrademarkClassify(){
         List<DistModel> tradeMarkClassify = DistEnum.getDistByType("TRADE_MARK_CLASSIFY");
         return R.ok().put("data",tradeMarkClassify);
+    }
+
+    @RequestMapping(value = "/uuid")
+    public R uuid(){
+        return R.ok().put("data",UUID.randomUUID().toString().replaceAll("-",""));
     }
 }

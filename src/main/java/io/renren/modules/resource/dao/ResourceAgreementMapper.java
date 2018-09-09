@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Map;
+
 @Mapper
 public interface ResourceAgreementMapper {
     int deleteByPrimaryKey(String agreementId);
@@ -20,9 +21,9 @@ public interface ResourceAgreementMapper {
 
     int updateByPrimaryKey(ResourceAgreement record);
 
-    List<ResourceAgreementVo> queryList(Map<String, Object> query);
+    Map<String,String> selectFromByPrimaryKey(String agreementId);
 
     int queryTotal(Map<String, Object> query);
 
-    Map<String,String> selectFromByPrimaryKey(String agreementId);
+    List<ResourceAgreementVo> queryList(Map<String, Object> query);
 }
