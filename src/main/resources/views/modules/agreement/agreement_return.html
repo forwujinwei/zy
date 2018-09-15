@@ -46,42 +46,42 @@
 				<span class="form-inline">
                     <span class="demonstration">提交时间</span>
                     <el-date-picker
-                           v-model="condition.createStartDate"
-                           type="date"
-                           placeholder="选择日期"
-                            @change="getSubmitStartDate"
-                            value-format="yyyy-MM-dd">
+		                    v-model="condition.createStartDate"
+		                    type="date"
+		                    placeholder="选择日期"
+		                    @change="getSubmitStartDate"
+		                    value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </span>
-                <span class="form-inline">
+				<span class="form-inline">
                     <span class="demonstration">到</span>
                     <el-date-picker
-                            v-model="condition.createEndDate"
-                           type="date"
-                          placeholder="选择日期"
-                        @change="getSubmitEndDate"
-                          value-format="yyyy-MM-dd">
+		                    v-model="condition.createEndDate"
+		                    type="date"
+		                    placeholder="选择日期"
+		                    @change="getSubmitEndDate"
+		                    value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </span>
-        		<div class="form-group">
-        			<a  class="btn btn-primary" ><i class="glyphicon glyphicon-search"></i>&nbsp;查询</a>
-        		</div>
-        	</div>
-        </form>
-        <div style="margin-bottom: 50px;">
+				<div class="form-group">
+					<a  class="btn btn-primary" ><i class="glyphicon glyphicon-search"></i>&nbsp;查询</a>
+				</div>
+			</div>
+		</form>
+		<div style="margin-bottom: 50px;">
 			<table class="table table-bordered" v-loading="listLoading">
 				<colgroup>
 					<col width="12%">
 					<col width="8%">
-					<col width="15%">
+					<col width="14%">
 					<col width="6%">
 					<col width="6%">
 					<col width="6%">
 					<col width="6%">
-					<col width="8%">
-					<col width="8%">
+					<col width="6%">
 					<col width="10%">
-					<col width="15%">
+					<col width="10%">
+					<col width="16%">
 				</colgroup>
 				<thead>
 				<tr>
@@ -117,11 +117,13 @@
 					<td>{{item.createDate|formatterDate}}</td>
 					<td><div class="btn-group" data-toggle="buttons-radio">
 						<button  class="btn btn-primary btn-padding-reset"
-						         @click="downLoadAgreement(item.nonChapterFileName,item.hasChapterFileName)">下载</button>
+						         @click="downLoadAgreement(item.nonChapterFileName,item.hasChapterFileName,item.finalFileName)">下载</button>
 						<button  class="btn btn-primary btn-padding-reset"
-						         @click="showUpdateAgreement(item.agreementId)" :disabled="item.statusCode=='AGS_002'">修改</button>
+						         @click="showUpdateAgreement(item.agreementId)" :disabled="item.statusCode!='AGS_003'">修改</button>
 						<button  class="btn btn-primary btn-padding-reset"
-						         @click="submitAgreement(item.agreementId)" :disabled="item.statusCode=='AGS_002'">提交</button>
+						         @click="showBuildAgreement(item.agreementId)" :disabled="item.statusCode!='AGS_003'">生成</button>
+						<button  class="btn btn-primary btn-padding-reset"
+						         @click="submitAgreement(item.agreementId)" :disabled="item.statusCode!='AGS_003'">提交</button>
 					</div>
 					</td>
 				</tr>
@@ -141,376 +143,429 @@
 			</div>
 		</div>
 	</div>
-	<!--修改合同 start-->
-	<div v-show="showAgreement">
-		<ul id="myTab" class="nav nav-tabs">
-			<li class="active"><a href="#agreement" data-toggle="tab">合同</a> </li>
-			<li><a href="#tradeMarkInfo" data-toggle="tab">商标信息</a></li>
-			<li><a href="#firstParty" data-toggle="tab">甲方</a></li>
-		</ul>
-		<div id="myTabContent" class="tab-content">
-			<div class="tab-pane fade in active" id="agreement">
-				<form class="form-horizontal">
-					<input type="text"  v-model="agreement.resourceId" class="hidden"/>
-					<div class="form-group">
-						<div class="col-sm-2 control-label">合同编号 </div>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" v-model="agreement.agreementId"   readonly/>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-2 control-label">总费用</div>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" v-model="agreement.allcost"  v-validate="'required|numeric'" name="总费用" placeholder="总费用(单位元)"/>
-							<div v-show="errors.has('总费用')" class="alert alert-danger">{{ errors.first('总费用') }}</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-2 control-label">定金</div>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" v-model="agreement.earnest" v-validate="'required|numeric'" name="定金" placeholder="定金(单位元)"/>
-							<div v-show="errors.has('定金')" class="alert alert-danger">{{ errors.first('定金') }}</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-2 control-label">尾款</div>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" v-model="agreement.finalPayment" v-validate="'required|numeric'" name="尾款" placeholder="尾款(单位元)"/>
-							<div v-show="errors.has('尾款')" class="alert alert-danger">{{ errors.first('尾款') }}</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-2 control-label">支出</div>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" v-model="agreement.pay" v-validate="'required|numeric'" name="支出" placeholder="支出(单位元)"/>
-							<div v-show="errors.has('支出')" class="alert alert-danger">{{ errors.first('支出') }}</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-2 control-label"></div>
-						<input type="button" class="btn btn-primary" @click="updateAgreement" value="确定"/>
-						&nbsp;&nbsp;<input type="button" class="btn btn-warning"  value="返回"/>
-					</div>
-				</form>
-			</div>
 
-			<!--  商标信息-->
-			<div class="tab-pane fade form-max-panel" id="tradeMarkInfo">
-				<div  class="form-group form-inline">
-					<div class="form-group" style="float: right">
-						<input type="button" class="btn btn-primary" @click="showUpdateTradeMark('',tradeMarkInfo.agreementId)" value="添加商标"/>
+	<!--修改合同-->
+	<div class="modal fade" id="updateAgreement" tabindex="-1" role="dialog" aria-labelledby="updateAgreementLabel" aria-hidden="true" style="overflow: auto">
+		<div class="modal-dialog  form-max-panel">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="updateAgreementLabel">
+						修改合同
+					</h4>
+				</div>
+				<div class="modal-body">
+
+
+					<ul id="myTab" class="nav nav-tabs">
+						<li class="active"><a href="#agreement" data-toggle="tab">合同</a> </li>
+						<li><a href="#tradeMarkInfo" data-toggle="tab">商标信息</a></li>
+						<li><a href="#firstParty" data-toggle="tab">甲方</a></li>
+					</ul>
+					<div id="myTabContent" class="tab-content">
+						<div class="tab-pane fade in active" id="agreement">
+							<form class="form-horizontal">
+								<input type="text"  v-model="agreement.resourceId" class="hidden"/>
+								<div class="form-group">
+									<div class="col-sm-2 control-label">合同编号 </div>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" v-model="agreement.agreementId"   readonly/>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-2 control-label">总费用</div>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" v-model="agreement.allcost"  v-validate="'required|numeric'" name="总费用" placeholder="总费用(单位元)"/>
+										<div v-show="errors.has('总费用')" class="alert alert-danger">{{ errors.first('总费用') }}</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-2 control-label">定金</div>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" v-model="agreement.earnest" v-validate="'required|numeric'" name="定金" placeholder="定金(单位元)"/>
+										<div v-show="errors.has('定金')" class="alert alert-danger">{{ errors.first('定金') }}</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-2 control-label">尾款</div>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" v-model="agreement.finalPayment" v-validate="'required|numeric'" name="尾款" placeholder="尾款(单位元)"/>
+										<div v-show="errors.has('尾款')" class="alert alert-danger">{{ errors.first('尾款') }}</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-2 control-label">支出</div>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" v-model="agreement.pay" v-validate="'required|numeric'" name="支出" placeholder="支出(单位元)"/>
+										<div v-show="errors.has('支出')" class="alert alert-danger">{{ errors.first('支出') }}</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-2 control-label"></div>
+									<input type="button" class="btn btn-primary" @click="updateAgreement('1')" value="确定"/>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								</div>
+							</form>
+						</div>
+
+						<!--  商标信息-->
+						<div class="tab-pane fade" id="tradeMarkInfo">
+							<div  class="form-group form-inline">
+								<div class="form-group" style="float: right">
+									<input type="button" class="btn btn-primary" @click="showUpdateTradeMark('',tradeMarkInfo.agreementId)" value="添加商标"/>
+								</div>
+							</div>
+							<table class="table table-bordered">
+								<colgroup>
+									<col width="20%">
+									<col width="20%">
+									<col width="20%">
+									<col width="20%">
+									<col width="20%">
+								</colgroup>
+								<thead>
+								<tr>
+									<th hidden>合同ID</th>
+									<th hidden>商标ID</th>
+									<th hidden>商标分类编码</th>
+									<th>商标名</th>
+									<th>分类</th>
+									<th>图片</th>
+									<th>商标局图片</th>
+									<th>操作</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr v-for="item in tradeMarkData">
+									<td hidden>{{item.agreementId}}</td>
+									<td hidden>{{item.id}}</td>
+									<td hidden>{{item.classifyCode}}</td>
+									<td>{{item.name}}</td>
+									<td>{{item.classifyDes}}</td>
+									<td>
+										<a href="#" class="thumbnail">
+											<img :src="'http://localhost:8080/api/file/readImage?imgName='+item.img">
+										</a>
+									</td>
+									<td>
+										<a href="#" class="thumbnail">
+											<img :src="'http://localhost:8080/api/file/readImage?imgName='+item.governmentImg">
+										</a>
+									</td>
+									<td><div class="btn-group" data-toggle="buttons-radio">
+										<button  class="btn btn-primary btn-padding-reset"
+										         @click="showUpdateTradeMark(item.id,item.agreementId)">修改</button>
+										<button  class="btn btn-primary btn-padding-reset"
+										         @click="downLoadSureDoc(item.id)">确认书</button>
+										<button  class="btn btn-primary btn-padding-reset"
+										         @click="deleteTradeMark(item.id)">删除</button>
+									</div>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<!--甲方-->
+						<div class="tab-pane fade" id="firstParty">
+							<form class="form-horizontal">
+								<div class="form-group">
+									<div class="col-sm-2  control-label">联系人 </div>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" v-validate="'required'" name="联系人" v-model="agreement.linkMan" />
+										<div v-show="errors.has('联系人')" class="alert alert-danger">{{ errors.first('联系人') }}</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="control-label col-sm-2">甲方</div>
+									<div class="col-sm-10">
+										<input type="text" class="form-control " v-validate="'required'" name="甲方" v-model="agreement.firstParty" />
+										<div v-show="errors.has('甲方')" class="alert alert-danger">{{ errors.first('甲方') }}</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="control-label col-sm-2">邮箱</div>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" v-validate="'required|email'" name="邮箱" v-model="agreement.email"/>
+										<div v-show="errors.has('邮箱')" class="alert alert-danger">{{ errors.first('邮箱') }}</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="control-label col-sm-2">电话</div>
+									<div class="col-sm-10">
+										<input type="text" class="form-control " v-validate="'required'" name="电话" v-model="agreement.phoneNumber" />
+										<div v-show="errors.has('电话')" class="alert alert-danger">{{ errors.first('电话') }}</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="control-label col-sm-2">地址</div>
+									<div class="col-sm-10">
+										<input type="text" class="form-control " v-validate="'required'" name="地址" v-model="agreement.address" />
+										<div v-show="errors.has('地址')" class="alert alert-danger">{{ errors.first('地址') }}</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="row">
+										<div class="control-label col-sm-2">身份证</div>
+										<div class="col-sm-10">
+											<el-upload
+													class="upload-demo"
+													:action='"http://localhost:8080/api/file/upload/icdImgFace/"+agreement.agreementId'
+													:on-success="handleSuccess"
+													:limit="1"
+													:file-list="uploadFile.icdImgFaceList">
+												<el-button slot="trigger"  size="small" type="primary">正面上传</el-button>
+												<el-button size="small"  type="success" :disabled="agreement.icdFaceImgName==null" @click="showImg(agreement.icdFaceImgName)">查看正面</el-button>
+											</el-upload>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-2"></div>
+										<div class="col-sm-10">
+											<el-upload
+													class="upload-demo"
+													:action='"http://localhost:8080/api/file/upload/icdImgReverse/"+agreement.agreementId'
+													:on-success="handleSuccess"
+													:limit="1"
+													:file-list="uploadFile.icdImgReverseList">
+												<el-button slot="trigger" size="small" type="primary">反面上传</el-button>
+												<el-button size="small"  type="success" :disabled="agreement.icdReverseImgName==null" @click="showImg(agreement.icdReverseImgName)">查看反面</el-button>
+											</el-upload>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<div class="control-label col-sm-2">执照</div>
+									<div class="col-sm-10">
+										<el-upload
+												class="upload-demo"
+												:action='"http://localhost:8080/api/file/upload/licenseImg/"+agreement.agreementId'
+												:on-success="handleSuccess"
+												:limit="1"
+												:file-list="uploadFile.licenseImgList">
+											<el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+											<el-button size="small" type="success" :disabled="agreement.licenseImgName==null" @click="showImg(agreement.licenseImgName)">查看执照</el-button>
+										</el-upload>
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="control-label col-sm-2">确认书</div>
+									<div class="col-sm-10">
+										<el-upload
+												class="upload-demo"
+												:action='"http://localhost:8080/api/file/upload/agreementSureDocImg/"+agreement.agreementId'
+												:on-success="handleSuccess"
+												:limit="1"
+												:file-list="uploadFile.sureDocList">
+											<el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+											<el-button size="small" type="success" :disabled="agreement.sureDocImgName==null" @click="showImg(agreement.sureDocImgName)">查看确认书</el-button>
+										</el-upload>
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="control-label col-sm-2">委托书</div>
+									<div class="col-sm-10">
+										<el-upload
+												class="upload-demo"
+												:action='"http://localhost:8080/api/file/upload/proxyImg/"+agreement.agreementId'
+												:on-success="handleSuccess"
+												:limit="1"
+												:file-list="uploadFile.proxyImgList">
+											<el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+											<el-button size="small" type="success" :disabled="agreement.proxyImgName==null" @click="showImg(agreement.proxyImgName)">查看委托书</el-button>
+										</el-upload>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="row">
+										<div class="control-label col-sm-2">合同</div>
+										<div class="col-sm-10 control-label " style="text-align: left;color: darkred">(请按照合同页码顺序上传，上传后自动生成pdf)</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-2"></div>
+										<div class="col-sm-10">
+											<el-upload
+													class="upload-demo"
+													:action='"http://localhost:8080/api/file/upload/agreementFile/"+agreement.agreementId'
+													:on-success="handleSuccess"
+													:limit="6"
+													:file-list="uploadFile.agreementFileList">
+												<el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+												<el-button size="small" style="margin-left: 10px;" type="success" :disabled="agreement.finalFileName==null" @click="showImg(agreement.finalFileName)">查看合同</el-button>
+											</el-upload>
+										</div>
+									</div>
+
+								</div>
+								<div class="form-group">
+									<div class="col-sm-2 control-label"></div>
+									<input type="button" class="btn btn-primary" @click="updateAgreement('2')" value="确定"/>
+									<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+								</div>
+							</form>
+						</div>
 					</div>
 				</div>
-				<table class="table table-bordered" v-loading="listLoading">
-					<colgroup>
-						<col width="20%">
-						<col width="20%">
-						<col width="20%">
-						<col width="20%">
-						<col width="20%">
-					</colgroup>
-					<thead>
-					<tr>
-						<th hidden>合同ID</th>
-						<th hidden>商标ID</th>
-						<th hidden>商标分类编码</th>
-						<th>商标名</th>
-						<th>分类</th>
-						<th>图片</th>
-						<th>商标局图片</th>
-						<th>操作</th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr v-for="item in tradeMarkData">
-						<td hidden>{{item.agreementId}}</td>
-						<td hidden>{{item.id}}</td>
-						<td hidden>{{item.classifyCode}}</td>
-						<td>{{item.name}}</td>
-						<td>{{item.classifyDes}}</td>
-						<td>
-							<a href="#" class="thumbnail">
-								<img :src="item.img">
-							</a>
-						</td>
-						<td>
-							<a href="#" class="thumbnail">
-								<img :src="item.governmentImg">
-							</a>
-						</td>
-						<td><div class="btn-group" data-toggle="buttons-radio">
-							<button  class="btn btn-primary btn-padding-reset"
-							         @click="showUpdateTradeMark(item.id,item.agreementId)">修改</button>
-							<button  class="btn btn-primary btn-padding-reset"
-							         @click="downLoadSureDoc(item.id)">确认书</button>
-							<button  class="btn btn-primary btn-padding-reset"
-							         @click="deleteTradeMark(item.id)">删除</button>
-						</div>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-			</div>
-
-			<!--甲方-->
-			<div class="tab-pane fade" id="firstParty">
-				<form class="form-horizontal">
-					<input type="text"  v-model="agreement.agreementId" class="hidden"/>
-					<div class="form-group">
-						<div class="col-sm-2  control-label">联系人 </div>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" v-validate="'required'" name="联系人" v-model="agreement.linkMan" />
-							<div v-show="errors.has('联系人')" class="alert alert-danger">{{ errors.first('联系人') }}</div>
-						</div>
-
-					</div>
-
-					<div class="form-group">
-						<div class="control-label col-sm-2">甲方</div>
-						<div class="col-sm-10">
-							<input type="text" class="form-control " v-validate="'required'" name="甲方" v-model="agreement.firstParty" />
-							<div v-show="errors.has('甲方')" class="alert alert-danger">{{ errors.first('甲方') }}</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="control-label col-sm-2">邮箱</div>
-						<div class="col-sm-10">
-							<input type="text" class="form-control" v-validate="'required|email'" name="邮箱" v-model="agreement.email"/>
-							<div v-show="errors.has('邮箱')" class="alert alert-danger">{{ errors.first('邮箱') }}</div>
-						</div>
-
-					</div>
-					<div class="form-group">
-						<div class="control-label col-sm-2">电话</div>
-						<div class="col-sm-10">
-							<input type="text" class="form-control " v-validate="'required'" name="电话" v-model="agreement.phoneNumber" />
-							<div v-show="errors.has('电话')" class="alert alert-danger">{{ errors.first('电话') }}</div>
-						</div>
-
-					</div>
-					<div class="form-group">
-						<div class="control-label col-sm-2">地址</div>
-						<div class="col-sm-10">
-							<input type="text" class="form-control " v-validate="'required'" name="地址" v-model="agreement.address" />
-							<div v-show="errors.has('地址')" class="alert alert-danger">{{ errors.first('地址') }}</div>
-						</div>
-
-					</div>
-
-					<div class="form-group">
-						<div class="control-label col-sm-2">身份证</div>
-						<div class="col-sm-10">
-							<el-upload
-									class="upload-demo"
-									ref="upload"
-									:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-									:on-preview="handlePreview"
-									:on-remove="handleRemove"
-									:file-list="fileList"
-									:limit="2"
-									:auto-upload="false">
-								<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-								<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-								<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-							</el-upload>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="control-label col-sm-2">执照</div>
-						<div class="col-sm-10">
-							<el-upload
-									class="upload-demo"
-									ref="upload"
-									:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-									:on-preview="handlePreview"
-									:on-remove="handleRemove"
-									:file-list="fileList"
-									:limit="2"
-									:auto-upload="false">
-								<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-								<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-								<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-							</el-upload>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="control-label col-sm-2">确认书</div>
-						<div class="col-sm-10">
-							<el-upload
-									class="upload-demo"
-									ref="upload"
-									:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-									:on-preview="handlePreview"
-									:on-remove="handleRemove"
-									:file-list="fileList"
-									:limit="1"
-									:auto-upload="false">
-								<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-								<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-								<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-							</el-upload>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="control-label col-sm-2">委托书</div>
-						<div class="col-sm-10">
-							<el-upload
-									class="upload-demo"
-									ref="upload"
-									:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-									:on-preview="handlePreview"
-									:on-remove="handleRemove"
-									:file-list="fileList"
-									:limit="1"
-									:auto-upload="false">
-								<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-								<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-								<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-							</el-upload>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="row">
-							<div class="control-label col-sm-2">合同</div>
-							<div class="col-sm-10 control-label " style="text-align: left;color: darkred">(请按照合同页码顺序上传，上传后自动生成pdf)</div>
-						</div>
-						<div class="row">
-							<div class="col-sm-2"></div>
-							<div class="col-sm-10">
-								<el-upload
-										class="upload-demo"
-										ref="upload"
-										:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-										:on-preview="handlePreview"
-										:on-remove="handleRemove"
-										:file-list="fileList"
-										:limit="6"
-										:auto-upload="false">
-									<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-									<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-									<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，单张图片且不超过500kb</div>
-								</el-upload>
-							</div>
-						</div>
-
-					</div>
-					<div class="form-group">
-						<div class="col-sm-2 control-label"></div>
-						<input type="button" class="btn btn-primary" @click="updateAgreement('2')" value="确定"/>
-						&nbsp;&nbsp;<input type="button" class="btn btn-warning"  value="返回"/>
-					</div>
-				</form>
 			</div>
 		</div>
 	</div>
 
-	<div v-show="showTradeMark" class="panel panel-default">
-		<div class="panel-heading">{{title}}</div>
-		<form class="form-horizontal">
-			<input type="text"  v-model="tradeMarkInfo.id" class="hidden"/>
-			<input type="text"  v-model="tradeMarkInfo.agreementId" class="hidden"/>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">商标名称</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" v-validate="'required'" name="商标名称" v-model="tradeMarkInfo.name"/>
-					<div v-show="errors.has('商标名称')" class="alert alert-danger">{{ errors.first('商标名称') }}</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">商标说明</div>
-				<div class="col-sm-10">
-					<textarea class="form-control" rows="3" v-model="tradeMarkInfo.remarks"></textarea>
-				</div>
+	<!--start-->
 
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">图片</div>
-				<div class="col-sm-10">
-					<el-upload
-							class="upload-demo"
-							ref="upload"
-							:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-							:on-preview="handlePreview"
-							:on-remove="handleRemove"
-							:file-list="fileList"
-							:limit="1"
-							:auto-upload="false">
-						<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-						<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-						<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-					</el-upload>
+	<div class="modal fade"  id="addTradeMark" tabindex="2" role="dialog" aria-labelledby="addTradeMarkLabel" aria-hidden="true" style="overflow: auto">
+		<div class="modal-dialog ">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="addTradeMarkLabel">
+						添加商标信息
+					</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<div class="col-sm-2 control-label">商标名称</div>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" v-validate="'required'" name="商标名称" v-model="tradeMarkInfo.name"/>
+								<div v-show="errors.has('商标名称')" class="alert alert-danger">{{ errors.first('商标名称') }}</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label">商标说明</div>
+							<div class="col-sm-10">
+								<textarea class="form-control" rows="3" v-model="tradeMarkInfo.remarks"></textarea>
+							</div>
+
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label">图片</div>
+							<div class="col-sm-10">
+								<el-upload
+										class="upload-demo"
+										:action='"http://localhost:8080/api/file/upload/tradeMarkImg/"+tradeMarkInfo.id'
+										:on-success="handleSuccess"
+										:file-list="uploadFile.imgList">
+									<el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+									<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+								</el-upload>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label">商标局图片</div>
+							<div class="col-sm-10">
+								<el-upload
+										class="upload-demo"
+										:action='"http://localhost:8080/api/file/upload/governmentImg/"+tradeMarkInfo.id'
+										:on-success="handleSuccess"
+										:file-list="uploadFile.governmentImgList">
+									<el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+									<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+								</el-upload>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label">客户确认书</div>
+							<div class="col-sm-10">
+								<el-upload
+										class="upload-demo"
+										:action='"http://localhost:8080/api/file/upload/trademarkSureDoc/"+tradeMarkInfo.id'
+										:on-success="handleSuccess"
+										:file-list="uploadFile.trademarkSureDocList">
+									<el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+									<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+								</el-upload>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label">商标分类</div>
+							<div class="col-sm-10">
+								<select  v-model="tradeMarkInfo.classifyCode" v-validate="'required'" name="商标分类" class="form-control clo-sm-2">
+									<option v-for="item in tradeMarkClassifyData" :value="item.code">{{item.des}}</option>
+								</select>
+								<div v-show="errors.has('商标分类')" class="alert alert-danger">{{ errors.first('商标分类') }}</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label">商标类型</div>
+							<div class="col-sm-10">
+								<select  v-model="tradeMarkInfo.docCode" v-validate="'required'" name="商标类型" class="form-control clo-sm-2">
+									<option value="TMDT_001">文字</option>
+									<option value="TMDT_002">图像</option>
+									<option value="TMDT_003">文字+图像</option>
+								</select>
+								<div v-show="errors.has('商标类型')" class="alert alert-danger">{{ errors.first('商标类型') }}</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label">保护产品</div>
+							<div class="col-sm-10">
+								<textarea class="form-control" rows="3" v-model="tradeMarkInfo.protectProduct"  placeholder="用英文的逗号,不然生成合同会出现错误"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-2 control-label"></div>
+							<input type="button" class="btn btn-primary" @click="saveOrupdateTradeMark()" value="确定"/>
+							&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="backToAgreement(tradeMarkInfo.agreementId)" value="返回"/>
+						</div>
+					</form>
 				</div>
 			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">商标局图片</div>
-				<div class="col-sm-10">
-					<el-upload
-							class="upload-demo"
-							ref="upload"
-							:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-							:on-preview="handlePreview"
-							:on-remove="handleRemove"
-							:file-list="fileList"
-							:limit="1"
-							:auto-upload="false">
-						<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-						<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-						<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-					</el-upload>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">客户确认书</div>
-				<div class="col-sm-10">
-					<el-upload
-							class="upload-demo"
-							ref="upload"
-							:action='"http://localhost:8080/api/file/upload/"+agreement.agreementId+"/1"'
-							:on-preview="handlePreview"
-							:on-remove="handleRemove"
-							:file-list="fileList"
-							:limit="1"
-							:auto-upload="false">
-						<el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-						<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
-						<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-					</el-upload>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">商标分类</div>
-				<div class="col-sm-10">
-					<select  v-model="tradeMarkInfo.classifyCode" v-validate="'required'" name="商标分类" class="form-control clo-sm-2">
-						<option v-for="item in tradeMarkClassifyData" :value="item.code">{{item.des}}</option>
-					</select>
-					<div v-show="errors.has('商标分类')" class="alert alert-danger">{{ errors.first('商标分类') }}</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">商标类型</div>
-				<div class="col-sm-10">
-					<select  v-model="tradeMarkInfo.docCode" v-validate="'required'" name="商标类型" class="form-control clo-sm-2">
-						<option value="TMDT_001">文字</option>
-						<option value="TMDT_002">图像</option>
-						<option value="TMDT_003">文字+图像</option>
-					</select>
-					<div v-show="errors.has('商标类型')" class="alert alert-danger">{{ errors.first('商标类型') }}</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label">保护产品</div>
-				<div class="col-sm-10">
-					<textarea class="form-control" rows="3" v-model="tradeMarkInfo.protectProduct"  placeholder="用英文的逗号,不然生成合同会出现错误"></textarea>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-2 control-label"></div>
-				<input type="button" class="btn btn-primary" @click="saveOrupdateTradeMark(tradeMarkInfo.id)" value="确定"/>
-				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="backToAgreement(tradeMarkInfo.agreementId)" value="返回"/>
-			</div>
-		</form>
+		</div>
 	</div>
-
+	<!--end-->
+	<!--查看图片 start-->
+	<div class="modal fade"  id="preImg" tabindex="2" role="dialog" aria-labelledby="showImg" aria-hidden="true" style="overflow: auto">
+		<div class="modal-dialog form-max-panel">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="showImg">
+						查看图片
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div>
+						<img src=""  style="width:800px;overflow:auto; " id="readImage"/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--查看图片 end-->
+	<!--查看图片 start-->
+	<div class="modal fade"  id="buildAgreement" tabindex="2" role="dialog" aria-labelledby="buildAgreementLabel" aria-hidden="true" style="overflow: auto">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="buildAgreementLabel">
+						生成合同类型
+					</h4>
+				</div>
+				<div class="modal-body">
+					<div>
+						<p><b>临时合同:</b>同时生成两份合同,一份有我方印章、一份无印章,生成合同无甲方印章或签字</p>
+						<p><b>最终合同:</b>生成合同前请确保已按页面顺序上传甲方签字或盖章合同，否则会无法生成或生成错误</p>
+						<input type="button" class="btn btn-primary" @click="buildAgreement('temp')" value="生成临时合同"/>
+						&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="buildAgreement('final')" value="生成最终合同"/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--查看图片 end-->
 </div>
 </body>
 
@@ -531,6 +586,7 @@
                 tableData: [],
                 tradeMarkData:[],
                 tradeMarkClassifyData:[],
+                img_url:'http://localhost:8080/api/file/readImage?imgName=',
                 //表格参数
                 tradeMarkTableConfig: {
                     //总数据
@@ -549,6 +605,17 @@
                     //每页条数
                     pageSize: 10,
                 },
+                uploadFile:{
+                    icdImgFaceList:[],
+                    icdImgReverseList:[],
+                    licenseImgList:[],
+                    trademarkSureDocList:[],
+                    proxyImgList:[],
+                    agreementFileList:[],
+                    imgList:[],
+                    governmentImgList:[],
+                    sureDocList:[]
+                },
                 condition: {
                     queryType: 'AQT_001',
                     urgent: '00',
@@ -566,7 +633,13 @@
                     firstParty:null,
                     email:null,
                     phoneNumber:null,
-                    address:null
+                    address:null,
+                    finalFileName:null,
+                    sureDocImgName:null,
+                    icdFaceImgName:null,
+                    icdReverseImgName:null,
+                    licenseImgName:null,
+                    proxyImgName:null,
                 },
                 tradeMarkAgreement: {
                     agreementId: null,
@@ -598,8 +671,10 @@
 
         },
         methods: {
-            submitUpload() {
-                this.$refs.upload.submit();
+            /*上传成功后*/
+            handleSuccess(){
+                var _this=this;
+                _this.getAgreementById(_this.agreement.agreementId);
             },
             handleRemove(file, fileList) {
                 console.log(file, fileList);
@@ -616,6 +691,7 @@
                 this.tableConfig.pageSize = val;
                 this.list();
             },
+
             list: function() {
                 var _this=this;
                 _this.tableData = [];
@@ -636,18 +712,63 @@
                     console.log(error);
                 });
             },
+            showImg:function(fileName){
+                var _this=this;
+                $("#preImg").modal('show');
+                $("#readImage").attr('src',_this.img_url+fileName);
+
+            },
+            showBuildAgreement:function(agreementId){
+                var _this=this;
+                _this.agreement.agreementId=agreementId;
+                $("#buildAgreement").modal('show');
+
+            },
+            buildAgreement:function(optional){
+                var _this=this;
+                if(optional=="temp"){
+                    axios.get('api/resource/agreement/build/temp/'+_this.agreement.agreementId, {})
+                        .then(function (response) {
+                            if(response.data.code === 0){
+                                alert('生成临时合同成功', function(){
+                                    _this.list();
+                                });
+                            }else{
+                                alert(response.data.msg);
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+
+                }else if(optional=="final"){
+                    axios.get('api/resource/agreement/build/final/'+_this.agreement.agreementId, {})
+                        .then(function (response) {
+                            if(response.data.code === 0){
+                                alert('生成最终合同成功', function(){
+                                    _this.list();
+                                });
+                            }else{
+                                alert(response.data.msg);
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+
+            },
             showUpdateAgreement:function (id) {
                 var _this=this;
-                _this.showList=false;
-                _this.showAgreement=true;
-                _this.title='修改商标';
                 _this.getAgreementById(id);
                 _this.tradeMarkInfo.agreementId=id;
                 _this.listTradeMark(id);
                 _this.getTrademarkClassify();
+                $("#updateAgreement").modal('show');
+                console.log("fileList:"+JSON.stringify(_this.uploadFile))
             },
             showUpdateTradeMark:function(id,agreementId){
                 var _this=this;
+                $("#addTradeMark").modal('show');
+
                 if(id!=''&&id!=null&&id!=undefined){
                     axios.get('/api/resource/trademark/'+id,null)
                         .then(function (response) {
@@ -664,25 +785,62 @@
                         }
                     );
                 }else{
-                    _this.tradeMarkInfo={
-                        id:'',
-                        agreementId:agreementId,
-                        name:'',
-                        remarks:'',
-                        img:null,
-                        governmentImg:null,
-                        sureDocImg:null,
-                        classifyCode:'',
-                        classifyDes:'',
-                        docCode:'TMDT_041',
-                        docDes:'',
-                        protectProduct:'',
+                    var uuid='';
+                    axios.get('/api/common/uuid',null)
+                        .then(function (response) {
+                            if(response.data.code === 0){
+                                uuid=response.data.data;
+                                _this.tradeMarkInfo.id=uuid;
+                            }else{
+                                return;
+                            }
+                        }).catch(function (error) {
+                            console.log(error);
+                        }
+                    );
+                    _this.tradeMarkInfo.agreementId=agreementId;
+                    _this.tradeMarkInfo.name='';
+                    _this.tradeMarkInfo.remarks='';
+                    _this.tradeMarkInfo.img=null;
+                    _this.tradeMarkInfo.governmentImg=null;
+                    _this.tradeMarkInfo.sureDocImg=null;
+                    _this.tradeMarkInfo.classifyCode='';
+                    _this.tradeMarkInfo.classifyDes='';
+                    _this.tradeMarkInfo.docCode='TMDT_041';
+                    _this.tradeMarkInfo.docDes='';
+                    _this.tradeMarkInfo.protectProduct='';
+                }
+                console.log(_this.tradeMarkInfo)
+
+            },
+            downLoadAgreement:function(nonChapterFileName,hasChapterFileName,finalFileName){
+                var htmlStr='';
+                if((nonChapterFileName==null || nonChapterFileName=='' || nonChapterFileName=='undefined')
+                    &&(hasChapterFileName==null || hasChapterFileName=='' || hasChapterFileName=='undefined')
+                    &&(finalFileName==null || finalFileName=='' || finalFileName=='undefined')){
+                    htmlStr+='<b>无可下载合同资源,请生成对应资源</b>';
+                }else{
+                    if(nonChapterFileName!=null && nonChapterFileName!='' && nonChapterFileName!='undefined'){
+                        htmlStr+="<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/has/"+hasChapterFileName+"'>有章合同(支持在线打印)</a> " +
+                            "</br>"
+                    }
+                    if(hasChapterFileName!=null && hasChapterFileName!='' && hasChapterFileName!='undefined'){
+                        htmlStr+="<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/non/"+ nonChapterFileName+"'>无章合同(支持在线打印)</a>" +
+                            "</br>"
+                    }
+                    if(finalFileName!=null && finalFileName!='' && finalFileName!='undefined'){
+                        htmlStr+="<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/non/"+ finalFileName+"'>最终合同</a>"
                     }
                 }
-                _this.showList=false;
-                _this.showAgreement=false;
-                _this.showTradeMark=true;
 
+                alert(htmlStr)
+            },
+            backToAgreement:function(agreementId){
+                var _this=this;
+                _this.showList=false;
+                _this.showAgreement=true;
+                _this.showTradeMark=false;
+                $('#myTab a[href="#tradeMarkInfo"]').tab('show')
             },
             getAgreementById:function(id){
                 var _this=this;
@@ -696,19 +854,6 @@
                     }
                 );
 
-            },
-            downLoadAgreement:function(nonChapterFileName,hasChapterFileName){
-                alert("<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/has/"+hasChapterFileName+"'>有章合同(支持在线打印)</a> " +
-                    "</br>"+
-                    "<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/non/"+ nonChapterFileName+"'>无章合同(支持在线打印)</a>"
-                )
-            },
-            backToAgreement:function(agreementId){
-                var _this=this;
-                _this.showList=false;
-                _this.showAgreement=true;
-                _this.showTradeMark=false;
-                $('#myTab a[href="#tradeMarkInfo"]').tab('show')
             },
             updateAgreement:function(val){
                 var _this=this;
@@ -737,13 +882,13 @@
                         });
                     }
                 }
-                axios.post(_this.update_agreement_url,_this.agreement)
+                axios.post(_this.update_agreement_url, _this.agreement)
                     .then(function (response) {
-                        if(response.data.code === 0){
-                            alert('操作成功', function(){
+                        if (response.data.code === 0) {
+                            alert('操作成功', function () {
                                 _this.list();
                             });
-                        }else{
+                        } else {
                             alert(response.data.msg);
                         }
                     }).catch(function (error) {
@@ -753,7 +898,7 @@
             },
             submitAgreement:function(id){
                 var _this=this;
-                alert('提交后不可修改合同信息，是否提交', function(){
+                alert('请确认所有资料都上传，提交后不可修改', function(){
                     axios.get('/api/resource/agreement/submit',{params:{
                             agreementId: id,
                         }
@@ -776,26 +921,36 @@
             downLoadSureDoc:function(id){
 
             },
-            saveOrupdateTradeMark:function(id){
+            saveOrupdateTradeMark:function(){
+
                 var _this=this;
                 var baseUrl='/api/resource/trademark';
-                var url=(id!=''&&id!=null)?baseUrl+'/update':baseUrl+'/save';
-                axios.post(url,_this.tradeMarkInfo).then(function (response) {
-                    if(response.data.code === 0){
-                        alert('操作成功', function(){
-                            _this.showList=false;
-                            _this.showAgreement=true;
-                            _this.showTradeMark=false;
-                            _this.listTradeMark(_this.tradeMarkInfo.agreementId);
+                var url=baseUrl+'/save';
+                var agreementId = _this.tradeMarkInfo.agreementId;
+                var name = _this.tradeMarkInfo.name;
+                var classifyCode = _this.tradeMarkInfo.classifyCode;
+                var docCode = _this.tradeMarkInfo.docCode;
+                if (!(agreementId&&name&&classifyCode&&docCode)) {
+                    alert('请正确填写表单数据', function(){
+                        _this.$validator.validate().then(result => {});
+                        return ;
+                    });
+                }else {
+                    axios.post(url, _this.tradeMarkInfo).then(function (response) {
+                        if (response.data.code === 0) {
+                            alert('操作成功', function () {
+                                $("#addTradeMark").modal('hide');
+                                _this.listTradeMark(_this.tradeMarkInfo.agreementId);
 
-                        });
-                    }else{
-                        alert(response.data.msg);
-                    }
-                }).catch(function (error) {
-                        console.log(error);
-                    }
-                );
+                            });
+                        } else {
+                            alert(response.data.msg);
+                        }
+                    }).catch(function (error) {
+                            console.log(error);
+                        }
+                    );
+                }
 
             },
             deleteTradeMark:function(id){
@@ -853,6 +1008,10 @@
             },
             getSubmitStartDate:function(val){
                 this.condition.createStartDate=val;
+            },
+            back: function () {
+                history.go(-1);
+                this.list();
             },
 
         },

@@ -119,6 +119,8 @@
                                 <button  class="btn btn-primary btn-padding-reset"
                                          @click="downLoadAgreement(item.nonChapterFileName,item.hasChapterFileName)">下载</button>
                                 <button  class="btn btn-primary btn-padding-reset"
+                                         @click="showAgreementInfo(item.agreementId)">查看</button>
+                                <button  class="btn btn-primary btn-padding-reset"
                                          @click="updateAgreement(item.agreementId,'AGS_004')">通过</button>
                                 <button  class="btn btn-primary btn-padding-reset"
                                          @click="updateAgreement(item.agreementId,'AGS_003')">驳回</button>
@@ -141,6 +143,221 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="updateAgreement" tabindex="-1" role="dialog" aria-labelledby="updateAgreementLabel" aria-hidden="true" style="overflow: auto">
+            <div class="modal-dialog  form-max-panel">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="updateAgreementLabel">
+                            修改合同
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul id="myTab" class="nav nav-tabs">
+                            <li class="active"><a href="#agreement" data-toggle="tab">合同</a> </li>
+                            <li><a href="#tradeMarkInfo" data-toggle="tab">商标信息</a></li>
+                            <li><a href="#firstParty" data-toggle="tab">甲方</a></li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div class="tab-pane fade in active" id="agreement">
+                                <form class="form-horizontal">
+                                    <input type="text"  v-model="agreement.resourceId" class="hidden"/>
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">合同编号 </div>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" v-model="agreement.agreementId"   readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">总费用</div>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" v-model="agreement.allcost" readonly v-validate="'required|numeric'" name="总费用" placeholder="总费用(单位元)"/>
+                                            <div v-show="errors.has('总费用')" class="alert alert-danger">{{ errors.first('总费用') }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">定金</div>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" v-model="agreement.earnest" readonly v-validate="'required|numeric'" name="定金" placeholder="定金(单位元)"/>
+                                            <div v-show="errors.has('定金')" class="alert alert-danger">{{ errors.first('定金') }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">尾款</div>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" v-model="agreement.finalPayment" readonly v-validate="'required|numeric'" name="尾款" placeholder="尾款(单位元)"/>
+                                            <div v-show="errors.has('尾款')" class="alert alert-danger">{{ errors.first('尾款') }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-2 control-label">支出</div>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" v-model="agreement.pay" readonly v-validate="'required|numeric'" name="支出" placeholder="支出(单位元)"/>
+                                            <div v-show="errors.has('支出')" class="alert alert-danger">{{ errors.first('支出') }}</div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!--  商标信息-->
+                            <div class="tab-pane fade" id="tradeMarkInfo">
+                                <table class="table table-bordered">
+                                    <colgroup>
+                                        <col width="20%">
+                                        <col width="20%">
+                                        <col width="20%">
+                                        <col width="20%">
+                                        <col width="20%">
+                                    </colgroup>
+                                    <thead>
+                                    <tr>
+                                        <th hidden>合同ID</th>
+                                        <th hidden>商标ID</th>
+                                        <th hidden>商标分类编码</th>
+                                        <th>商标名</th>
+                                        <th>分类</th>
+                                        <th>图片</th>
+                                        <th>商标局图片</th>
+                                        <th>确认书</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="item in tradeMarkData">
+                                            <td hidden>{{item.agreementId}}</td>
+                                            <td hidden>{{item.id}}</td>
+                                            <td hidden>{{item.classifyCode}}</td>
+                                            <td>{{item.name}}</td>
+                                            <td>{{item.classifyDes}}</td>
+                                            <td>
+                                                <a href="#" class="thumbnail">
+                                                    <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.img">
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="#" class="thumbnail">
+                                                    <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.governmentImg">
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="#" class="thumbnail">
+                                                <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.sureDocImg">
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!--甲方-->
+                            <div class="tab-pane fade" id="firstParty">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <div class="col-sm-2  control-label">联系人 </div>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" readonly v-validate="'required'" name="联系人" v-model="agreement.linkMan" />
+                                            <div v-show="errors.has('联系人')" class="alert alert-danger">{{ errors.first('联系人') }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="control-label col-sm-2">甲方</div>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control " readonly v-validate="'required'" name="甲方" v-model="agreement.firstParty" />
+                                            <div v-show="errors.has('甲方')" class="alert alert-danger">{{ errors.first('甲方') }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="control-label col-sm-2">邮箱</div>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" readonly v-validate="'required|email'" name="邮箱" v-model="agreement.email"/>
+                                            <div v-show="errors.has('邮箱')" class="alert alert-danger">{{ errors.first('邮箱') }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="control-label col-sm-2">电话</div>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control " readonly v-validate="'required'" name="电话" v-model="agreement.phoneNumber" />
+                                            <div v-show="errors.has('电话')" class="alert alert-danger">{{ errors.first('电话') }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="control-label col-sm-2">地址</div>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control " readonly v-validate="'required'" name="地址" v-model="agreement.address" />
+                                            <div v-show="errors.has('地址')" class="alert alert-danger">{{ errors.first('地址') }}</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="control-label col-sm-2">身份证</div>
+                                            <div class="col-sm-10">
+                                                <el-button size="small"  type="success" :disabled="agreement.icdFaceImgName==null" @click="showImg(agreement.icdFaceImgName)">查看正面</el-button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-2"></div>
+                                            <div class="col-sm-10">
+                                                <el-button size="small"  type="success" :disabled="agreement.icdReverseImgName==null" @click="showImg(agreement.icdReverseImgName)">查看反面</el-button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="control-label col-sm-2">执照</div>
+                                        <div class="col-sm-10">
+                                            <el-button size="small" type="success" :disabled="agreement.licenseImgName==null" @click="showImg(agreement.licenseImgName)">查看执照</el-button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="control-label col-sm-2">确认书</div>
+                                        <div class="col-sm-10">
+                                            <el-button size="small" type="success" :disabled="agreement.sureDocImgName==null" @click="showImg(agreement.sureDocImgName)">查看确认书</el-button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="control-label col-sm-2">委托书</div>
+                                        <div class="col-sm-10">
+                                            <el-button size="small" type="success" :disabled="agreement.proxyImgName==null" @click="showImg(agreement.proxyImgName)">查看委托书</el-button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="control-label col-sm-2">合同</div>
+                                        <div class="col-sm-10">
+                                            <el-button size="small" type="success" :disabled="agreement.finalFileName==null" @click="showImg(agreement.finalFileName)">查看合同</el-button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--查看图片 start-->
+        <div class="modal fade"  id="preImg" tabindex="2" role="dialog" aria-labelledby="showImg" aria-hidden="true" style="overflow: auto">
+            <div class="modal-dialog form-max-panel">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="showImg">
+                            查看图片
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <img src=""  style="width:800px;overflow:auto; " id="readImage"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--查看图片 end-->
     </div>
 </body>
 
@@ -153,6 +370,7 @@
             return {
                 fileList: [],
                 update_agreement_url:'/api/resource/agreement/update',
+                img_url:'http://localhost:8080/api/file/readImage?imgName=',
                 listLoading:false,
                 title:null,
                 showList:true,
@@ -245,6 +463,52 @@
                     if(response.data.code === 0){
                         _this.tableData = response.data.page.list;
                         _this.tableConfig.totalCount = response.data.page.totalCount;
+                    }else{
+                        alert(response.data.msg);
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            showImg:function(fileName){
+                var _this=this;
+                $("#preImg").modal('show');
+                $("#readImage").attr('src',_this.img_url+fileName);
+
+            },
+            showAgreementInfo:function (id) {
+                var _this=this;
+                _this.getAgreementById(id);
+                _this.tradeMarkInfo.agreementId=id;
+                _this.listTradeMark(id);
+                $("#updateAgreement").modal('show');
+            },
+            getAgreementById:function(id){
+                var _this=this;
+                axios.get('/api/resource/agreement/get/'+id)
+                    .then(function (response) {
+                        if(response.data.code === 0){
+                            _this.agreement=response.data.data;
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    }
+                );
+
+            },
+            listTradeMark:function(agreementId){
+                var _this=this;
+                _this.tradeMarkData = [];
+                axios.get('/api/resource/trademark/list', {
+                    params: {
+                        agreementId:agreementId,
+                        page: _this.tradeMarkTableConfig.pageNumber,
+                        limit: _this.tradeMarkTableConfig.pageSize
+                    }
+                }).then(function (response) {
+                    if(response.data.code === 0){
+                        _this.tradeMarkData = response.data.page.list;
+                        _this.tradeMarkTableConfig.totalCount = response.data.page.totalCount;
                     }else{
                         alert(response.data.msg);
                     }

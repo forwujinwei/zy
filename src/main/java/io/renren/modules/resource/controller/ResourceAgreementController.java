@@ -122,19 +122,14 @@ public class ResourceAgreementController {
      */
     @RequestMapping("/submit")
     public R submit(@LoginUser UserEntity user, @RequestParam String agreementId) throws Exception {
-        //生成合同pdf
-        //获取合同信息
-        Map<String,String> agreementFormFieldMap = resourceAgreementService.selectFromByPrimaryKey(agreementId);
-
-        //获取商标信息
-        List<ResourceTradeMark> resourceTradeMarks = resourceTradeMarkService.selectByResourceId(agreementId);
-        Map<String, String> pdfNameMap = commonService.manipulatePdf(agreementFormFieldMap, resourceTradeMarks);
+        ResourceAgreement resourceAgreementExist = resourceAgreementService.selectByPrimaryKey(agreementId);
+        if(resourceAgreementExist==null||StringUtils.isBlank(resourceAgreementExist.getFinalFileName())){
+            R.error("请确保提交合同前已上传甲方签字或盖章合同");
+       }
         //修改数据库
         ResourceAgreement resourceAgreement = new ResourceAgreement();
         String username = user.getUsername();
         resourceAgreement.setAgreementId(agreementId);
-        resourceAgreement.setNonChapterFileName(pdfNameMap.get("nonChapterFileName"));
-        resourceAgreement.setHasChapterFileName(pdfNameMap.get("hasChapterFileName"));
         resourceAgreement.setUpdateBy(username);
         resourceAgreement.setStatusCode(DistEnum.AGREEMENT_STATUS_SUBMIT.getTypeCode());
         resourceAgreement.setStatusDes(DistEnum.AGREEMENT_STATUS_SUBMIT.getDes());
@@ -144,4 +139,31 @@ public class ResourceAgreementController {
 
         return R.ok();
     }
+    /**
+     * 生成合同pdf
+     */
+    @RequestMapping("/build/{operate}/{agreementId}")
+    public R build(@LoginUser UserEntity user,@PathVariable String operate, @PathVariable String agreementId) throws Exception {
+        ResourceAgreement resourceAgreement = new ResourceAgreement();
+        String username = user.getUsername();
+        resourceAgreement.setAgreementId(agreementId);
+        resourceAgreement.setUpdateBy(username);
+        //生成临时合同
+        if(StringUtils.equals("temp",operate)){
+            Map<String,String> agreementFormFieldMap = resourceAgreementService.selectFromByPrimaryKey(agreementId);
+            //获取商标信息
+            List<ResourceTradeMark> resourceTradeMarks = resourceTradeMarkService.selectByResourceId(agreementId);
+            Map<String, String> pdfNameMap = commonService.manipulatePdf(agreementId,agreementFormFieldMap, resourceTradeMarks);
+            //修改数据库
+            resourceAgreement.setNonChapterFileName(pdfNameMap.get("nonChapterFileName"));
+            resourceAgreement.setHasChapterFileName(pdfNameMap.get("hasChapterFileName"));
+            resourceAgreementService.update(resourceAgreement);
+        //生成最终合同
+        }else if(StringUtils.equals("final",operate)){
+
+        }
+        return R.ok();
+    }
+
+
 }

@@ -73,15 +73,15 @@
                     <colgroup>
                         <col width="12%">
                         <col width="8%">
-                        <col width="15%">
+                        <col width="14%">
                         <col width="6%">
                         <col width="6%">
                         <col width="6%">
                         <col width="6%">
-                        <col width="8%">
-                        <col width="8%">
+                        <col width="6%">
                         <col width="10%">
-                        <col width="15%">
+                        <col width="10%">
+                        <col width="16%">
                     </colgroup>
                     <thead>
                         <tr>
@@ -117,11 +117,13 @@
                             <td>{{item.createDate|formatterDate}}</td>
                             <td><div class="btn-group" data-toggle="buttons-radio">
                                 <button  class="btn btn-primary btn-padding-reset"
-                                         @click="downLoadAgreement(item.nonChapterFileName,item.hasChapterFileName)" :disabled="item.statusCode=='AGS_001'">下载</button>
+                                         @click="downLoadAgreement(item.nonChapterFileName,item.hasChapterFileName,item.finalFileName)">下载</button>
                                 <button  class="btn btn-primary btn-padding-reset"
-                                         @click="showUpdateAgreement(item.agreementId)" :disabled="item.statusCode=='AGS_002'">修改</button>
+                                         @click="showUpdateAgreement(item.agreementId)" :disabled="item.statusCode!='AGS_001'">修改</button>
                                 <button  class="btn btn-primary btn-padding-reset"
-                                         @click="submitAgreement(item.agreementId)" :disabled="item.statusCode=='AGS_002'">提交</button>
+                                         @click="showBuildAgreement(item.agreementId)" :disabled="item.statusCode!='AGS_001'">生成</button>
+                                <button  class="btn btn-primary btn-padding-reset"
+                                         @click="submitAgreement(item.agreementId)" :disabled="item.statusCode!='AGS_001'">提交</button>
                             </div>
                             </td>
                         </tr>
@@ -316,8 +318,8 @@
                                                         :on-success="handleSuccess"
                                                         :limit="1"
                                                         :file-list="uploadFile.icdImgFaceList">
-                                                    <el-button size="small" type="primary">正面上传</el-button>
-                                                    <el-button size="small" type="primary" :disabled="agreement.icdFaceImgName==null" @click="showImg(agreement.icdFaceImgName)">查看正面</el-button>
+                                                    <el-button slot="trigger"  size="small" type="primary">正面上传</el-button>
+                                                    <el-button size="small"  type="success" :disabled="agreement.icdFaceImgName==null" @click="showImg(agreement.icdFaceImgName)">查看正面</el-button>
                                                 </el-upload>
                                             </div>
                                         </div>
@@ -330,8 +332,8 @@
                                                         :on-success="handleSuccess"
                                                         :limit="1"
                                                         :file-list="uploadFile.icdImgReverseList">
-                                                    <el-button size="small" type="primary">反面上传</el-button>
-                                                    <el-button size="small" type="primary" :disabled="agreement.icdReverseImgName==null" @click="showImg(agreement.icdReverseImgName)">查看反面</el-button>
+                                                    <el-button slot="trigger" size="small" type="primary">反面上传</el-button>
+                                                    <el-button size="small"  type="success" :disabled="agreement.icdReverseImgName==null" @click="showImg(agreement.icdReverseImgName)">查看反面</el-button>
                                                 </el-upload>
                                             </div>
                                         </div>
@@ -346,8 +348,8 @@
                                                     :on-success="handleSuccess"
                                                     :limit="1"
                                                     :file-list="uploadFile.licenseImgList">
-                                                <el-button size="small" type="primary">点击上传</el-button>
-                                                <el-button size="small" type="primary" :disabled="agreement.licenseImgName==null" @click="showImg(agreement.licenseImgName)">查看执照</el-button>
+                                                <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+                                                <el-button size="small" type="success" :disabled="agreement.licenseImgName==null" @click="showImg(agreement.licenseImgName)">查看执照</el-button>
                                             </el-upload>
                                         </div>
                                     </div>
@@ -360,8 +362,8 @@
                                                     :on-success="handleSuccess"
                                                     :limit="1"
                                                     :file-list="uploadFile.sureDocList">
-                                                <el-button size="small" type="primary">点击上传</el-button>
-                                                <el-button size="small" type="primary" :disabled="agreement.sureDocImgName==null" @click="showImg(agreement.sureDocImgName)">查看确认书</el-button>
+                                                <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+                                                <el-button size="small" type="success" :disabled="agreement.sureDocImgName==null" @click="showImg(agreement.sureDocImgName)">查看确认书</el-button>
                                             </el-upload>
                                         </div>
                                     </div>
@@ -374,8 +376,8 @@
                                                     :on-success="handleSuccess"
                                                     :limit="1"
                                                     :file-list="uploadFile.proxyImgList">
-                                                <el-button size="small" type="primary">点击上传</el-button>
-                                                <el-button size="small" type="primary" :disabled="agreement.proxyImgName==null" @click="showImg(agreement.proxyImgName)">查看委托书</el-button>
+                                                <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+                                                <el-button size="small" type="success" :disabled="agreement.proxyImgName==null" @click="showImg(agreement.proxyImgName)">查看委托书</el-button>
                                             </el-upload>
                                         </div>
                                     </div>
@@ -393,9 +395,8 @@
                                                         :on-success="handleSuccess"
                                                         :limit="6"
                                                         :file-list="uploadFile.agreementFileList">
-                                                    <el-button size="small" type="primary">点击上传</el-button>
-                                                    <el-button size="small" type="primary">生成合同</el-button>
-                                                    <el-button size="small" type="primary" :disabled="agreement.finalFileName==null" @click="showImg(agreement.finalFileName)">查看合同</el-button>
+                                                    <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+                                                    <el-button size="small" style="margin-left: 10px;" type="success" :disabled="agreement.finalFileName==null" @click="showImg(agreement.finalFileName)">查看合同</el-button>
                                                 </el-upload>
                                             </div>
                                         </div>
@@ -451,8 +452,8 @@
                                             :action='"http://localhost:8080/api/file/upload/tradeMarkImg/"+tradeMarkInfo.id'
                                             :on-success="handleSuccess"
                                             :file-list="uploadFile.imgList">
-                                        <el-button size="small" type="primary">点击上传</el-button>
-                                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                        <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+                                        <el-button size="small" style="margin-left: 10px;" type="success" :disabled="agreement.img==null" @click="showImg(tradeMarkInfo.img)">查看图片</el-button>
                                     </el-upload>
                                 </div>
                             </div>
@@ -464,8 +465,8 @@
                                             :action='"http://localhost:8080/api/file/upload/governmentImg/"+tradeMarkInfo.id'
                                             :on-success="handleSuccess"
                                             :file-list="uploadFile.governmentImgList">
-                                        <el-button size="small" type="primary">点击上传</el-button>
-                                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                        <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+                                        <el-button size="small" style="margin-left: 10px;" type="success" :disabled="tradeMarkInfo.governmentImg==null" @click="showImg(tradeMarkInfo.governmentImg)">查看商标局图片</el-button>
                                     </el-upload>
                                 </div>
                             </div>
@@ -474,11 +475,11 @@
                                 <div class="col-sm-10">
                                     <el-upload
                                             class="upload-demo"
-                                            :action='"http://localhost:8080/api/file/upload/trademarkSureDoc/"+tradeMarkInfo.id'
+                                            :action='"http://localhost:8080/api/file/upload/trademarkSureDoc?tradeMarkId="+tradeMarkInfo.id+"&agreementId="+tradeMarkInfo.agreementId'
                                             :on-success="handleSuccess"
                                             :file-list="uploadFile.trademarkSureDocList">
-                                        <el-button size="small" type="primary">点击上传</el-button>
-                                        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                        <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+                                        <el-button size="small" style="margin-left: 10px;" type="success" :disabled="tradeMarkInfo.sureDocImg==null" @click="showImg(tradeMarkInfo.sureDocImg)">查看客户确认书</el-button>
                                     </el-upload>
                                 </div>
                             </div>
@@ -540,6 +541,31 @@
             </div>
         </div>
         <!--查看图片 end-->
+        <!--查看合同 start-->
+        <div class="modal fade"  id="buildAgreement" tabindex="2" role="dialog" aria-labelledby="buildAgreementLabel" aria-hidden="true" style="overflow: auto">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="buildAgreementLabel">
+                           生成合同类型
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div>
+                            <p><b>临时合同:</b>同时生成两份合同,一份有我方印章、一份无印章,生成合同无甲方印章或签字</p>
+                            <p><b>最终合同:</b>生成合同前请确保已按页面顺序上传甲方签字或盖章合同，否则会无法生成或生成错误</p>
+                            <input type="button" class="btn btn-primary" @click="buildAgreement('temp')" value="生成临时合同"/>
+                            &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="buildAgreement('final')" value="生成最终合同"/>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--查看合同 end-->
     </div>
 </body>
 
@@ -649,7 +675,6 @@
             handleSuccess(){
                 var _this=this;
                 _this.getAgreementById(_this.agreement.agreementId);
-
             },
             handleRemove(file, fileList) {
                 console.log(file, fileList);
@@ -672,7 +697,7 @@
                 _this.tableData = [];
                 axios.get('api/resource/agreement/list', {
                     params: {
-                        statusCode:'AGS_001,AGS_002',
+                        statusCode:'AGS_001,AGS_002,AGS_004',
                         page: _this.tableConfig.pageNumber,
                         limit: _this.tableConfig.pageSize
                     }
@@ -693,24 +718,52 @@
                 $("#readImage").attr('src',_this.img_url+fileName);
 
             },
+            showBuildAgreement:function(agreementId){
+                var _this=this;
+                _this.agreement.agreementId=agreementId;
+                $("#buildAgreement").modal('show');
+
+            },
+            buildAgreement:function(optional){
+                var _this=this;
+                if(optional=="temp"){
+                    axios.get('api/resource/agreement/build/temp/'+_this.agreement.agreementId, {})
+                        .then(function (response) {
+                        if(response.data.code === 0){
+                            alert('生成临时合同成功', function(){
+                                _this.list();
+                            });
+                        }else{
+                            alert(response.data.msg);
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+
+                }else if(optional=="final"){
+                    axios.get('api/resource/agreement/build/final/'+_this.agreement.agreementId, {})
+                        .then(function (response) {
+                            if(response.data.code === 0){
+                                alert('生成最终合同成功', function(){
+                                    _this.list();
+                                });
+                            }else{
+                                alert(response.data.msg);
+                            }
+                        }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+
+            },
             showUpdateAgreement:function (id) {
                 var _this=this;
-                /*_this.showList=false;
-                _this.showAgreement=true;
-                _this.title='修改商标';*/
-                _this.uploadFile.icdImgList=[];
-                _this.uploadFile.licenseImgList=[];
-                _this.uploadFile.trademarkSureDocList=[];
-                _this.uploadFile.proxyImgList=[];
-                _this.uploadFile.agreementFileList=[];
-                _this.uploadFile.imgList=[];
-                _this.uploadFile.governmentImgList=[];
-                _this.uploadFile.sureDocList=[];
-                $("#updateAgreement").modal('show');
                 _this.getAgreementById(id);
                 _this.tradeMarkInfo.agreementId=id;
                 _this.listTradeMark(id);
                 _this.getTrademarkClassify();
+                $("#updateAgreement").modal('show');
+                console.log("fileList:"+JSON.stringify(_this.uploadFile))
             },
             showUpdateTradeMark:function(id,agreementId){
                 var _this=this;
@@ -760,11 +813,27 @@
                 console.log(_this.tradeMarkInfo)
 
             },
-            downLoadAgreement:function(nonChapterFileName,hasChapterFileName){
-               alert("<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/has/"+hasChapterFileName+"'>有章合同(支持在线打印)</a> " +
-                       "</br>"+
-                       "<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/non/"+ nonChapterFileName+"'>无章合同(支持在线打印)</a>"
-                   )
+            downLoadAgreement:function(nonChapterFileName,hasChapterFileName,finalFileName){
+                var htmlStr='';
+                if((nonChapterFileName==null || nonChapterFileName=='' || nonChapterFileName=='undefined')
+                    &&(hasChapterFileName==null || hasChapterFileName=='' || hasChapterFileName=='undefined')
+                    &&(finalFileName==null || finalFileName=='' || finalFileName=='undefined')){
+                    htmlStr+='<b>无可下载合同资源,请生成对应资源</b>';
+                }else{
+                    if(nonChapterFileName!=null && nonChapterFileName!='' && nonChapterFileName!='undefined'){
+                        htmlStr+="<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/has/"+hasChapterFileName+"'>有章合同(支持在线打印)</a> " +
+                            "</br>"
+                    }
+                    if(hasChapterFileName!=null && hasChapterFileName!='' && hasChapterFileName!='undefined'){
+                        htmlStr+="<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/non/"+ nonChapterFileName+"'>无章合同(支持在线打印)</a>" +
+                            "</br>"
+                    }
+                    if(finalFileName!=null && finalFileName!='' && finalFileName!='undefined'){
+                        htmlStr+="<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/non/"+ finalFileName+"'>最终合同</a>"
+                    }
+                }
+
+               alert(htmlStr)
             },
             backToAgreement:function(agreementId){
                 var _this=this;
@@ -829,7 +898,7 @@
             },
             submitAgreement:function(id){
                 var _this=this;
-                alert('提交后不可修改合同信息，是否提交', function(){
+                alert('请确认所有资料都上传，提交后不可修改', function(){
                     axios.get('/api/resource/agreement/submit',{params:{
                             agreementId: id,
                         }

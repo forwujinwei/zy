@@ -63,8 +63,16 @@ public class FileController {
                 filePath="tradeMarkImg\\"+destFileName;
                 ResourceTradeMark resourceTradeMark = new ResourceTradeMark();
                 resourceTradeMark.setId(id);
+                resourceTradeMark.setUpdateDate(new Date());
                 resourceTradeMark.setImg(destFileName);
-                resourceTradeMarkService.update(resourceTradeMark);
+                ResourceTradeMark resourceTradeMarkExist = resourceTradeMarkService.selectByPrimaryKey(id);
+               if(resourceTradeMarkExist!=null){
+                   resourceTradeMarkService.update(resourceTradeMark);
+               }else{
+                   resourceTradeMark.setCreateDate(new Date());
+                   resourceTradeMarkService.save(resourceTradeMark);
+               }
+
             //合同
             }else if("agreementFile".equals(operation)){
                 filePath="agreementFile"+"\\agreement_"+id+"_"+System.currentTimeMillis();
@@ -86,8 +94,15 @@ public class FileController {
                 resourceTradeMark.setId(id);
                 resourceTradeMark.setGovernmentImg(destFileName);
                 resourceTradeMark.setUpdateDate(new Date());
-                resourceTradeMarkService.update(resourceTradeMark);
-            //身份证正面
+                ResourceTradeMark resourceTradeMarkExist = resourceTradeMarkService.selectByPrimaryKey(id);
+                if(resourceTradeMarkExist!=null){
+                    resourceTradeMarkService.update(resourceTradeMark);
+                }else{
+                    resourceTradeMark.setCreateDate(new Date());
+                    resourceTradeMarkService.save(resourceTradeMark);
+                }
+
+             //身份证正面
             }else if("icdImgFace".equals(operation)){
                 destFileName="icd_face_"+id;
                 filePath="icdImg\\"+destFileName;
@@ -130,7 +145,15 @@ public class FileController {
                 ResourceTradeMark resourceTradeMark = new ResourceTradeMark();
                 resourceTradeMark.setId(id);
                 resourceTradeMark.setSureDocImg(destFileName);
-                resourceTradeMarkService.update(resourceTradeMark);
+                resourceTradeMark.setUpdateDate(new Date());
+                ResourceTradeMark resourceTradeMarkExist = resourceTradeMarkService.selectByPrimaryKey(id);
+                if(resourceTradeMarkExist!=null){
+                    resourceTradeMarkService.update(resourceTradeMark);
+                }else{
+                    resourceTradeMark.setCreateDate(new Date());
+                    resourceTradeMarkService.save(resourceTradeMark);
+                }
+
             }
 
 

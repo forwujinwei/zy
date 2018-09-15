@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.*;
 import java.util.List;
 
@@ -36,19 +37,26 @@ public class CommonService {
     /*添加商标*/
     private static String  logImageUrl = "src/main/resources/agreement_resource/logo.png";
     private static String  markImageUrl = "src/main/resources/agreement_resource/mark.png";
-    public Map<String,String> manipulatePdf(Map<String, String> fieldValueMap, List<ResourceTradeMark> tradeMarkets) throws Exception {
+    public Map<String,String> manipulatePdf(String agreementId,Map<String, String> fieldValueMap, List<ResourceTradeMark> tradeMarkets) throws Exception {
 
-        String nonChapterFileName = "zy_non_chapter_"+System.currentTimeMillis();
+        String nonChapterFileName = "zy_non_chapter_"+agreementId;
+        String hasChapterFileName = "zy_has_chapter_"+agreementId;
         String nonChapterFilePath = nonChapterFileDir + nonChapterFileName + ".pdf";
+        String hasChapterFilePath = hasChapterFileDir + hasChapterFileName + ".pdf";
+        //判断文件是否存在
+        File nonChapterFileFile = new File(nonChapterFilePath);
+        File hasChapterFileFile = new File(hasChapterFilePath);
+        // 检测是否存在目录
+        if(nonChapterFileFile.exists()){
+            nonChapterFileFile.deleteOnExit();
+        }
+        if(hasChapterFileFile.exists()){
+            hasChapterFileFile.deleteOnExit();
+        }
         PdfDocument pdfDoc = new PdfDocument(new PdfReader(templateFilePath), new PdfWriter(nonChapterFilePath));
-
         Image logImg = new Image(ImageDataFactory.create(logImageUrl));
-
-
         Image markImg = new Image(ImageDataFactory.create(markImageUrl));
-
         pdfDoc.addEventHandler(PdfDocumentEvent.END_PAGE, new TransparentImage(logImg, markImg));
-
         PdfAcroForm pdfAcroForm = PdfAcroForm.getAcroForm(pdfDoc, true);
         Map<String, PdfFormField> formFields = pdfAcroForm.getFormFields();
         Set<String> strings = formFields.keySet();
@@ -111,7 +119,7 @@ public class CommonService {
         document.close();
         pdfDoc.close();
         //添加骑缝章和签约章
-        String hasChapterFileName = addAgreementchapter(nonChapterFileName);
+        addAgreementchapter(nonChapterFilePath,hasChapterFilePath);
         HashMap<String, String> fileNameMap = new HashMap<>();
         fileNameMap.put("hasChapterFileName",hasChapterFileName);
         fileNameMap.put("nonChapterFileName",nonChapterFileName);
@@ -162,10 +170,7 @@ public class CommonService {
         return table;
     }
 
-    private String addAgreementchapter(String nonChapterFileName) throws Exception {
-        String hasChapterFileName = "zy_has_chapter_"+System.currentTimeMillis();
-        String nonChapterFilePath = nonChapterFileDir + nonChapterFileName + ".pdf";
-        String hasChapterFilePath = hasChapterFileDir + hasChapterFileName + ".pdf";
+    private void addAgreementchapter(String nonChapterFilePath,String hasChapterFilePath) throws Exception {
         PdfDocument pdfDocFinal = new PdfDocument(new PdfReader(nonChapterFilePath), new PdfWriter(hasChapterFilePath));
         int numberOfPages = pdfDocFinal.getNumberOfPages();
         for (int i = 1; i <= numberOfPages; i++) {
@@ -206,6 +211,5 @@ public class CommonService {
             pdfCanvas.release();
         }
         pdfDocFinal.close();
-        return hasChapterFileName;
     }
 }
