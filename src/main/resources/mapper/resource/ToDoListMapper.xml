@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.renren.modules.resource.dao.ToDoListMapper">
+  <resultMap id="BaseResultMap" type="io.renren.modules.resource.model.ToDoList">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="item_des" jdbcType="VARCHAR" property="itemDes" />
+    <result column="finish_date" jdbcType="TIMESTAMP" property="finishDate" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+    <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, item_des, finish_date, status, create_by, create_date, update_date, remarks, 
+    delete_flag
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from to_do_list
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from to_do_list
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="io.renren.modules.resource.model.ToDoList">
+    insert into to_do_list (id, item_des, finish_date, 
+      status, create_by, create_date, 
+      update_date, remarks, delete_flag
+      )
+    values (#{id,jdbcType=VARCHAR}, #{itemDes,jdbcType=VARCHAR}, #{finishDate,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="io.renren.modules.resource.model.ToDoList">
+    insert into to_do_list
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="itemDes != null">
+        item_des,
+      </if>
+      <if test="finishDate != null">
+        finish_date,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="itemDes != null">
+        #{itemDes,jdbcType=VARCHAR},
+      </if>
+      <if test="finishDate != null">
+        #{finishDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.resource.model.ToDoList">
+    update to_do_list
+    <set>
+      <if test="itemDes != null">
+        item_des = #{itemDes,jdbcType=VARCHAR},
+      </if>
+      <if test="finishDate != null">
+        finish_date = #{finishDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag = #{deleteFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="io.renren.modules.resource.model.ToDoList">
+    update to_do_list
+    set item_des = #{itemDes,jdbcType=VARCHAR},
+      finish_date = #{finishDate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      delete_flag = #{deleteFlag,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="queryList" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from to_do_list
+    where create_by = #{username,jdbcType=VARCHAR}
+    and delete_flag != 1
+    order  by finish_date ASC
+    <if test="offset != null and limit != null ">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="queryTotal" resultType="int">
+    select count(1)
+    from to_do_list
+    where create_by = #{username,jdbcType=VARCHAR}
+    and delete_flag != 1
+  </select>
+</mapper>

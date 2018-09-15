@@ -1,42 +1,256 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>商标管理</title>
+    <title>TO DO LIST</title>
     <meta charset="UTF-8">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="../../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
-    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+
+    <link rel="stylesheet" href="../../plugins/element/theme-default/index.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap-3.3.7/css/bootstrap.css">
+    <link rel="stylesheet" href="../../plugin/Ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="../../plugin/adminlte/css/AdminLTE.css">
+    <link rel="stylesheet" href="../../plugin/adminlte/css/skins/_all-skins.min.css">
     <link rel="stylesheet" href="../../css/main.css">
-    <script src="../../libs/jquery.min.js"></script>
+    <script src="../../libs/jquery-3.1.1.min.js"></script>
     <script src="../../plugins/layer/layer.js"></script>
-    <script src="../../libs/bootstrap.min.js"></script>
+
+    <script src="../../plugins/bootstrap-3.3.7/js/bootstrap.js"></script>
+    <script src="../../libs/json2.js"></script>
     <script src="../../libs/vue.min.js"></script>
-    <script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
-    <script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
-    <script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
-    <script src="../../js/common.js"></script>
+    <script src="../../libs/axios.min.js"></script>
+    <script src="../../js/axiso.js"></script>
+    <script src="../../plugins/laydate/laydate.js"></script>
+    <script src="../../plugins/element/index.js"></script>
+    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/vee-validate.min.js"></script>
+    <script src="https://cdn.bootcss.com/vee-validate/2.0.9/locale/zh_CN.js"></script>
 </head>
 <body>
 <div id="rrapp">
-    <!--<div class="grid-btn">
-        <div class="form-group col-sm-2">
-            <input type="text" class="form-control" v-model="q.jobId" @keyup.enter="query" placeholder="任务ID">
-        </div>
-        <a class="btn btn-default" @click="query">查询</a>
-        &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="back" value="返回"/>
-    </div>-->
-    <div>今日回访客户</div>
-    <table id="jqGrid"></table>
-    <div id="jqGridPager"></div>
+    <section class="content">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>150</h3>
 
-    <!--<div>打款信息</div>
-    <table id="jqGrid_account_info"></table>
-    <div id="jqGridPager_account_info"></div>-->
+                        <p>退回合同数</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i
+                            class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3>
+                            53<sup style="font-size: 20px">%</sup>
+                        </h3>
+
+                        <p>本月资源数</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i
+                            class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-yellow">
+                    <div class="inner">
+                        <h3>44</h3>
+                        <p>本月合同已提交/已签订数</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-person-add"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i
+                            class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-red">
+                    <div class="inner">
+                        <h3>65</h3>
+
+                        <p>本月商标数</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    <a href="#" class="small-box-footer">More info <i
+                            class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            </div>
+            <!-- ./col -->
+        </div>
+        <!-- /.row -->
+
+        <!-- TO DO List -->
+        <div class="box box-primary">
+            <div class="box-header">
+                <i class="ion ion-clipboard"></i>
+
+                <h3 class="box-title">To Do List</h3>
+
+                <div class="box-tools pull-right">
+                    <ul class="pagination pagination-sm inline">
+                        <li><a href="#">&laquo;</a></li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">&raquo;</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <ul class="todo-list">
+                    <li v-for="item in todoList">
+                       <span class="handle">
+                           <i class="glyphicon glyphicon-th-list"></i>
+                        </span>
+                        <span class="text">{{item.itemDes}}</span>
+                        <small class="label label-danger"><i
+                                class="fa fa-clock-o"></i> {{item.finishDate|formatterDate}}</small>
+                        <div class="tools">
+                            <i class="glyphicon glyphicon-check">DONE</i>
+                            <i class="glyphicon glyphicon-remove">删除</i>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="box-footer clearfix no-border">
+                <button type="button" class="btn btn-default pull-right">
+                    <i class="glyphicon glyphicon-plus"></i> 添加
+                </button>
+            </div>
+        </div>
+
+    </section>
 </div>
 
-<script src="js/main.js"></script>
+
 </body>
+<script>
+    Vue.use(VeeValidate);
+    VeeValidate.Validator.localize('zh_CN');
+    new Vue({
+        el:"#rrapp",
+        data(){
+            return {
+                todoList:[],
+                //表格参数
+                tableConfig: {
+                    //总数据
+                    totalCount: 0,
+                    //当前页
+                    pageNumber: 1,
+                    //每页条数
+                    pageSize: 10,
+                },
+                toDoListItem:{
+                    id:null,
+                    itemDes:null,
+                    finishDate:null,
+                    remarks:null
+                }
+            }
+
+        },
+        methods: {
+            handleRemove(file, fileList) {
+                console.log(file, fileList);
+            },
+            handlePreview(file) {
+                console.log(file);
+            },
+            handleCurrentChange(val) {
+                this.tableConfig.pageNumber = val;
+                this.list();
+            },
+            handleSizeChange(val) {
+                this.tableConfig.pageNumber = 1;
+                this.tableConfig.pageSize = val;
+                this.list();
+            },
+            list: function() {
+                var _this=this;
+                _this.tableData = [];
+                axios.get('/api/todo/list', {
+                    params: {
+                        page: _this.tableConfig.pageNumber,
+                        limit: _this.tableConfig.pageSize
+                    }
+                }).then(function (response) {
+                    if(response.data.code === 0){
+                        _this.todoList = response.data.page.list;
+                        _this.tableConfig.totalCount = response.data.page.totalCount;
+                    }else{
+                        alert(response.data.msg);
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            getSubmitEndDate:function(val){
+                this.condition.createEndDate=val;
+            },
+
+
+        },
+        mounted () {
+            this.list();
+        },
+
+        filters: {
+            formatterDate: function (value) {
+                var timeStr = value;  //获得的时间字符串.
+                if(timeStr==null || timeStr==''){
+                    return;
+                }
+                var end_str = (timeStr).replace(/-/g,"/");
+                var class_time = new Date(end_str);   //将时间字符串转换为时间.
+                var now_time = new Date();
+                var time = class_time-now_time;
+                if(time>0){
+                    var totalSecs=(class_time-now_time)/1000;   //获得两个时间的总毫秒数. 靠前的就调换再减。
+                    var days=Math.floor(totalSecs/3600/24);
+                    var hours=Math.floor((totalSecs-days*24*3600)/3600);
+                    var mins=Math.floor((totalSecs-days*24*3600-hours*3600)/60);
+                    var secs=Math.floor((totalSecs-days*24*3600-hours*3600-mins*60));
+                    var result='';
+                    if (days != 0 ) {
+                        result=days+"天"+hours+"小时"+mins+"分钟";
+                    }else if (hours == 0 && mins != 0) {
+                        result=mins+"分钟";
+                    }else if (hours != 0) {
+                        result=hours+"小时"+mins+"分钟";
+                    }
+                }else{
+                    result="超时未完成";
+                }
+                return result;
+            }
+        },
+
+    });
+
+</script>
 </html>

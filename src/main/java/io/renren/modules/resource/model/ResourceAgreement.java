@@ -45,6 +45,16 @@ public class ResourceAgreement {
 
     private String finalFileName;
 
+    private String sureDocImgName;
+
+    private String icdFaceImgName;
+
+    private String icdReverseImgName;
+
+    private String licenseImgName;
+
+    private String proxyImgName;
+
     private String createBy;
 
     private Date createDate;
@@ -221,6 +231,46 @@ public class ResourceAgreement {
 
     public void setFinalFileName(String finalFileName) {
         this.finalFileName = finalFileName;
+    }
+
+    public String getSureDocImgName() {
+        return sureDocImgName;
+    }
+
+    public void setSureDocImgName(String sureDocImgName) {
+        this.sureDocImgName = sureDocImgName;
+    }
+
+    public String getIcdFaceImgName() {
+        return icdFaceImgName;
+    }
+
+    public void setIcdFaceImgName(String icdFaceImgName) {
+        this.icdFaceImgName = icdFaceImgName;
+    }
+
+    public String getIcdReverseImgName() {
+        return icdReverseImgName;
+    }
+
+    public void setIcdReverseImgName(String icdReverseImgName) {
+        this.icdReverseImgName = icdReverseImgName;
+    }
+
+    public String getLicenseImgName() {
+        return licenseImgName;
+    }
+
+    public void setLicenseImgName(String licenseImgName) {
+        this.licenseImgName = licenseImgName;
+    }
+
+    public String getProxyImgName() {
+        return proxyImgName;
+    }
+
+    public void setProxyImgName(String proxyImgName) {
+        this.proxyImgName = proxyImgName;
     }
 
     public String getCreateBy() {

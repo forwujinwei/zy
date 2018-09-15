@@ -23,6 +23,11 @@
     <result column="non_chapter_file_name" jdbcType="VARCHAR" property="nonChapterFileName" />
     <result column="has_chapter_file_name" jdbcType="VARCHAR" property="hasChapterFileName" />
     <result column="final_file_name" jdbcType="VARCHAR" property="finalFileName" />
+    <result column="sure_doc_img_name" jdbcType="VARCHAR" property="sureDocImgName" />
+    <result column="icd_face_img_name" jdbcType="VARCHAR" property="icdFaceImgName" />
+    <result column="icd_reverse_img_name" jdbcType="VARCHAR" property="icdReverseImgName" />
+    <result column="license_img_name" jdbcType="VARCHAR" property="licenseImgName" />
+    <result column="proxy_img_name" jdbcType="VARCHAR" property="proxyImgName" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
@@ -33,6 +38,7 @@
     agreement_id, resource_id, allCost, earnest, final_payment, pay, email, link_man, 
     first_party, phone_number, address, type_code, type_des, status_code, status_des, 
     adviser, urgent_code, urgent_des, non_chapter_file_name, has_chapter_file_name, final_file_name, 
+    sure_doc_img_name, icd_face_img_name, icd_reverse_img_name, license_img_name, proxy_img_name, 
     create_by, create_date, update_by, update_date, remarks
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -53,9 +59,10 @@
       type_des, status_code, status_des, 
       adviser, urgent_code, urgent_des, 
       non_chapter_file_name, has_chapter_file_name, 
-      final_file_name, create_by, create_date, 
-      update_by, update_date, remarks
-      )
+      final_file_name, sure_doc_img_name, icd_face_img_name, 
+      icd_reverse_img_name, license_img_name, proxy_img_name, 
+      create_by, create_date, update_by, 
+      update_date, remarks)
     values (#{agreementId,jdbcType=VARCHAR}, #{resourceId,jdbcType=VARCHAR}, #{allcost,jdbcType=INTEGER}, 
       #{earnest,jdbcType=INTEGER}, #{finalPayment,jdbcType=INTEGER}, #{pay,jdbcType=INTEGER}, 
       #{email,jdbcType=VARCHAR}, #{linkMan,jdbcType=VARCHAR}, #{firstParty,jdbcType=VARCHAR}, 
@@ -63,9 +70,10 @@
       #{typeDes,jdbcType=VARCHAR}, #{statusCode,jdbcType=VARCHAR}, #{statusDes,jdbcType=VARCHAR}, 
       #{adviser,jdbcType=VARCHAR}, #{urgentCode,jdbcType=VARCHAR}, #{urgentDes,jdbcType=VARCHAR}, 
       #{nonChapterFileName,jdbcType=VARCHAR}, #{hasChapterFileName,jdbcType=VARCHAR}, 
-      #{finalFileName,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}
-      )
+      #{finalFileName,jdbcType=VARCHAR}, #{sureDocImgName,jdbcType=VARCHAR}, #{icdFaceImgName,jdbcType=VARCHAR}, 
+      #{icdReverseImgName,jdbcType=VARCHAR}, #{licenseImgName,jdbcType=VARCHAR}, #{proxyImgName,jdbcType=VARCHAR}, 
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.renren.modules.resource.model.ResourceAgreement">
     insert into resource_agreement
@@ -132,6 +140,21 @@
       </if>
       <if test="finalFileName != null">
         final_file_name,
+      </if>
+      <if test="sureDocImgName != null">
+        sure_doc_img_name,
+      </if>
+      <if test="icdFaceImgName != null">
+        icd_face_img_name,
+      </if>
+      <if test="icdReverseImgName != null">
+        icd_reverse_img_name,
+      </if>
+      <if test="licenseImgName != null">
+        license_img_name,
+      </if>
+      <if test="proxyImgName != null">
+        proxy_img_name,
       </if>
       <if test="createBy != null">
         create_by,
@@ -213,6 +236,21 @@
       <if test="finalFileName != null">
         #{finalFileName,jdbcType=VARCHAR},
       </if>
+      <if test="sureDocImgName != null">
+        #{sureDocImgName,jdbcType=VARCHAR},
+      </if>
+      <if test="icdFaceImgName != null">
+        #{icdFaceImgName,jdbcType=VARCHAR},
+      </if>
+      <if test="icdReverseImgName != null">
+        #{icdReverseImgName,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseImgName != null">
+        #{licenseImgName,jdbcType=VARCHAR},
+      </if>
+      <if test="proxyImgName != null">
+        #{proxyImgName,jdbcType=VARCHAR},
+      </if>
       <if test="createBy != null">
         #{createBy,jdbcType=VARCHAR},
       </if>
@@ -293,6 +331,21 @@
       <if test="finalFileName != null">
         final_file_name = #{finalFileName,jdbcType=VARCHAR},
       </if>
+      <if test="sureDocImgName != null">
+        sure_doc_img_name = #{sureDocImgName,jdbcType=VARCHAR},
+      </if>
+      <if test="icdFaceImgName != null">
+        icd_face_img_name = #{icdFaceImgName,jdbcType=VARCHAR},
+      </if>
+      <if test="icdReverseImgName != null">
+        icd_reverse_img_name = #{icdReverseImgName,jdbcType=VARCHAR},
+      </if>
+      <if test="licenseImgName != null">
+        license_img_name = #{licenseImgName,jdbcType=VARCHAR},
+      </if>
+      <if test="proxyImgName != null">
+        proxy_img_name = #{proxyImgName,jdbcType=VARCHAR},
+      </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=VARCHAR},
       </if>
@@ -333,6 +386,11 @@
       non_chapter_file_name = #{nonChapterFileName,jdbcType=VARCHAR},
       has_chapter_file_name = #{hasChapterFileName,jdbcType=VARCHAR},
       final_file_name = #{finalFileName,jdbcType=VARCHAR},
+      sure_doc_img_name = #{sureDocImgName,jdbcType=VARCHAR},
+      icd_face_img_name = #{icdFaceImgName,jdbcType=VARCHAR},
+      icd_reverse_img_name = #{icdReverseImgName,jdbcType=VARCHAR},
+      license_img_name = #{licenseImgName,jdbcType=VARCHAR},
+      proxy_img_name = #{proxyImgName,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
@@ -340,6 +398,7 @@
       remarks = #{remarks,jdbcType=VARCHAR}
     where agreement_id = #{agreementId,jdbcType=VARCHAR}
   </update>
+
   <select id="selectFromByPrimaryKey" resultType="java.util.Map">
       SELECT
       agreement_id AS agreementId,

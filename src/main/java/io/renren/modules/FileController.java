@@ -2,20 +2,26 @@ package io.renren.modules;
 
 import io.renren.common.utils.R;
 import io.renren.modules.api.annotation.AuthIgnore;
+import io.renren.modules.resource.model.ResourceAgreement;
 import io.renren.modules.resource.model.ResourcePoolModel;
 import io.renren.modules.resource.model.ResourceTradeMark;
+import io.renren.modules.resource.service.ResourceAgreementService;
 import io.renren.modules.resource.service.ResourcePoolService;
 import io.renren.modules.resource.service.ResourceTradeMarkService;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,12 +33,16 @@ import java.util.List;
 @RequestMapping("/api/file")
 @RestController
 public class FileController {
-    private static final String fileBaseDir="D:\\app_data\\imgData\\";
+    @Value("${constant.imgBasePath}")
+    private String imgBasePath;
+
     private static final Logger log = LoggerFactory.getLogger(FileController.class);
     @Resource
     private ResourceTradeMarkService resourceTradeMarkService;
     @Resource
     private ResourcePoolService resourcePoolService;
+    @Resource
+    private ResourceAgreementService resourceAgreementService;
     @AuthIgnore
     @RequestMapping(value = "/upload/{operation}/{id}")
     public R upload(@PathVariable String id,@PathVariable String operation,MultipartFile file) {
@@ -41,45 +51,92 @@ public class FileController {
                 return R.error("文件为空");
             }
             // 获取文件名
-            String fileName = file.getOriginalFilename();
-            log.info("上传的文件名为：" + fileName);
+            String OriginalFileName = file.getOriginalFilename();
+            log.info("上传的文件名为：" + OriginalFileName);
             // 获取文件的后缀名
-            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            String suffixName = OriginalFileName.substring(OriginalFileName.lastIndexOf("."));
             String filePath = "";
-            if("tradeMarkImg".equals(operation)){//商标图片
-                filePath="tradeMarkImg"+"\\tradeMark_img_"+id;
+            String destFileName="";
+            //商标图片
+            if("tradeMarkImg".equals(operation)){
+                destFileName="tradeMark_img_"+id;
+                filePath="tradeMarkImg\\"+destFileName;
                 ResourceTradeMark resourceTradeMark = new ResourceTradeMark();
                 resourceTradeMark.setId(id);
-                resourceTradeMark.setImg(filePath);
+                resourceTradeMark.setImg(destFileName);
                 resourceTradeMarkService.update(resourceTradeMark);
-            }else if("agreementFile".equals(operation)){//合同
+            //合同
+            }else if("agreementFile".equals(operation)){
                 filePath="agreementFile"+"\\agreement_"+id+"_"+System.currentTimeMillis();
-            }else if("agreementSureDocImg".equals(operation)){//合同确认书
-                filePath="agreementSureDocImg"+"\\agreement_sure_doc_"+id;
-            }else if("governmentImg".equals(operation)){//商标局图片
-                filePath="governmentImg"+"\\tradeMark_government_"+id;
+
+            //合同确认书
+            }else if("agreementSureDocImg".equals(operation)){
+                destFileName="agreement_sure_doc_"+id;
+                filePath="agreementSureDocImg\\"+destFileName;
+                ResourceAgreement resourceAgreement = new ResourceAgreement();
+                resourceAgreement.setAgreementId(id);
+                resourceAgreement.setSureDocImgName(destFileName);
+                resourceAgreement.setUpdateDate(new Date());
+                resourceAgreementService.update(resourceAgreement);
+            //商标局图片
+            }else if("governmentImg".equals(operation)){
+                destFileName="tradeMark_government_"+id;
+                filePath="governmentImg\\"+destFileName;
                 ResourceTradeMark resourceTradeMark = new ResourceTradeMark();
                 resourceTradeMark.setId(id);
-                resourceTradeMark.setGovernmentImg(filePath);
+                resourceTradeMark.setGovernmentImg(destFileName);
+                resourceTradeMark.setUpdateDate(new Date());
                 resourceTradeMarkService.update(resourceTradeMark);
-            }else if("icdImg".equals(operation)){//身份证
-                filePath="icdImg"+"\\icd_"+id+"_"+System.currentTimeMillis();
-            }else if("licenseImg".equals(operation)){//执照
-                filePath="licenseImg"+"\\license_"+id;
-            }else if("proxyImg".equals(operation)){//委托书
-                filePath="proxyImg"+"\\proxy_"+id;
-            }else if("trademarkSureDoc".equals(operation)){//商标确认书
-                filePath="trademarkSureDoc"+"\\tradeMark_sureDoc_"+id;
+            //身份证正面
+            }else if("icdImgFace".equals(operation)){
+                destFileName="icd_face_"+id;
+                filePath="icdImg\\"+destFileName;
+                ResourceAgreement resourceAgreement = new ResourceAgreement();
+                resourceAgreement.setAgreementId(id);
+                resourceAgreement.setIcdFaceImgName(destFileName);
+                resourceAgreement.setUpdateDate(new Date());
+                resourceAgreementService.update(resourceAgreement);
+            //身份证反面
+            } else if("icdImgReverse".equals(operation)){
+                destFileName="icd_reverse_"+id;
+                filePath="icdImg\\"+destFileName;
+                ResourceAgreement resourceAgreement = new ResourceAgreement();
+                resourceAgreement.setAgreementId(id);
+                resourceAgreement.setIcdReverseImgName(destFileName);
+                resourceAgreement.setUpdateDate(new Date());
+                resourceAgreementService.update(resourceAgreement);
+            //执照
+            }else if("licenseImg".equals(operation)){
+                destFileName="license_"+id+suffixName;
+                filePath="licenseImg\\"+destFileName;
+                ResourceAgreement resourceAgreement = new ResourceAgreement();
+                resourceAgreement.setAgreementId(id);
+                resourceAgreement.setLicenseImgName(destFileName);
+                resourceAgreement.setUpdateDate(new Date());
+                resourceAgreementService.update(resourceAgreement);
+            //委托书
+            }else if("proxyImg".equals(operation)){
+                destFileName="proxy_"+id+suffixName;
+                filePath="proxyImg\\"+destFileName;
+                ResourceAgreement resourceAgreement = new ResourceAgreement();
+                resourceAgreement.setAgreementId(id);
+                resourceAgreement.setProxyImgName(destFileName);
+                resourceAgreement.setUpdateDate(new Date());
+                resourceAgreementService.update(resourceAgreement);
+            //商标确认书
+            }else if("trademarkSureDoc".equals(operation)){
+                destFileName="tradeMark_sureDoc_"+id+suffixName;
+                filePath="trademarkSureDoc\\"+destFileName;
                 ResourceTradeMark resourceTradeMark = new ResourceTradeMark();
                 resourceTradeMark.setId(id);
-                resourceTradeMark.setSureDocImg(filePath);
+                resourceTradeMark.setSureDocImg(destFileName);
                 resourceTradeMarkService.update(resourceTradeMark);
             }
 
 
             log.info("文件的后缀名为：" + suffixName);
             // 设置文件存储路径
-            String path = fileBaseDir+filePath +suffixName;
+            String path = imgBasePath+filePath ;
             File dest = new File(path);
             // 检测是否存在目录
             if (!dest.getParentFile().exists()) {
@@ -98,6 +155,52 @@ public class FileController {
             e.printStackTrace();
         }
         return R.error("上传失败");
+    }
+
+    /**
+     * IO流读取图片 by:long
+     * @return
+     */
+    @RequestMapping(value = "/readImage", method = RequestMethod.GET)
+    @AuthIgnore
+    public void IoReadImage(@RequestParam String imgName, HttpServletResponse response) throws IOException {
+        String extPath="";
+        if(imgName.startsWith("tradeMark_img")){
+            extPath="tradeMarkImg\\";
+        }else if(imgName.startsWith("agreement_sure_doc")){
+            extPath="agreementSureDocImg\\";
+        }else if(imgName.startsWith("tradeMark_government")){
+            extPath="governmentImg\\";
+        }else if(imgName.startsWith("icd")){
+            extPath="icdImg\\";
+        }else if(imgName.startsWith("license")){
+            extPath="licenseImg\\";
+        }else if(imgName.startsWith("proxy")){
+            extPath="proxyImg\\";
+        }else if(imgName.startsWith("tradeMark_sureDoc")){
+            extPath="trademarkSureDoc\\";
+        }
+        String imgPath=imgBasePath+extPath+imgName;
+        ServletOutputStream out = null;
+        FileInputStream ips = null;
+        try {
+            //获取图片存放路径
+            ips = new FileInputStream(new File(imgPath));
+            response.setContentType("multipart/form-data");
+            out = response.getOutputStream();
+            //读取文件流
+            int len = 0;
+            byte[] buffer = new byte[1024 * 10];
+            while ((len = ips.read(buffer)) != -1) {
+                out.write(buffer, 0, len);
+            }
+            out.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            out.close();
+            ips.close();
+        }
     }
 
     @PostMapping("/batch")

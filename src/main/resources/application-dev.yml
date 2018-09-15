@@ -39,3 +39,6 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
+constant:
+    imgBasePath: D:\\app_data\\imgData\\
+    pdfBasePath: D:\\app_data\\pdfData\\
