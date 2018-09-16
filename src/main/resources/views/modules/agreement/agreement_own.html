@@ -245,12 +245,12 @@
                                         <td>{{item.name}}</td>
                                         <td>{{item.classifyDes}}</td>
                                         <td>
-                                            <a href="#" class="thumbnail">
+                                            <a v-show="item.img!=null" href="#" class="thumbnail">
                                                 <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.img">
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="#" class="thumbnail">
+                                            <a v-show="item.governmentImg!=null" href="#" class="thumbnail">
                                                 <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.governmentImg">
                                             </a>
                                         </td>
@@ -314,7 +314,7 @@
                                             <div class="col-sm-10">
                                                 <el-upload
                                                         class="upload-demo"
-                                                        :action='"http://localhost:8080/api/file/upload/icdImgFace/"+agreement.agreementId'
+                                                        :action='"http://localhost:8080/api/file/upload/icdImgFace?tradeMarkId=&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
                                                         :on-success="handleSuccess"
                                                         :limit="1"
                                                         :file-list="uploadFile.icdImgFaceList">
@@ -328,7 +328,7 @@
                                             <div class="col-sm-10">
                                                 <el-upload
                                                         class="upload-demo"
-                                                        :action='"http://localhost:8080/api/file/upload/icdImgReverse/"+agreement.agreementId'
+                                                        :action='"http://localhost:8080/api/file/upload/icdImgReverse?tradeMarkId=&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
                                                         :on-success="handleSuccess"
                                                         :limit="1"
                                                         :file-list="uploadFile.icdImgReverseList">
@@ -344,7 +344,7 @@
                                         <div class="col-sm-10">
                                             <el-upload
                                                     class="upload-demo"
-                                                    :action='"http://localhost:8080/api/file/upload/licenseImg/"+agreement.agreementId'
+                                                    :action='"http://localhost:8080/api/file/upload/licenseImg?tradeMarkId=&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
                                                     :on-success="handleSuccess"
                                                     :limit="1"
                                                     :file-list="uploadFile.licenseImgList">
@@ -358,7 +358,7 @@
                                         <div class="col-sm-10">
                                             <el-upload
                                                     class="upload-demo"
-                                                    :action='"http://localhost:8080/api/file/upload/agreementSureDocImg/"+agreement.agreementId'
+                                                    :action='"http://localhost:8080/api/file/upload/agreementSureDocImg?tradeMarkId=&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
                                                     :on-success="handleSuccess"
                                                     :limit="1"
                                                     :file-list="uploadFile.sureDocList">
@@ -372,7 +372,7 @@
                                         <div class="col-sm-10">
                                             <el-upload
                                                     class="upload-demo"
-                                                    :action='"http://localhost:8080/api/file/upload/proxyImg/"+agreement.agreementId'
+                                                    :action='"http://localhost:8080/api/file/upload/proxyImg?tradeMarkId=&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
                                                     :on-success="handleSuccess"
                                                     :limit="1"
                                                     :file-list="uploadFile.proxyImgList">
@@ -391,7 +391,7 @@
                                             <div class="col-sm-10">
                                                 <el-upload
                                                         class="upload-demo"
-                                                        :action='"http://localhost:8080/api/file/upload/agreementFile/"+agreement.agreementId'
+                                                        :action='"http://localhost:8080/api/file/upload/agreementFile?tradeMarkId=&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
                                                         :on-success="handleSuccess"
                                                         :limit="6"
                                                         :file-list="uploadFile.agreementFileList">
@@ -449,7 +449,7 @@
                                 <div class="col-sm-10">
                                     <el-upload
                                             class="upload-demo"
-                                            :action='"http://localhost:8080/api/file/upload/tradeMarkImg/"+tradeMarkInfo.id'
+                                            :action='"http://localhost:8080/api/file/upload/tradeMarkImg?tradeMarkId="+tradeMarkInfo.id+"&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
                                             :on-success="handleSuccess"
                                             :file-list="uploadFile.imgList">
                                         <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
@@ -462,7 +462,7 @@
                                 <div class="col-sm-10">
                                     <el-upload
                                             class="upload-demo"
-                                            :action='"http://localhost:8080/api/file/upload/governmentImg/"+tradeMarkInfo.id'
+                                            :action='"http://localhost:8080/api/file/upload/governmentImg?tradeMarkId="+tradeMarkInfo.id+"&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
                                             :on-success="handleSuccess"
                                             :file-list="uploadFile.governmentImgList">
                                         <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
@@ -475,7 +475,7 @@
                                 <div class="col-sm-10">
                                     <el-upload
                                             class="upload-demo"
-                                            :action='"http://localhost:8080/api/file/upload/trademarkSureDoc?tradeMarkId="+tradeMarkInfo.id+"&agreementId="+tradeMarkInfo.agreementId'
+                                            :action='"http://localhost:8080/api/file/upload/trademarkSureDoc?tradeMarkId="+tradeMarkInfo.id+"&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
                                             :on-success="handleSuccess"
                                             :file-list="uploadFile.trademarkSureDocList">
                                         <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>

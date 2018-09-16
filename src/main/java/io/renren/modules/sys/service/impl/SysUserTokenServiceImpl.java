@@ -1,6 +1,8 @@
 package io.renren.modules.sys.service.impl;
 
+import io.renren.modules.resource.vo.UserInfoVo;
 import io.renren.modules.sys.dao.SysUserTokenDao;
+import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.entity.SysUserTokenEntity;
 import io.renren.modules.sys.service.SysUserTokenService;
 import io.renren.common.utils.R;
@@ -71,5 +73,10 @@ public class SysUserTokenServiceImpl implements SysUserTokenService {
 		R r = R.ok().put("token", token).put("expire", EXPIRE);
 
 		return r;
+	}
+
+	@Override
+	public UserInfoVo queryUserByToken(String token) {
+		return sysUserTokenDao.queryUserByToken(token);
 	}
 }

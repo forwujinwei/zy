@@ -1,5 +1,7 @@
 package io.renren.modules.sys.service;
 
+import io.renren.modules.resource.vo.UserInfoVo;
+import io.renren.modules.sys.entity.SysUserEntity;
 import io.renren.modules.sys.entity.SysUserTokenEntity;
 import io.renren.common.utils.R;
 
@@ -26,4 +28,5 @@ public interface SysUserTokenService {
 	 */
 	R createToken(long userId);
 
+	UserInfoVo queryUserByToken(String token);
 }

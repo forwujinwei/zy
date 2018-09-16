@@ -38,4 +38,11 @@
 		where user_id = #{userId}
 	</update>
 
+
+	<select id="queryUserByToken" resultType="io.renren.modules.resource.vo.UserInfoVo">
+		SELECT B.`username`,B.`user_id` AS userId
+        FROM  sys_user_token A LEFT JOIN sys_user B ON A.`user_id`=B.`user_id`
+        WHERE A.token = #{value}
+	</select>
+
 </mapper>

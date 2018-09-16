@@ -2,12 +2,17 @@ package io.renren.modules;
 
 import io.renren.common.utils.R;
 import io.renren.modules.api.annotation.AuthIgnore;
+import io.renren.modules.api.dao.UserDao;
 import io.renren.modules.resource.model.ResourceAgreement;
 import io.renren.modules.resource.model.ResourcePoolModel;
 import io.renren.modules.resource.model.ResourceTradeMark;
 import io.renren.modules.resource.service.ResourceAgreementService;
 import io.renren.modules.resource.service.ResourcePoolService;
 import io.renren.modules.resource.service.ResourceTradeMarkService;
+import io.renren.modules.resource.vo.UserInfoVo;
+import io.renren.modules.sys.dao.SysUserDao;
+import io.renren.modules.sys.entity.SysUserEntity;
+import io.renren.modules.sys.service.SysUserTokenService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,13 +48,21 @@ public class FileController {
     private ResourcePoolService resourcePoolService;
     @Resource
     private ResourceAgreementService resourceAgreementService;
+    @Resource
+    private SysUserTokenService sysUserTokenService;
     @AuthIgnore
-    @RequestMapping(value = "/upload/{operation}/{id}")
-    public R upload(@PathVariable String id,@PathVariable String operation,MultipartFile file) {
+    @RequestMapping(value = "/upload/{operation}")
+    public R upload(@RequestParam String token,@RequestParam(required = false) String tradeMarkId,@RequestParam String agreementId,@PathVariable String operation,MultipartFile file) {
         try {
-            if (file.isEmpty()) {
+            if (StringUtils.isBlank(token)||StringUtils.isBlank(agreementId)||file.isEmpty()) {
                 return R.error("文件为空");
             }
+            UserInfoVo userInfoVo = sysUserTokenService.queryUserByToken(token);
+            if(userInfoVo==null){
+                return R.error("用户信息错误");
+            }
+            String username = userInfoVo.getUsername();
+            Date date = new Date();
             // 获取文件名
             String OriginalFileName = file.getOriginalFilename();
             log.info("上传的文件名为：" + OriginalFileName);
@@ -59,98 +72,127 @@ public class FileController {
             String destFileName="";
             //商标图片
             if("tradeMarkImg".equals(operation)){
-                destFileName="tradeMark_img_"+id;
+                destFileName="tradeMark_img_"+tradeMarkId+suffixName;
                 filePath="tradeMarkImg\\"+destFileName;
                 ResourceTradeMark resourceTradeMark = new ResourceTradeMark();
-                resourceTradeMark.setId(id);
-                resourceTradeMark.setUpdateDate(new Date());
+                resourceTradeMark.setId(tradeMarkId);
+                resourceTradeMark.setUpdateDate(date);
                 resourceTradeMark.setImg(destFileName);
-                ResourceTradeMark resourceTradeMarkExist = resourceTradeMarkService.selectByPrimaryKey(id);
+                resourceTradeMark.setAgreementId(agreementId);
+                resourceTradeMark.setDeleteFlag("0");
+                ResourceTradeMark resourceTradeMarkExist = resourceTradeMarkService.selectByPrimaryKey(tradeMarkId);
                if(resourceTradeMarkExist!=null){
+                   resourceTradeMark.setUpdateBy(username);
+                   resourceTradeMark.setUpdateDate(date);
                    resourceTradeMarkService.update(resourceTradeMark);
                }else{
-                   resourceTradeMark.setCreateDate(new Date());
+                   resourceTradeMark.setCreateBy(username);
+                   resourceTradeMark.setUpdateBy(username);
+                   resourceTradeMark.setCreateDate(date);
+                   resourceTradeMark.setUpdateDate(date);
+                   resourceTradeMark.setAdviser(username);
                    resourceTradeMarkService.save(resourceTradeMark);
                }
 
             //合同
             }else if("agreementFile".equals(operation)){
-                filePath="agreementFile"+"\\agreement_"+id+"_"+System.currentTimeMillis();
+                filePath="agreementFile"+"\\agreement_"+agreementId+"_"+System.currentTimeMillis();
 
             //合同确认书
             }else if("agreementSureDocImg".equals(operation)){
-                destFileName="agreement_sure_doc_"+id;
+                destFileName="agreement_sure_doc_"+agreementId+suffixName;
                 filePath="agreementSureDocImg\\"+destFileName;
                 ResourceAgreement resourceAgreement = new ResourceAgreement();
-                resourceAgreement.setAgreementId(id);
+                resourceAgreement.setAgreementId(agreementId);
                 resourceAgreement.setSureDocImgName(destFileName);
-                resourceAgreement.setUpdateDate(new Date());
+                resourceAgreement.setUpdateDate(date);
+                resourceAgreement.setUpdateBy(username);
                 resourceAgreementService.update(resourceAgreement);
             //商标局图片
             }else if("governmentImg".equals(operation)){
-                destFileName="tradeMark_government_"+id;
+                destFileName="tradeMark_government_"+tradeMarkId+suffixName;
                 filePath="governmentImg\\"+destFileName;
                 ResourceTradeMark resourceTradeMark = new ResourceTradeMark();
-                resourceTradeMark.setId(id);
+                resourceTradeMark.setId(tradeMarkId);
                 resourceTradeMark.setGovernmentImg(destFileName);
-                resourceTradeMark.setUpdateDate(new Date());
-                ResourceTradeMark resourceTradeMarkExist = resourceTradeMarkService.selectByPrimaryKey(id);
+                resourceTradeMark.setUpdateDate(date);
+                resourceTradeMark.setAgreementId(agreementId);
+                resourceTradeMark.setDeleteFlag("0");
+                ResourceTradeMark resourceTradeMarkExist = resourceTradeMarkService.selectByPrimaryKey(tradeMarkId);
                 if(resourceTradeMarkExist!=null){
+                    resourceTradeMark.setUpdateBy(username);
+                    resourceTradeMark.setUpdateDate(date);
                     resourceTradeMarkService.update(resourceTradeMark);
                 }else{
-                    resourceTradeMark.setCreateDate(new Date());
+                    resourceTradeMark.setCreateBy(username);
+                    resourceTradeMark.setUpdateBy(username);
+                    resourceTradeMark.setCreateDate(date);
+                    resourceTradeMark.setUpdateDate(date);
+                    resourceTradeMark.setAdviser(username);
                     resourceTradeMarkService.save(resourceTradeMark);
                 }
 
              //身份证正面
             }else if("icdImgFace".equals(operation)){
-                destFileName="icd_face_"+id;
+                destFileName="icd_face_"+agreementId+suffixName;
                 filePath="icdImg\\"+destFileName;
                 ResourceAgreement resourceAgreement = new ResourceAgreement();
-                resourceAgreement.setAgreementId(id);
+                resourceAgreement.setAgreementId(agreementId);
                 resourceAgreement.setIcdFaceImgName(destFileName);
-                resourceAgreement.setUpdateDate(new Date());
+                resourceAgreement.setUpdateDate(date);
+                resourceAgreement.setUpdateBy(username);
                 resourceAgreementService.update(resourceAgreement);
             //身份证反面
             } else if("icdImgReverse".equals(operation)){
-                destFileName="icd_reverse_"+id;
+                destFileName="icd_reverse_"+agreementId+suffixName;
                 filePath="icdImg\\"+destFileName;
                 ResourceAgreement resourceAgreement = new ResourceAgreement();
-                resourceAgreement.setAgreementId(id);
+                resourceAgreement.setAgreementId(agreementId);
                 resourceAgreement.setIcdReverseImgName(destFileName);
-                resourceAgreement.setUpdateDate(new Date());
+                resourceAgreement.setUpdateDate(date);
+                resourceAgreement.setUpdateBy(username);
                 resourceAgreementService.update(resourceAgreement);
             //执照
             }else if("licenseImg".equals(operation)){
-                destFileName="license_"+id+suffixName;
+                destFileName="license_"+agreementId+suffixName;
                 filePath="licenseImg\\"+destFileName;
                 ResourceAgreement resourceAgreement = new ResourceAgreement();
-                resourceAgreement.setAgreementId(id);
+                resourceAgreement.setAgreementId(agreementId);
                 resourceAgreement.setLicenseImgName(destFileName);
-                resourceAgreement.setUpdateDate(new Date());
+                resourceAgreement.setUpdateBy(username);
+                resourceAgreement.setUpdateDate(date);
                 resourceAgreementService.update(resourceAgreement);
             //委托书
             }else if("proxyImg".equals(operation)){
-                destFileName="proxy_"+id+suffixName;
+                destFileName="proxy_"+agreementId+suffixName;
                 filePath="proxyImg\\"+destFileName;
                 ResourceAgreement resourceAgreement = new ResourceAgreement();
-                resourceAgreement.setAgreementId(id);
+                resourceAgreement.setAgreementId(agreementId);
                 resourceAgreement.setProxyImgName(destFileName);
-                resourceAgreement.setUpdateDate(new Date());
+                resourceAgreement.setUpdateDate(date);
+                resourceAgreement.setUpdateBy(username);
                 resourceAgreementService.update(resourceAgreement);
             //商标确认书
             }else if("trademarkSureDoc".equals(operation)){
-                destFileName="tradeMark_sureDoc_"+id+suffixName;
+                destFileName="tradeMark_sureDoc_"+tradeMarkId+suffixName;
                 filePath="trademarkSureDoc\\"+destFileName;
                 ResourceTradeMark resourceTradeMark = new ResourceTradeMark();
-                resourceTradeMark.setId(id);
+                resourceTradeMark.setId(tradeMarkId);
                 resourceTradeMark.setSureDocImg(destFileName);
-                resourceTradeMark.setUpdateDate(new Date());
-                ResourceTradeMark resourceTradeMarkExist = resourceTradeMarkService.selectByPrimaryKey(id);
+                resourceTradeMark.setUpdateDate(date);
+                resourceTradeMark.setAgreementId(agreementId);
+                resourceTradeMark.setDeleteFlag("0");
+                ResourceTradeMark resourceTradeMarkExist = resourceTradeMarkService.selectByPrimaryKey(tradeMarkId);
                 if(resourceTradeMarkExist!=null){
+                    resourceTradeMark.setUpdateBy(username);
+                    resourceTradeMark.setUpdateDate(date);
                     resourceTradeMarkService.update(resourceTradeMark);
                 }else{
-                    resourceTradeMark.setCreateDate(new Date());
+                    resourceTradeMark.setCreateBy(username);
+                    resourceTradeMark.setUpdateBy(username);
+                    resourceTradeMark.setCreateDate(date);
+                    resourceTradeMark.setUpdateDate(date);
+                    resourceTradeMark.setAdviser(username);
                     resourceTradeMarkService.save(resourceTradeMark);
                 }
 
