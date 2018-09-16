@@ -3,6 +3,7 @@ package io.renren.modules.resource.service;
 import io.renren.common.utils.Query;
 import io.renren.modules.resource.dao.AgreementFinanceMapper;
 import io.renren.modules.resource.model.AgreementFinanceModel;
+import io.renren.modules.resource.vo.AgreementFinanceVo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,7 +15,7 @@ public class AgreementFinanceService {
     private AgreementFinanceMapper agreementFinanceMapper;
 
 
-    public List<AgreementFinanceModel> queryList(Query query) {
+    public List<AgreementFinanceVo> queryList(Query query) {
         return agreementFinanceMapper.queryList(query);
     }
 
@@ -28,5 +29,13 @@ public class AgreementFinanceService {
 
     public void update(AgreementFinanceModel agreementFinanceModel) {
         agreementFinanceMapper.updateByPrimaryKeySelective(agreementFinanceModel);
+    }
+
+    public List<AgreementFinanceVo> queryFileList(Query query) {
+        return agreementFinanceMapper.queryFileList(query);
+    }
+
+    public int queryFileListTotal(Query query) {
+        return agreementFinanceMapper.queryFileListTotal(query);
     }
 }

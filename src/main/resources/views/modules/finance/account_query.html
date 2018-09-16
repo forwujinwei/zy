@@ -30,7 +30,8 @@
 <div id="rrapp">
 	<form role="form" class="contain">
 		<div  class="form-group form-inline row">
-			<a  class="btn btn-primary " @click="showAddFinance"><i class="glyphicon glyphicon-plus"></i>添加业绩</a>
+			<a  class="btn btn-primary " @click="showAddFinance"><i class="glyphicon glyphicon-plus"></i>添加打款记录</a>
+			<a  class="btn btn-primary " @click="showAddPay"><i class="glyphicon glyphicon-plus"></i>官费&代理费</a>
 			<select  v-model="condition.queryTypeCode" class="form-control">
 				<option value="00">查询方式</option>
 				<option value="QU_001">顾问</option>
@@ -65,51 +66,53 @@
 			<table class="table table-bordered">
 				<colgroup>
 					<col width="12%">
+					<col width="7%">
+					<col width="8%">
+					<col width="8%">
+					<col width="7%">
+					<col width="8%">
 					<col width="8%">
 					<col width="8%">
 					<col width="8%">
 					<col width="7%">
-					<col width="9%">
-					<col width="9%">
-					<col width="9%">
-					<col width="8%">
-					<col width="6%">
-					<col width="6%">
-					<col width="10%">
+					<col width="7%">
+					<col width="12%">
 				</colgroup>
 				<thead>
 				<tr>
 					<th>合同编号</th>
-					<th>状态</th>
 					<th>顾问</th>
+					<th>状态</th>
 					<th>客户名称</th>
-					<th>备注</th>
+					<th>汇款金额</th>
 					<th>汇款时间</th>
 					<th>汇款账号</th>
 					<th>收款账号</th>
-					<th>汇款金额</th>
 					<th>官费</th>
 					<th>代理费</th>
+					<th>备注</th>
 					<th>操作</th>
 				</tr>
 				</thead>
 				<tbody>
 				<tr v-for="item in tableData">
 					<td>{{item.agreementId}}</td>
-					<td>{{item.statusDes}}</td>
 					<td>{{item.adviser}}</td>
+					<td>{{item.statusDes}}</td>
 					<td>{{item.firstParty}}</td>
-					<td>{{item.remarksDetail}}</td>
+					<td>{{item.money}}</td>
 					<td>{{item.remitDate|formatterDate}}</td>
 					<td>{{item.remitAccount}}</td>
 					<td>{{item.gatheringAccount}}</td>
-					<td>{{item.money}}</td>
 					<td>{{item.governmentCost}}</td>
-					<td>{{item.agentCost}}</td>
+					<td>{{item.proxyCost}}</td>
+					<td>{{item.remarksDetail}}</td>
 					<td><div class="btn-group" data-toggle="buttons-radio">
-						<button  class="btn btn-primary btn-padding-reset"
+						<button  class="btn btn-primary btn-padding-reset" :disabled="item.statusCode!='AS_001'"
 						         @click="showUpdateAccount(item.id,item.adviser,item.firstParty,item.remarksDetail,item.agreementId,item.remitCode,item.remitDate,item.remitAccount,item.gatheringAccount,item.remark)">修改</button>
-						<button  class="btn btn-primary btn-padding-reset" :disabled="item.statusCode!='RS_001'"
+						<button  class="btn btn-primary btn-padding-reset" :disabled="item.statusCode!='AS_001'"
+						         @click="deleteFinance(item.id)">删除</button>
+						<button  class="btn btn-primary btn-padding-reset" :disabled="item.statusCode=='AS_003'"
 						         @click="updateFinanceFile(item.id)">归档</button>
 					</div>
 					</td>
@@ -132,7 +135,7 @@
 	</div>
 
 
-	<!-- 模态框（Modal） -->
+	<!-- 添加打款记录 -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -147,23 +150,27 @@
 				<div class="modal-body">
 					<form  class="form-horizontal">
 						<div  class="form-group">
+							<div class="col-sm-2 control-label">合同编号</div>
+							<div class="col-sm-10">
+								<input type="text"  v-model="finance.agreementId" v-validate="'required'" name="合同编号" class="form-control">
+								<div v-show="errors.has('合同编号')" class="alert alert-danger">{{ errors.first('合同编号') }}</div>
+							</div>
+						</div>
+						<div  class="form-group">
 							<div class="col-sm-2 control-label">顾问</div>
 							<div class="col-sm-10">
-								<input type="text"  v-model="finance.adviser" class="form-control">
+								<input type="text"  v-model="finance.adviser" v-validate="'required'" name="合同顾问" class="form-control">
+								<div v-show="errors.has('合同顾问')" class="alert alert-danger">{{ errors.first('合同顾问') }}</div>
 							</div>
 						</div>
 						<div  class="form-group">
 							<div class="col-sm-2 control-label">客户名称</div>
 							<div class="col-sm-10">
-								<input type="text"  v-model="finance.firstParty" class="form-control">
+								<input type="text"  v-model="finance.firstParty" v-validate="'required'" name="客户名称" class="form-control">
+								<div v-show="errors.has('客户名称')" class="alert alert-danger">{{ errors.first('客户名称') }}</div>
 							</div>
 						</div>
-						<div  class="form-group">
-							<div class="col-sm-2 control-label">合同编号</div>
-							<div class="col-sm-10">
-								<input type="text"  v-model="finance.agreementId" class="form-control">
-							</div>
-						</div>
+					
 						<div  class="form-group">
 							<div class="col-sm-2 control-label">备注名称</div>
 							<div class="col-sm-10">
@@ -171,13 +178,21 @@
 							</div>
 						</div>
 						<div  class="form-group">
+							<div class="col-sm-2 control-label">汇款金额</div>
+							<div class="col-sm-10">
+								<input type="text"  v-model="finance.money" class="form-control" v-validate="'required'" name="汇款金额" placeholder="单位（元）">
+								<div v-show="errors.has('汇款金额')" class="alert alert-danger">{{ errors.first('汇款金额') }}</div>
+							</div>
+						</div>
+						<div  class="form-group">
 							<div class="col-sm-2 control-label">汇款类型</div>
 							<div class="col-sm-10">
-								<select  v-model="finance.remitCode" v-validate="'required'" name="操作" class="form-control ">
+								<select  v-model="finance.remitCode" v-validate="'required'" name="汇款类型" class="form-control ">
 									<option value="TMO_001">全款</option>
 									<option value="TMO_002">定金</option>
 									<option value="TMO_002">尾款</option>
 								</select>
+								<div v-show="errors.has('汇款类型')" class="alert alert-danger">{{ errors.first('汇款类型') }}</div>
 							</div>
 						</div>
 						<div  class="form-group">
@@ -195,18 +210,26 @@
 						<div  class="form-group">
 							<div class="col-sm-2 control-label">汇款账户</div>
 							<div class="col-sm-10">
-								<input type="text"  v-model="finance.remitAccount" class="form-control">
+								<input type="text"  v-model="finance.remitAccount" v-validate="'required'" name="汇款账户" class="form-control">
+								<div v-show="errors.has('汇款账户')" class="alert alert-danger">{{ errors.first('汇款账户') }}</div>
 							</div>
 						</div>
 
 						<div  class="form-group">
 							<div class="col-sm-2 control-label">收款账户</div>
 							<div class="col-sm-10">
-								<select  v-model="finance.gatheringAccount" v-validate="'required'" name="操作" class="form-control ">
-									<option value="TMO_001">全款</option>
-									<option value="TMO_002">定金</option>
-									<option value="TMO_002">尾款</option>
+								<select  v-model="finance.gatheringAccount" v-validate="'required'" name="收款账户" class="form-control ">
+									<option value="GA_001">工行公户</option>
+									<option value="GA_002">工行私户</option>
+									<option value="GA_003">建行公户</option>
+									<option value="GA_004">建行私户</option>
+									<option value="GA_005">农行</option>
+									<option value="GA_006">支付宝</option>
+									<option value="GA_007">现金</option>
+									<option value="GA_008">刷卡</option>
+									<option value="GA_009">微信</option>
 								</select>
+								<div v-show="errors.has('收款账户')" class="alert alert-danger">{{ errors.first('收款账户') }}</div>
 							</div>
 						</div>
 
@@ -222,6 +245,61 @@
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
 					</button>
 					<button type="button" class="btn btn-primary" @click="saveOrUpdateFinance()">
+						提交
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 添加showAddPay记录 -->
+	<div class="modal fade" id="showAddPay" tabindex="-1" role="dialog" aria-labelledby="showAddPayLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						&times;
+					</button>
+					<h4 class="modal-title" id="showAddPayLabel">
+						添加官费&代理费信息
+					</h4>
+				</div>
+				<div class="modal-body">
+					<form  class="form-horizontal">
+						<div  class="form-group">
+							<div class="col-sm-2 control-label">合同编号</div>
+							<div class="col-sm-10">
+								<input type="text"  v-model="agreement.agreementId" v-validate="'required'" name="编号" class="form-control">
+								<div v-show="errors.has('编号')" class="alert alert-danger">{{ errors.first('编号') }}</div>
+							</div>
+						</div>
+						<div  class="form-group">
+							<div class="col-sm-2 control-label">顾问</div>
+							<div class="col-sm-10">
+								<input type="text"  v-model="agreement.adviser" v-validate="'required'" name="顾问" class="form-control">
+								<div v-show="errors.has('顾问')" class="alert alert-danger">{{ errors.first('顾问') }}</div>
+							</div>
+						</div>
+						<div  class="form-group">
+							<div class="col-sm-2 control-label">官费金额</div>
+							<div class="col-sm-10">
+								<input type="text"  v-model="agreement.governmentCost" class="form-control" v-validate="'required'" name="官费金额" placeholder="单位（元）">
+								<div v-show="errors.has('官费金额')" class="alert alert-danger">{{ errors.first('官费金额') }}</div>
+							</div>
+						</div>
+						<div  class="form-group">
+							<div class="col-sm-2 control-label">代理费金额</div>
+							<div class="col-sm-10">
+								<input type="text"  v-model="agreement.proxyCost" v-validate="'required'" name="代理费金额" class="form-control" placeholder="单位（元）">
+								<div v-show="errors.has('代理费金额')" class="alert alert-danger">{{ errors.first('代理费金额') }}</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+					</button>
+					<button type="button" class="btn btn-primary" @click="updateAgreement()">
 						提交
 					</button>
 				</div>
@@ -260,13 +338,20 @@
                     firstParty:null,
                     remarksDetail:null,
                     agreementId:null,
+                    money:null,
                     remitCode:null,
                     statusCode:null,
                     remitDate:null,
                     remitAccount:null,
                     gatheringAccount:null,
                     remark:null
-                }
+                },
+	            agreement:{
+                    agreementId:null,
+                    adviser:null,
+                    proxyCost:null,
+                    governmentCost:null
+	            }
             }
 
         },
@@ -300,6 +385,14 @@
                     console.log(error);
                 });
             },
+            showAddPay: function(){
+                var _this=this;
+                _this.agreement.agreementId=null;
+                _this.agreement.adviser=null;
+                _this.agreement.proxyCost=null;
+                _this.agreement.governmentCost=null;
+                $("#showAddPay").modal('show');
+            },
             showAddFinance: function(){
                 $("#myModal").modal('show');
                 var _this=this;
@@ -316,6 +409,65 @@
                 _this.finance.remark=null;
 
             },
+            updateAgreement:function(){
+                var _this=this;
+                var agreementId = _this.agreement.agreementId;
+                var adviser = _this.agreement.adviser;
+                var proxyCost = _this.agreement.proxyCost;
+                var governmentCost = _this.agreement.governmentCost;
+                if (!(agreementId && adviser && proxyCost && governmentCost)) {
+                    alert('请正确填写表单数据', function(){
+                        _this.$validator.validate().then(result => {});
+                        return ;
+                    });
+                }else{
+                    axios.post('/api/resource/agreement/update', _this.agreement)
+                        .then(function (response) {
+                            if (response.data.code === 0) {
+                                alert('操作成功', function () {
+                                    $("#showAddPay").modal('hide');
+                                    _this.list();
+                                });
+                            } else {
+                                alert(response.data.msg);
+                            }
+                        }).catch(function (error) {
+                            console.log(error);
+                        }
+                    );
+                }
+                
+            },
+	        deleteFinance:function(id){
+                var _this=this;
+                axios.get('/api/finance/delete/'+id,{}).then(function (response) {
+                    if(response.data.code === 0){
+                        alert('操作成功', function(){
+                            $("#myModal").modal('hide');
+                            _this.list();
+                        });
+                    }else{
+                        alert(response.data.msg)
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+	        },
+	        submitFinance:function(id){
+                var _this=this;
+                axios.get('/api/finance/submit/'+id,{}).then(function (response) {
+                    if(response.data.code === 0){
+                        alert('操作成功', function(){
+                            $("#myModal").modal('hide');
+                            _this.list();
+                        });
+                    }else{
+                        alert(response.data.msg)
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+	        },
             saveOrUpdateFinance: function(){
                 var _this=this;
                 _this.finance.remitDate=$("#revisitDate").val();

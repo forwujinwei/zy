@@ -2,6 +2,7 @@ package io.renren.modules.resource.dao;
 
 import io.renren.common.utils.Query;
 import io.renren.modules.resource.model.AgreementFinanceModel;
+import io.renren.modules.resource.vo.AgreementFinanceVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -20,8 +21,11 @@ public interface AgreementFinanceMapper {
 
     int updateByPrimaryKey(AgreementFinanceModel record);
 
-    List<AgreementFinanceModel> queryList(Query query);
+    List<AgreementFinanceVo> queryList(Query query);
 
     int queryTotal(Query query);
 
+    List<AgreementFinanceVo> queryFileList(Query query);
+
+    int queryFileListTotal(Query query);
 }

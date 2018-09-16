@@ -39,6 +39,10 @@ public class ResourceAgreement {
 
     private String urgentDes;
 
+    private Integer proxyCost;
+
+    private Integer governmentCost;
+
     private String nonChapterFileName;
 
     private String hasChapterFileName;
@@ -207,6 +211,22 @@ public class ResourceAgreement {
 
     public void setUrgentDes(String urgentDes) {
         this.urgentDes = urgentDes;
+    }
+
+    public Integer getProxyCost() {
+        return proxyCost;
+    }
+
+    public void setProxyCost(Integer proxyCost) {
+        this.proxyCost = proxyCost;
+    }
+
+    public Integer getGovernmentCost() {
+        return governmentCost;
+    }
+
+    public void setGovernmentCost(Integer governmentCost) {
+        this.governmentCost = governmentCost;
     }
 
     public String getNonChapterFileName() {

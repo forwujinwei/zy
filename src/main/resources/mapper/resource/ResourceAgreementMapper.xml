@@ -20,6 +20,8 @@
     <result column="adviser" jdbcType="VARCHAR" property="adviser" />
     <result column="urgent_code" jdbcType="VARCHAR" property="urgentCode" />
     <result column="urgent_des" jdbcType="VARCHAR" property="urgentDes" />
+    <result column="proxy_cost" jdbcType="INTEGER" property="proxyCost" />
+    <result column="government_cost" jdbcType="INTEGER" property="governmentCost" />
     <result column="non_chapter_file_name" jdbcType="VARCHAR" property="nonChapterFileName" />
     <result column="has_chapter_file_name" jdbcType="VARCHAR" property="hasChapterFileName" />
     <result column="final_file_name" jdbcType="VARCHAR" property="finalFileName" />
@@ -37,9 +39,10 @@
   <sql id="Base_Column_List">
     agreement_id, resource_id, allCost, earnest, final_payment, pay, email, link_man, 
     first_party, phone_number, address, type_code, type_des, status_code, status_des, 
-    adviser, urgent_code, urgent_des, non_chapter_file_name, has_chapter_file_name, final_file_name, 
-    sure_doc_img_name, icd_face_img_name, icd_reverse_img_name, license_img_name, proxy_img_name, 
-    create_by, create_date, update_by, update_date, remarks
+    adviser, urgent_code, urgent_des, proxy_cost, government_cost, non_chapter_file_name, 
+    has_chapter_file_name, final_file_name, sure_doc_img_name, icd_face_img_name, icd_reverse_img_name, 
+    license_img_name, proxy_img_name, create_by, create_date, update_by, update_date, 
+    remarks
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -58,22 +61,24 @@
       phone_number, address, type_code, 
       type_des, status_code, status_des, 
       adviser, urgent_code, urgent_des, 
-      non_chapter_file_name, has_chapter_file_name, 
-      final_file_name, sure_doc_img_name, icd_face_img_name, 
-      icd_reverse_img_name, license_img_name, proxy_img_name, 
-      create_by, create_date, update_by, 
-      update_date, remarks)
+      proxy_cost, government_cost, non_chapter_file_name, 
+      has_chapter_file_name, final_file_name, sure_doc_img_name, 
+      icd_face_img_name, icd_reverse_img_name, license_img_name, 
+      proxy_img_name, create_by, create_date, 
+      update_by, update_date, remarks
+      )
     values (#{agreementId,jdbcType=VARCHAR}, #{resourceId,jdbcType=VARCHAR}, #{allcost,jdbcType=INTEGER}, 
       #{earnest,jdbcType=INTEGER}, #{finalPayment,jdbcType=INTEGER}, #{pay,jdbcType=INTEGER}, 
       #{email,jdbcType=VARCHAR}, #{linkMan,jdbcType=VARCHAR}, #{firstParty,jdbcType=VARCHAR}, 
       #{phoneNumber,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{typeCode,jdbcType=VARCHAR}, 
       #{typeDes,jdbcType=VARCHAR}, #{statusCode,jdbcType=VARCHAR}, #{statusDes,jdbcType=VARCHAR}, 
       #{adviser,jdbcType=VARCHAR}, #{urgentCode,jdbcType=VARCHAR}, #{urgentDes,jdbcType=VARCHAR}, 
-      #{nonChapterFileName,jdbcType=VARCHAR}, #{hasChapterFileName,jdbcType=VARCHAR}, 
-      #{finalFileName,jdbcType=VARCHAR}, #{sureDocImgName,jdbcType=VARCHAR}, #{icdFaceImgName,jdbcType=VARCHAR}, 
-      #{icdReverseImgName,jdbcType=VARCHAR}, #{licenseImgName,jdbcType=VARCHAR}, #{proxyImgName,jdbcType=VARCHAR}, 
-      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, 
-      #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR})
+      #{proxyCost,jdbcType=INTEGER}, #{governmentCost,jdbcType=INTEGER}, #{nonChapterFileName,jdbcType=VARCHAR}, 
+      #{hasChapterFileName,jdbcType=VARCHAR}, #{finalFileName,jdbcType=VARCHAR}, #{sureDocImgName,jdbcType=VARCHAR}, 
+      #{icdFaceImgName,jdbcType=VARCHAR}, #{icdReverseImgName,jdbcType=VARCHAR}, #{licenseImgName,jdbcType=VARCHAR}, 
+      #{proxyImgName,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="io.renren.modules.resource.model.ResourceAgreement">
     insert into resource_agreement
@@ -131,6 +136,12 @@
       </if>
       <if test="urgentDes != null">
         urgent_des,
+      </if>
+      <if test="proxyCost != null">
+        proxy_cost,
+      </if>
+      <if test="governmentCost != null">
+        government_cost,
       </if>
       <if test="nonChapterFileName != null">
         non_chapter_file_name,
@@ -227,6 +238,12 @@
       <if test="urgentDes != null">
         #{urgentDes,jdbcType=VARCHAR},
       </if>
+      <if test="proxyCost != null">
+        #{proxyCost,jdbcType=INTEGER},
+      </if>
+      <if test="governmentCost != null">
+        #{governmentCost,jdbcType=INTEGER},
+      </if>
       <if test="nonChapterFileName != null">
         #{nonChapterFileName,jdbcType=VARCHAR},
       </if>
@@ -322,6 +339,12 @@
       <if test="urgentDes != null">
         urgent_des = #{urgentDes,jdbcType=VARCHAR},
       </if>
+      <if test="proxyCost != null">
+        proxy_cost = #{proxyCost,jdbcType=INTEGER},
+      </if>
+      <if test="governmentCost != null">
+        government_cost = #{governmentCost,jdbcType=INTEGER},
+      </if>
       <if test="nonChapterFileName != null">
         non_chapter_file_name = #{nonChapterFileName,jdbcType=VARCHAR},
       </if>
@@ -383,6 +406,8 @@
       adviser = #{adviser,jdbcType=VARCHAR},
       urgent_code = #{urgentCode,jdbcType=VARCHAR},
       urgent_des = #{urgentDes,jdbcType=VARCHAR},
+      proxy_cost = #{proxyCost,jdbcType=INTEGER},
+      government_cost = #{governmentCost,jdbcType=INTEGER},
       non_chapter_file_name = #{nonChapterFileName,jdbcType=VARCHAR},
       has_chapter_file_name = #{hasChapterFileName,jdbcType=VARCHAR},
       final_file_name = #{finalFileName,jdbcType=VARCHAR},

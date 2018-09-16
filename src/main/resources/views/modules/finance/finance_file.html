@@ -60,45 +60,41 @@
     <div style="margin-bottom: 50px;">
             <table class="table table-bordered">
                 <colgroup>
-                <col width="8%">
                 <col width="12%">
                 <col width="10%">
-                <col width="10%">
-                <col width="8%">
-                <col width="8%">
-                <col width="8%">
                 <col width="12%">
+                <col width="10%">
+                <col width="12%">
+                <col width="12%">
+                <col width="8%">
+                <col width="8%">
                 <col width="16%">
-                <col width="8%">
              </colgroup>
              <thead>
-             <tr>
-                <th>顾问</th>
-                <th>时间</th>
-                <th>汇款行</th>
-                <th>收款行</th>
-                <th>汇款金额</th>
-                <th>官费</th>
-                <th>单项官费</th>
-                <th>合同编号</th>
-                <th>备注</th>
-                <th>代理费</th>
-             </tr>
+                 <tr>
+                    <th>合同编号</th>
+                    <th>顾问</th>
+                    <th>时间</th>
+                    <th>汇款金额</th>
+                    <th>汇款行</th>
+                    <th>收款行</th>
+                    <th>官费</th>
+                    <th>代理费</th>
+                    <th>备注</th>
+                 </tr>
              </thead>
              <tbody>
-
-             <tr v-for="item in tableData">
-                <td>{{item.adviser}}</td>
-                <td>{{item.remitDate}}</td>
-                <td>{{item.remitAccount}}</td>
-                <td>{{item.gatheringAccount}}</td>
-                <td>{{item.money}}</td>
-                <td>{{item.governmentCost}}</td>
-                <td>{{item.pay}}</td>
-                <td>{{item.agreementId}}</td>
-                <td>{{item.remarksDetail}}</td>
-                <td>{{item.agentCost}}</td>
-			</tr>
+                 <tr v-for="item in tableData">
+                     <td>{{item.agreementId}}</td>
+                     <td>{{item.adviser}}</td>
+                     <td>{{item.remitDate}}</td>
+                     <td>{{item.money}}</td>
+                     <td>{{item.remitAccount}}</td>
+                     <td>{{item.gatheringAccount}}</td>
+                     <td>{{item.governmentCost}}</td>
+                     <td>{{item.proxyCost}}</td>
+                     <td>{{item.remarksDetail}}</td>
+                </tr>
 			</tbody>
 		</table>
 		<div class="page-wrap bottom_footer" >
@@ -157,7 +153,7 @@
             list: function() {
                 var _this=this;
                 _this.tableData = [];
-                axios.get('api/finance/list', {
+                axios.get('api/finance/file/list', {
                     params: {
                         page: _this.tableConfig.pageNumber,
                         limit: _this.tableConfig.pageSize

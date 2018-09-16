@@ -23,7 +23,7 @@
 
         <javaClientGenerator type="XMLMAPPER" targetPackage="io.renren.modules.resource.dao" targetProject="src/main/java" />
 
-        <table tableName="resource_agreement" domainObjectName="ResourceAgreement"
+        <table tableName="agreement_finance" domainObjectName="AgreementFinanceModel"
                enableCountByExample="false" enableUpdateByExample="false"
                enableSelectByExample="false" enableDeleteByExample="false"
                selectByExampleQueryId="false" >

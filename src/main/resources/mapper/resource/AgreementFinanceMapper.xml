@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="io.renren.modules.resource.dao.AgreementFinanceMapper" >
     <resultMap id="BaseResultMap" type="io.renren.modules.resource.model.AgreementFinanceModel" >
-        <id column="agreement_id" property="agreementId" jdbcType="VARCHAR" />
-        <result column="id" property="id" jdbcType="VARCHAR" />
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="agreement_id" property="agreementId" jdbcType="VARCHAR" />
         <result column="money" property="money" jdbcType="INTEGER" />
         <result column="status_code" property="statusCode" jdbcType="VARCHAR" />
         <result column="status_des" property="statusDes" jdbcType="VARCHAR" />
@@ -15,18 +15,17 @@
         <result column="remit_date" property="remitDate" jdbcType="TIMESTAMP" />
         <result column="remit_account" property="remitAccount" jdbcType="VARCHAR" />
         <result column="gathering_account" property="gatheringAccount" jdbcType="VARCHAR" />
-        <result column="government_cost" property="governmentCost" jdbcType="INTEGER" />
-        <result column="agent_cost" property="agentCost" jdbcType="INTEGER" />
         <result column="create_by" property="createBy" jdbcType="VARCHAR" />
         <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
         <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
         <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
         <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="delete_flag" property="deleteFlag" jdbcType="VARCHAR" />
     </resultMap>
     <sql id="Base_Column_List" >
-    agreement_id, id, money, status_code, status_des, adviser, first_party, remarks_detail,
-    remit_code, remit_des, remit_date, remit_account, gathering_account, government_cost,
-    agent_cost, create_by, create_date, update_by, update_date, remarks
+    id, agreement_id, money, status_code, status_des, adviser, first_party, remarks_detail,
+    remit_code, remit_des, remit_date, remit_account, gathering_account,
+    create_by, create_date, update_by, update_date, remarks, delete_flag
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
         select
@@ -39,29 +38,31 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
     <insert id="insert" parameterType="io.renren.modules.resource.model.AgreementFinanceModel" >
-    insert into agreement_finance (agreement_id, id, money,
+    insert into agreement_finance (id, agreement_id, money,
       status_code, status_des, adviser,
       first_party, remarks_detail, remit_code,
       remit_des, remit_date, remit_account,
-      gathering_account, government_cost, agent_cost,
+      gathering_account,
       create_by, create_date, update_by,
-      update_date, remarks)
-    values (#{agreementId,jdbcType=VARCHAR}, #{id,jdbcType=VARCHAR}, #{money,jdbcType=INTEGER},
+      update_date, remarks, delete_flag
+      )
+    values (#{id,jdbcType=VARCHAR}, #{agreementId,jdbcType=VARCHAR}, #{money,jdbcType=INTEGER},
       #{statusCode,jdbcType=VARCHAR}, #{statusDes,jdbcType=VARCHAR}, #{adviser,jdbcType=VARCHAR},
       #{firstParty,jdbcType=VARCHAR}, #{remarksDetail,jdbcType=VARCHAR}, #{remitCode,jdbcType=VARCHAR},
       #{remitDes,jdbcType=VARCHAR}, #{remitDate,jdbcType=TIMESTAMP}, #{remitAccount,jdbcType=VARCHAR},
-      #{gatheringAccount,jdbcType=VARCHAR}, #{governmentCost,jdbcType=INTEGER}, #{agentCost,jdbcType=INTEGER},
+      #{gatheringAccount,jdbcType=VARCHAR},
       #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR},
-      #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR})
+      #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}, #{deleteFlag,jdbcType=VARCHAR}
+      )
   </insert>
     <insert id="insertSelective" parameterType="io.renren.modules.resource.model.AgreementFinanceModel" >
         insert into agreement_finance
         <trim prefix="(" suffix=")" suffixOverrides="," >
-            <if test="agreementId != null" >
-                agreement_id,
-            </if>
             <if test="id != null" >
                 id,
+            </if>
+            <if test="agreementId != null" >
+                agreement_id,
             </if>
             <if test="money != null" >
                 money,
@@ -96,12 +97,6 @@
             <if test="gatheringAccount != null" >
                 gathering_account,
             </if>
-            <if test="governmentCost != null" >
-                government_cost,
-            </if>
-            <if test="agentCost != null" >
-                agent_cost,
-            </if>
             <if test="createBy != null" >
                 create_by,
             </if>
@@ -117,13 +112,16 @@
             <if test="remarks != null" >
                 remarks,
             </if>
+            <if test="deleteFlag != null" >
+                delete_flag,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides="," >
-            <if test="agreementId != null" >
-                #{agreementId,jdbcType=VARCHAR},
-            </if>
             <if test="id != null" >
                 #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="agreementId != null" >
+                #{agreementId,jdbcType=VARCHAR},
             </if>
             <if test="money != null" >
                 #{money,jdbcType=INTEGER},
@@ -158,12 +156,6 @@
             <if test="gatheringAccount != null" >
                 #{gatheringAccount,jdbcType=VARCHAR},
             </if>
-            <if test="governmentCost != null" >
-                #{governmentCost,jdbcType=INTEGER},
-            </if>
-            <if test="agentCost != null" >
-                #{agentCost,jdbcType=INTEGER},
-            </if>
             <if test="createBy != null" >
                 #{createBy,jdbcType=VARCHAR},
             </if>
@@ -179,13 +171,16 @@
             <if test="remarks != null" >
                 #{remarks,jdbcType=VARCHAR},
             </if>
+            <if test="deleteFlag != null" >
+                #{deleteFlag,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="io.renren.modules.resource.model.AgreementFinanceModel" >
         update agreement_finance
         <set >
-            <if test="id != null" >
-                id = #{id,jdbcType=VARCHAR},
+            <if test="agreementId != null" >
+                agreement_id = #{agreementId,jdbcType=VARCHAR},
             </if>
             <if test="money != null" >
                 money = #{money,jdbcType=INTEGER},
@@ -220,12 +215,6 @@
             <if test="gatheringAccount != null" >
                 gathering_account = #{gatheringAccount,jdbcType=VARCHAR},
             </if>
-            <if test="governmentCost != null" >
-                government_cost = #{governmentCost,jdbcType=INTEGER},
-            </if>
-            <if test="agentCost != null" >
-                agent_cost = #{agentCost,jdbcType=INTEGER},
-            </if>
             <if test="createBy != null" >
                 create_by = #{createBy,jdbcType=VARCHAR},
             </if>
@@ -241,12 +230,15 @@
             <if test="remarks != null" >
                 remarks = #{remarks,jdbcType=VARCHAR},
             </if>
+            <if test="deleteFlag != null" >
+                delete_flag = #{deleteFlag,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="io.renren.modules.resource.model.AgreementFinanceModel" >
     update agreement_finance
-    set id = #{id,jdbcType=VARCHAR},
+    set agreement_id = #{agreementId,jdbcType=VARCHAR},
       money = #{money,jdbcType=INTEGER},
       status_code = #{statusCode,jdbcType=VARCHAR},
       status_des = #{statusDes,jdbcType=VARCHAR},
@@ -258,28 +250,73 @@
       remit_date = #{remitDate,jdbcType=TIMESTAMP},
       remit_account = #{remitAccount,jdbcType=VARCHAR},
       gathering_account = #{gatheringAccount,jdbcType=VARCHAR},
-      government_cost = #{governmentCost,jdbcType=INTEGER},
-      agent_cost = #{agentCost,jdbcType=INTEGER},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
       update_date = #{updateDate,jdbcType=TIMESTAMP},
-      remarks = #{remarks,jdbcType=VARCHAR}
+      remarks = #{remarks,jdbcType=VARCHAR},
+      delete_flag = #{deleteFlag,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+    <select id="queryList" resultType="io.renren.modules.resource.vo.AgreementFinanceVo" >
+        select
+        A.id ,
+        A.agreement_id AS agreementId,
+        A.money ,
+        A.adviser ,
+        A.first_party AS firstParty,
+        A.status_code AS statusCode,
+        A.status_des AS statusDes,
+        A.remit_code AS remitCode,
+        A.remit_des AS remitDes,
+        A.remit_date AS remitDate,
+        A.remit_account AS remitAccount,
+        A.gathering_account AS gatheringAccount,
+        A.remarks,
+        B.proxy_cost AS proxyCost,
+        B.government_cost AS governmentCost
+        from agreement_finance A left join resource_agreement B on A.agreement_id=B.agreement_id
+        where A.delete_flag!='1'
+        <if test="offset != null and limit != null ">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
 
-  <select id="queryList" resultType="io.renren.modules.resource.model.AgreementFinanceModel" >
-    select * from agreement_finance
-
-    <if test="offset != null and limit != null ">
-      limit #{offset}, #{limit}
-    </if>
-  </select>
-
-  <select id="queryTotal" resultType="int">
+    <select id="queryTotal" resultType="int">
     select count(1)
     from agreement_finance
+    where delete_flag!='1'
+  </select>
 
+    <select id="queryFileList" resultType="io.renren.modules.resource.vo.AgreementFinanceVo" >
+        select
+                A.id ,
+                A.agreement_id AS agreementId,
+                A. money ,
+                A.adviser ,
+                A.first_party AS firstParty,
+                A.remit_code AS remitCode,
+                A.remit_des AS remitDes,
+                A.remit_date AS remitDate,
+                A.remit_account AS remitAccount,
+                A.gathering_account AS gatheringAccount,
+                A.remarks,
+                B.proxy_cost AS proxyCost,
+                B.government_cost AS governmentCost
+        from agreement_finance A left join resource_agreement B on A.agreement_id=B.agreement_id
+        where  A.adviser=#{username,jdbcType=VARCHAR}
+        and A.status_code=#{statusCode,jdbcType=VARCHAR}
+        and A.delete_flag!='1'
+        <if test="offset != null and limit != null ">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
 
+    <select id="queryFileListTotal" resultType="int">
+    select count(1)
+    from agreement_finance
+    where adviser=#{username,jdbcType=VARCHAR}
+    and status_code=#{statusCode,jdbcType=VARCHAR}
+    and delete_flag!='1'
   </select>
 </mapper>

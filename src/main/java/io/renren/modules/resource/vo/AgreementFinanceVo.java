@@ -1,11 +1,18 @@
-package io.renren.modules.resource.model;
+package io.renren.modules.resource.vo;
 
 import java.util.Date;
 
-public class AgreementFinanceModel {
+/**
+ * @Auther: jinweia.wu
+ * @Date: 2018/9/16 16:32
+ * @Description:
+ */
+public class AgreementFinanceVo {
     private String id;
 
     private String agreementId;
+
+    private String adviser;
 
     private Integer money;
 
@@ -13,11 +20,9 @@ public class AgreementFinanceModel {
 
     private String statusDes;
 
-    private String adviser;
+    private String remarksDetail;
 
     private String firstParty;
-
-    private String remarksDetail;
 
     private String remitCode;
 
@@ -29,17 +34,11 @@ public class AgreementFinanceModel {
 
     private String gatheringAccount;
 
-    private String createBy;
+    private Integer governmentCost;
 
-    private Date createDate;
-
-    private String updateBy;
-
-    private Date updateDate;
+    private Integer proxyCost;
 
     private String remarks;
-
-    private String deleteFlag;
 
     public String getId() {
         return id;
@@ -57,20 +56,8 @@ public class AgreementFinanceModel {
         this.agreementId = agreementId;
     }
 
-    public Integer getMoney() {
-        return money;
-    }
-
-    public void setMoney(Integer money) {
-        this.money = money;
-    }
-
-    public String getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(String statusCode) {
-        this.statusCode = statusCode;
+    public String getAdviser() {
+        return adviser;
     }
 
     public String getStatusDes() {
@@ -81,20 +68,32 @@ public class AgreementFinanceModel {
         this.statusDes = statusDes;
     }
 
-    public String getAdviser() {
-        return adviser;
-    }
-
-    public void setAdviser(String adviser) {
-        this.adviser = adviser;
-    }
-
     public String getFirstParty() {
         return firstParty;
     }
 
     public void setFirstParty(String firstParty) {
         this.firstParty = firstParty;
+    }
+
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public void setAdviser(String adviser) {
+        this.adviser = adviser;
+    }
+
+    public Integer getMoney() {
+        return money;
+    }
+
+    public void setMoney(Integer money) {
+        this.money = money;
     }
 
     public String getRemarksDetail() {
@@ -145,37 +144,22 @@ public class AgreementFinanceModel {
         this.gatheringAccount = gatheringAccount;
     }
 
-    public String getCreateBy() {
-        return createBy;
+    public Integer getGovernmentCost() {
+        return governmentCost;
     }
 
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
+    public void setGovernmentCost(Integer governmentCost) {
+        this.governmentCost = governmentCost;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public Integer getProxyCost() {
+        return proxyCost;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setProxyCost(Integer proxyCost) {
+        this.proxyCost = proxyCost;
     }
 
-    public String getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
 
     public String getRemarks() {
         return remarks;
@@ -185,11 +169,4 @@ public class AgreementFinanceModel {
         this.remarks = remarks;
     }
 
-    public String getDeleteFlag() {
-        return deleteFlag;
-    }
-
-    public void setDeleteFlag(String deleteFlag) {
-        this.deleteFlag = deleteFlag;
-    }
 }

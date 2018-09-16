@@ -144,9 +144,20 @@ public enum DistEnum {
     TRADE_MARK_OPERATION_002("TMO_002","修改商标信息","TRADE_MARK_OPERATION"),
 
     /*打款状态*/
-    ACCOUNT_STATUS_001("AS_001","已打款","account_status"),
-    ACCOUNT_STATUS_002("AS_002","已退款","account_status"),
+    ACCOUNT_STATUS_001("AS_001","草稿","account_status"),
+    ACCOUNT_STATUS_002("AS_002","已提交","account_status"),
     ACCOUNT_STATUS_003("AS_003","已归档","account_status"),
+    /*收款账户*/
+    GATHERING_ACCOUNT_001("GA_001","工行公户","gathering_account"),
+    GATHERING_ACCOUNT_002("GA_002","工行私户","gathering_account"),
+    GATHERING_ACCOUNT_003("GA_003","建行公户","gathering_account"),
+    GATHERING_ACCOUNT_004("GA_004","建行私户","gathering_account"),
+    GATHERING_ACCOUNT_005("GA_005","农行","gathering_account"),
+    GATHERING_ACCOUNT_006("GA_006","支付宝","gathering_account"),
+    GATHERING_ACCOUNT_007("GA_007","现金","gathering_account"),
+    GATHERING_ACCOUNT_008("GA_008","刷卡","gathering_account"),
+    GATHERING_ACCOUNT_009("GA_009","微信","gathering_account"),
+
 
     ;
 
