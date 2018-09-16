@@ -30,21 +30,8 @@
 <div id="rrapp" v-cloak>
     <div  v-show="showList" >
         <form role="form" class="contain">
-            <div  class="form-group form-inline row">
+            <div class="form-group form-inline row">
                 <a  class="btn btn-primary " @click="addCustomer"><i class="glyphicon glyphicon-plus"></i>&nbsp;添加客户</a>
-                <select id="intention" v-model="condition.intentCode"  class="form-control">
-                    <option value="00">意向程度</option>
-                    <option value="IN_001">意向特别好的</option>
-                    <option value="IN_002">改名</option>
-                    <option value="IN_003">执照没下来</option>
-                    <option value="IN_004">字可以注册，还没有委托我</option>
-                    <option value="IN_005">已经注册过了，一手标</option>
-                    <option value="IN_006">其他</option>
-                    <option value="IN_008">不跟踪了</option>
-                    <option value="IN_009">已经签合同的资源</option>
-                    <option value="IN_010">待确认</option>
-                    <option value="IN_011">重复提交</option>
-                </select>
                 <select  v-model="condition.queryTypeCode" class="form-control">
                     <option value="00">查询方式</option>
                     <option value="QU_001">电话</option>
@@ -54,30 +41,6 @@
                     <option value="QU_005">商标名称</option>
                 </select>
                 <input type="text"  v-model="condition.queryTypeValue" class="form-control">
-
-                <select  v-model="condition.acrossCode" class="form-control " >
-                    <option value="00">交叉类型</option>
-                    <option value="AT_001">本站</option>
-                    <option value="AT_002">盛凡</option>
-                    <option value="AT_003">清上</option>
-                </select>
-
-                <select  v-model="condition.typeCode" class="form-control ">
-                    <option value="00">类型</option>
-                    <option value="RT_001">商标</option>
-                    <option value="RT_002">专利</option>
-                    <option value="RT_003">国际商标</option>
-                    <option value="RT_004">国际专利</option>
-                </select>
-
-                <select  v-model="condition.infoRangeCode" class="form-control ">
-                    <option value="00">全部信息</option>
-                    <option value="IR_001">2个月内信息</option>
-                    <option value="IR_002">3个月内信息</option>
-                    <option value="IR_003">4个月内信息</option>
-                </select>
-            </div>
-            <div class="form-group form-inline row">
                 <span class="form-inline">
                     <span class="demonstration">提交时间</span>
                     <el-date-picker
@@ -89,32 +52,12 @@
                     </el-date-picker>
                 </span>
                 <span class="form-inline">
-                    <span class="demonstration">到</span>
-                    <el-date-picker
-                            v-model="condition.submitEndDate"
-                            type="date"
-                            placeholder="选择日期"
-                            @change="getSubmitEndDate"
-                            value-format="yyyy-MM-dd">
-                    </el-date-picker>
-                </span>
-                <span class="form-inline">
                     <span class="demonstration">确认时间</span>
                     <el-date-picker
                             v-model="condition.sureStartDate"
                             type="date"
                             placeholder="选择日期"
                             @change="getSureStartDate"
-                            value-format="yyyy-MM-dd">
-                    </el-date-picker>
-                </span>
-                <span class="form-inline">
-                    <span class="demonstration">到</span>
-                    <el-date-picker
-                            v-model="condition.sureEndDate"
-                            type="date"
-                            placeholder="选择日期"
-                            @change="getSureEndDate"
                             value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </span>
@@ -500,7 +443,6 @@
                     pageSize:5,
                 },
                 condition:{
-                    intentCode: '00',
                     queryTypeCode: '00',
                     queryTypeValue: null,
                     dataSourceCode:'RDSP_002',
@@ -602,7 +544,7 @@
                         limit: _this.tableConfig.pageSize,
                         intentCode: _this.condition.intentCode,
                         queryTypeCode: _this.condition.queryTypeCode,
-                        queryTypeCode: _this.condition.queryTypeValue,
+                        queryTypeValue: _this.condition.queryTypeValue,
                         typeCode: _this.condition.typeCode,
                         acrossCode: _this.condition.acrossCode,
                         submitStartDate: _this.condition.submitStartDate,

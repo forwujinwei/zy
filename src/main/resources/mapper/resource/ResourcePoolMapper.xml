@@ -424,6 +424,7 @@
                 and  sure_date &lt;= #{sureEndDate,jdbcType=TIMESTAMP}
             </if>
         </where>
+        order by sure_date DESC
         <if test="offset != null and limit != null ">
             limit #{offset}, #{limit}
         </if>
