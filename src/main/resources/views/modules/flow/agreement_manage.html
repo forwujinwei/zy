@@ -117,7 +117,7 @@
                             <td>{{item.createDate|formatterDate}}</td>
                             <td><div class="btn-group" data-toggle="buttons-radio">
                                 <button  class="btn btn-primary btn-padding-reset"
-                                         @click="downLoadAgreement(item.nonChapterFileName,item.hasChapterFileName)">下载</button>
+                                         @click="downLoadAgreement(item.finalFileName)">下载</button>
                                 <button  class="btn btn-primary btn-padding-reset"
                                          @click="showAgreementInfo(item.agreementId)">查看</button>
                                 <button  class="btn btn-primary btn-padding-reset"
@@ -232,18 +232,18 @@
                                             <td>{{item.name}}</td>
                                             <td>{{item.classifyDes}}</td>
                                             <td>
-                                                <a href="#" class="thumbnail">
-                                                    <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.img">
+                                                <a v-show="item.img!=null" href="#" class="thumbnail">
+                                                    <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.img" @click="showImg(item.img)">
                                                 </a>
                                             </td>
                                             <td>
-                                                <a href="#" class="thumbnail">
-                                                    <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.governmentImg">
+                                                <a v-show="item.governmentImg!=null" href="#" class="thumbnail">
+                                                    <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.governmentImg" @click="showImg(item.governmentImg)">
                                                 </a>
                                             </td>
                                             <td>
-                                                <a href="#" class="thumbnail">
-                                                <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.sureDocImg">
+                                                <a v-show="item.sureDocImg!=null" href="#" class="thumbnail">
+                                                <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.sureDocImg" @click="showImg(item.sureDocImg)">
                                                 </a>
                                             </td>
                                         </tr>
@@ -515,6 +515,17 @@
                 }).catch(function (error) {
                     console.log(error);
                 });
+            },
+            downLoadAgreement:function(finalFileName){
+                var htmlStr='';
+                if(finalFileName==null || finalFileName=='' || finalFileName=='undefined'){
+                    htmlStr+='<b>无可下载合同资源,请联系对应顾问</b>';
+                }else{
+                    if(finalFileName!=null && finalFileName!='' && finalFileName!='undefined'){
+                        htmlStr+="<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/non/"+ finalFileName+"'>最终合同</a>"
+                    }
+                }
+                alert(htmlStr)
             },
             updateAgreement:function(id,statusCode){
                 var _this=this;

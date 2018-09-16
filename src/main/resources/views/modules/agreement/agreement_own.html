@@ -246,22 +246,23 @@
                                         <td>{{item.classifyDes}}</td>
                                         <td>
                                             <a v-show="item.img!=null" href="#" class="thumbnail">
-                                                <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.img">
+                                                <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.img" @click="showImg(item.img)">
                                             </a>
                                         </td>
                                         <td>
                                             <a v-show="item.governmentImg!=null" href="#" class="thumbnail">
-                                                <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.governmentImg">
+                                                <img :src="'http://localhost:8080/api/file/readImage?imgName='+item.governmentImg" @click="showImg(item.governmentImg)">
                                             </a>
                                         </td>
-                                        <td><div class="btn-group" data-toggle="buttons-radio">
-                                            <button  class="btn btn-primary btn-padding-reset"
-                                                     @click="showUpdateTradeMark(item.id,item.agreementId)">修改</button>
-                                            <button  class="btn btn-primary btn-padding-reset"
-                                                     @click="downLoadSureDoc(item.id)">确认书</button>
-                                            <button  class="btn btn-primary btn-padding-reset"
-                                                     @click="deleteTradeMark(item.id)">删除</button>
-                                        </div>
+                                        <td>
+                                            <div class="btn-group" data-toggle="buttons-radio">
+                                                <button  class="btn btn-primary btn-padding-reset"
+                                                         @click="showUpdateTradeMark(item.id,item.agreementId)">修改</button>
+                                                <button  class="btn btn-primary btn-padding-reset" :disabled="item.sureDocImg==null"
+                                                         @click="showImg(item.sureDocImg)">确认书</button>
+                                                <button  class="btn btn-primary btn-padding-reset"
+                                                         @click="deleteTradeMark(item.id)">删除</button>
+                                            </div>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -450,10 +451,10 @@
                                     <el-upload
                                             class="upload-demo"
                                             :action='"http://localhost:8080/api/file/upload/tradeMarkImg?tradeMarkId="+tradeMarkInfo.id+"&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
-                                            :on-success="handleSuccess"
+                                            :on-success="handleSuccessTradeMark"
                                             :file-list="uploadFile.imgList">
                                         <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
-                                        <el-button size="small" style="margin-left: 10px;" type="success" :disabled="agreement.img==null" @click="showImg(tradeMarkInfo.img)">查看图片</el-button>
+                                        <el-button size="small" style="margin-left: 10px;" type="success" :disabled="tradeMarkInfo.img==null" @click="showImg(tradeMarkInfo.img)">查看图片</el-button>
                                     </el-upload>
                                 </div>
                             </div>
@@ -463,7 +464,7 @@
                                     <el-upload
                                             class="upload-demo"
                                             :action='"http://localhost:8080/api/file/upload/governmentImg?tradeMarkId="+tradeMarkInfo.id+"&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
-                                            :on-success="handleSuccess"
+                                            :on-success="handleSuccessTradeMark"
                                             :file-list="uploadFile.governmentImgList">
                                         <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
                                         <el-button size="small" style="margin-left: 10px;" type="success" :disabled="tradeMarkInfo.governmentImg==null" @click="showImg(tradeMarkInfo.governmentImg)">查看商标局图片</el-button>
@@ -476,7 +477,7 @@
                                     <el-upload
                                             class="upload-demo"
                                             :action='"http://localhost:8080/api/file/upload/trademarkSureDoc?tradeMarkId="+tradeMarkInfo.id+"&agreementId="+tradeMarkInfo.agreementId+"&token="+localStorage.getItem("token")'
-                                            :on-success="handleSuccess"
+                                            :on-success="handleSuccessTradeMark"
                                             :file-list="uploadFile.trademarkSureDocList">
                                         <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
                                         <el-button size="small" style="margin-left: 10px;" type="success" :disabled="tradeMarkInfo.sureDocImg==null" @click="showImg(tradeMarkInfo.sureDocImg)">查看客户确认书</el-button>
@@ -676,6 +677,10 @@
                 var _this=this;
                 _this.getAgreementById(_this.agreement.agreementId);
             },
+            handleSuccessTradeMark(){
+                var _this=this;
+                _this.getTradeMarkById(_this.tradeMarkInfo.id);
+            },
             handleRemove(file, fileList) {
                 console.log(file, fileList);
             },
@@ -767,23 +772,12 @@
             },
             showUpdateTradeMark:function(id,agreementId){
                 var _this=this;
-                $("#addTradeMark").modal('show');
+                _this.uploadFile.trademarkSureDocList=[];
+                _this.uploadFile.imgList=[];
+                _this.uploadFile.governmentImgList=[]
 
-                if(id!=''&&id!=null&&id!=undefined){
-                    axios.get('/api/resource/trademark/'+id,null)
-                        .then(function (response) {
-                            if(response.data.code === 0){
-                                _this.tradeMarkInfo=response.data.data;
-                                _this.tradeMarkInfo.img=null;
-                                _this.tradeMarkInfo.governmentImg=null;
-                                _this.tradeMarkInfo.sureDocImg=null;
-                            }else{
-                                alert(response.data.msg);
-                            }
-                        }).catch(function (error) {
-                            console.log(error);
-                        }
-                    );
+                if(id!=''&&id!=null&&id!='undefined'){
+                    _this.getTradeMarkById(id);
                 }else{
                     var uuid='';
                     axios.get('/api/common/uuid',null)
@@ -806,12 +800,27 @@
                     _this.tradeMarkInfo.sureDocImg=null;
                     _this.tradeMarkInfo.classifyCode='';
                     _this.tradeMarkInfo.classifyDes='';
-                    _this.tradeMarkInfo.docCode='TMDT_041';
+                    _this.tradeMarkInfo.docCode='TMDT_001';
                     _this.tradeMarkInfo.docDes='';
                     _this.tradeMarkInfo.protectProduct='';
                 }
-                console.log(_this.tradeMarkInfo)
-
+                $("#addTradeMark").modal('show');
+            },
+            getTradeMarkById:function(id){
+                var _this=this;
+                if(id!=''&&id!=null&&id!='undefined'){
+                    axios.get('/api/resource/trademark/'+id,null)
+                        .then(function (response) {
+                            if(response.data.code === 0){
+                                _this.tradeMarkInfo=response.data.data;
+                            }else{
+                                alert(response.data.msg);
+                            }
+                        }).catch(function (error) {
+                            console.log(error);
+                        }
+                    );
+                }
             },
             downLoadAgreement:function(nonChapterFileName,hasChapterFileName,finalFileName){
                 var htmlStr='';
@@ -837,10 +846,8 @@
             },
             backToAgreement:function(agreementId){
                 var _this=this;
-                _this.showList=false;
-                _this.showAgreement=true;
-                _this.showTradeMark=false;
-                $('#myTab a[href="#tradeMarkInfo"]').tab('show')
+                $("#addTradeMark").modal('hide');
+                _this.listTradeMark(agreementId);
             },
             getAgreementById:function(id){
                 var _this=this;
@@ -941,6 +948,7 @@
                             alert('操作成功', function () {
                                 $("#addTradeMark").modal('hide');
                                 _this.listTradeMark(_this.tradeMarkInfo.agreementId);
+                                _this.list();
 
                             });
                         } else {
