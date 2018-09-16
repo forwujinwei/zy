@@ -58,13 +58,6 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">导航菜单</li>
-          <!-- vue生成的菜单 -->
-        <li>
-          <a id="menu-home" href="#main.html">
-              <i  class="fa fa-home"></i>
-              首页
-          </a>
-        </li>
         <!-- vue生成的菜单 -->
 		<menu-item :item="item" :index="index" v-for="(item, index) in menuList"></menu-item>
       </ul>
