@@ -110,13 +110,12 @@
                 <h3 class="box-title">To Do List</h3>
 
                 <div class="box-tools pull-right">
-                    <ul class="pagination pagination-sm inline">
-                        <li><a href="#">&laquo;</a></li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">&raquo;</a></li>
-                    </ul>
+                    <el-pagination
+                            layout="prev, pager, next"
+                            @current-change="handleCurrentChange"
+                            :page-size="tableConfig.pageSize"
+                            :total="tableConfig.totalCount">
+                    </el-pagination>
                 </div>
             </div>
             <!-- /.box-header -->
@@ -126,24 +125,76 @@
                        <span class="handle">
                            <i class="glyphicon glyphicon-th-list"></i>
                         </span>
-                        <span class="text">{{item.itemDes}}</span>
-                        <small class="label label-danger"><i
+                        <span v-if="item.status=='TD_001'" class="text">{{item.itemDes}}</span>
+                        <span v-if="item.status=='TD_002'" class="text"><s>{{item.itemDes}}</s></span>
+                        <small v-if="item.status=='TD_001'" class="label label-danger"><i
                                 class="fa fa-clock-o"></i> {{item.finishDate|formatterDate}}</small>
                         <div class="tools">
-                            <i class="glyphicon glyphicon-check">DONE</i>
-                            <i class="glyphicon glyphicon-remove">删除</i>
+                            <i v-if="item.status=='TD_001'" class="glyphicon glyphicon-check" @click="updateTask(item.id)">DONE</i>
+                            <i class="glyphicon glyphicon-remove" @click="deleteTask(item.id)">删除</i>
                         </div>
                     </li>
                 </ul>
             </div>
             <div class="box-footer clearfix no-border">
-                <button type="button" class="btn btn-default pull-right">
+                <button type="button" class="btn btn-default pull-right" @click="showAddTodoListItem()">
                     <i class="glyphicon glyphicon-plus"></i> 添加
                 </button>
             </div>
         </div>
-
     </section>
+    
+    
+    
+    <div class="modal fade"  id="addToDoList" tabindex="2" role="dialog" aria-labelledby="addToDoListLabel" aria-hidden="true" style="overflow: auto">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="addToDoListLabel">
+                        添加TODO任务
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">任务名称</div>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" v-validate="'required'" name="任务名称" v-model="toDoListItem.itemDes"/>
+                                <div v-show="errors.has('任务名称')" class="alert alert-danger">{{ errors.first('任务名称') }}</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">任务说明</div>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" rows="3" v-model="toDoListItem.remarks"></textarea>
+                            </div>
+                        
+                        </div>
+    
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label">完成时间</div>
+                            <div class="col-sm-10">
+                                <el-date-picker
+                                        v-model="toDoListItem.finishDate"
+                                        type="datetime"
+                                        placeholder="选择日期时间"
+                                        @change="getFinishDate"
+                                        default-time="12:00:00">
+                                </el-date-picker>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-2 control-label"></div>
+                            <input type="button" class="btn btn-primary" @click="saveTodoListItem()" value="确定"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -158,18 +209,18 @@
                 todoList:[],
                 //表格参数
                 tableConfig: {
+                    totalPage:0,
                     //总数据
                     totalCount: 0,
                     //当前页
                     pageNumber: 1,
                     //每页条数
-                    pageSize: 10,
+                    pageSize: 5,
                 },
                 toDoListItem:{
-                    id:null,
-                    itemDes:null,
+                    itemDes:'',
                     finishDate:null,
-                    remarks:null
+                    remarks:''
                 }
             }
 
@@ -209,9 +260,61 @@
                     console.log(error);
                 });
             },
-            getSubmitEndDate:function(val){
-                this.condition.createEndDate=val;
+            getFinishDate:function(val){
+                this.toDoListItem.finishDate=val;
             },
+            showAddTodoListItem:function(){
+                $("#addToDoList").modal('show');
+            },
+            saveTodoListItem(){
+                var _this=this;
+                axios.post('/api/todo/save', _this.toDoListItem)
+                    .then(function (response) {
+                        if (response.data.code === 0) {
+                            alert('保存成功', function () {
+                                _this.list();
+                                $("#addToDoList").modal('hide');
+                            });
+                        } else {
+                            alert(response.data.msg);
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    }
+                );
+            },
+            updateTask:function (id) {
+                var _this=this;
+                axios.get('/api/todo/update/'+id,{params:{
+                        status: 'TD_002'}
+                    }).then(function (response) {
+                        if(response.data.code === 0){
+                            alert('保存成功', function () {
+                                _this.list();
+                            })
+                        }else{
+                            alert(response.data.msg);
+                        }
+                    }).catch(function (error) {
+                        console.log(error);
+                    }
+                );
+            },
+            deleteTask:function (id) {
+                var _this=this;
+                axios.get('/api/todo/delete/'+id).then(function (response) {
+                    if(response.data.code === 0){
+                        alert('删除成功', function () {
+                            _this.list();
+                        })
+                    }else{
+                        alert(response.data.msg);
+                    }
+                }).catch(function (error) {
+                        console.log(error);
+                    }
+                );
+            }
 
 
         },

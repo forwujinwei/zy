@@ -290,8 +290,8 @@
 
     <select id="queryTotal" resultType="int">
     select count(1)
-    from agreement_finance
-    where delete_flag!='1'
+    from agreement_finance A
+    where A.delete_flag!='1'
     <if test="submitStartDate != null">
         and  A.update_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
     </if>

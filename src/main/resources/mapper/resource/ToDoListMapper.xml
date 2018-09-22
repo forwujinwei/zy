@@ -146,7 +146,7 @@
     from to_do_list
     where create_by = #{username,jdbcType=VARCHAR}
     and delete_flag != 1
-    order  by finish_date ASC
+    order  by status ASC ,finish_date ASC
     <if test="offset != null and limit != null ">
       limit #{offset}, #{limit}
     </if>

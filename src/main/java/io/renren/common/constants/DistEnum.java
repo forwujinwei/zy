@@ -158,6 +158,10 @@ public enum DistEnum {
     GATHERING_ACCOUNT_008("GA_008","刷卡","gathering_account"),
     GATHERING_ACCOUNT_009("GA_009","微信","gathering_account"),
 
+    /*打款状态*/
+    TODO_STATUS_001("TD_001","TODO","todo_status"),
+    TODO_STATUS_002("TD_002","DONE","todo_status"),
+
 
     ;
 

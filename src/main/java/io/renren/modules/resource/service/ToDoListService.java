@@ -25,4 +25,12 @@ public class ToDoListService {
     public void save(ToDoList toDoList) {
         toDoListMapper.insert(toDoList);
     }
+
+    public void update(ToDoList toDoList) {
+        toDoListMapper.updateByPrimaryKeySelective(toDoList);
+    }
+
+    public void delete(String id) {
+        toDoListMapper.deleteByPrimaryKey(id);
+    }
 }
