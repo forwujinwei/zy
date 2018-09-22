@@ -1,5 +1,6 @@
 package io.renren.modules.resource.service;
 
+import io.renren.common.utils.Query;
 import io.renren.modules.resource.dao.ResourceAgreementMapper;
 import io.renren.modules.resource.model.ResourceAgreement;
 import io.renren.modules.resource.vo.ResourceAgreementVo;
@@ -46,5 +47,14 @@ public class ResourceAgreementService {
 
     public ResourceAgreement getAgreementById(String agreementId) {
         return resourceAgreementMapper.selectByPrimaryKey(agreementId);
+    }
+
+    public List<ResourceAgreementVo> queryAgreementManageList(Query query) {
+        return resourceAgreementMapper.queryAgreementManageList(query);
+
+    }
+
+    public int queryAgreementManageListTotal(Query query) {
+        return resourceAgreementMapper.queryAgreementManageListTotal(query);
     }
 }

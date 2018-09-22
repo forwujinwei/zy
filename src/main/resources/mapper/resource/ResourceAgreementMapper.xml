@@ -30,6 +30,7 @@
     <result column="icd_reverse_img_name" jdbcType="VARCHAR" property="icdReverseImgName" />
     <result column="license_img_name" jdbcType="VARCHAR" property="licenseImgName" />
     <result column="proxy_img_name" jdbcType="VARCHAR" property="proxyImgName" />
+    <result column="submit_date" jdbcType="TIMESTAMP" property="submitDate" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
@@ -41,8 +42,8 @@
     first_party, phone_number, address, type_code, type_des, status_code, status_des, 
     adviser, urgent_code, urgent_des, proxy_cost, government_cost, non_chapter_file_name, 
     has_chapter_file_name, final_file_name, sure_doc_img_name, icd_face_img_name, icd_reverse_img_name, 
-    license_img_name, proxy_img_name, create_by, create_date, update_by, update_date, 
-    remarks
+    license_img_name, proxy_img_name, submit_date, create_by, create_date, update_by, 
+    update_date, remarks
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -64,9 +65,9 @@
       proxy_cost, government_cost, non_chapter_file_name, 
       has_chapter_file_name, final_file_name, sure_doc_img_name, 
       icd_face_img_name, icd_reverse_img_name, license_img_name, 
-      proxy_img_name, create_by, create_date, 
-      update_by, update_date, remarks
-      )
+      proxy_img_name, submit_date, create_by, 
+      create_date, update_by, update_date, 
+      remarks)
     values (#{agreementId,jdbcType=VARCHAR}, #{resourceId,jdbcType=VARCHAR}, #{allcost,jdbcType=INTEGER}, 
       #{earnest,jdbcType=INTEGER}, #{finalPayment,jdbcType=INTEGER}, #{pay,jdbcType=INTEGER}, 
       #{email,jdbcType=VARCHAR}, #{linkMan,jdbcType=VARCHAR}, #{firstParty,jdbcType=VARCHAR}, 
@@ -76,9 +77,9 @@
       #{proxyCost,jdbcType=INTEGER}, #{governmentCost,jdbcType=INTEGER}, #{nonChapterFileName,jdbcType=VARCHAR}, 
       #{hasChapterFileName,jdbcType=VARCHAR}, #{finalFileName,jdbcType=VARCHAR}, #{sureDocImgName,jdbcType=VARCHAR}, 
       #{icdFaceImgName,jdbcType=VARCHAR}, #{icdReverseImgName,jdbcType=VARCHAR}, #{licenseImgName,jdbcType=VARCHAR}, 
-      #{proxyImgName,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}
-      )
+      #{proxyImgName,jdbcType=VARCHAR}, #{submitDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{remarks,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="io.renren.modules.resource.model.ResourceAgreement">
     insert into resource_agreement
@@ -166,6 +167,9 @@
       </if>
       <if test="proxyImgName != null">
         proxy_img_name,
+      </if>
+      <if test="submitDate != null">
+        submit_date,
       </if>
       <if test="createBy != null">
         create_by,
@@ -268,6 +272,9 @@
       <if test="proxyImgName != null">
         #{proxyImgName,jdbcType=VARCHAR},
       </if>
+      <if test="submitDate != null">
+        #{submitDate,jdbcType=TIMESTAMP},
+      </if>
       <if test="createBy != null">
         #{createBy,jdbcType=VARCHAR},
       </if>
@@ -369,6 +376,9 @@
       <if test="proxyImgName != null">
         proxy_img_name = #{proxyImgName,jdbcType=VARCHAR},
       </if>
+      <if test="submitDate != null">
+        submit_date = #{submitDate,jdbcType=TIMESTAMP},
+      </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=VARCHAR},
       </if>
@@ -416,6 +426,7 @@
       icd_reverse_img_name = #{icdReverseImgName,jdbcType=VARCHAR},
       license_img_name = #{licenseImgName,jdbcType=VARCHAR},
       proxy_img_name = #{proxyImgName,jdbcType=VARCHAR},
+      submit_date = #{submitDate,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       update_by = #{updateBy,jdbcType=VARCHAR},
@@ -471,6 +482,12 @@
       #{item}
     </foreach>
     AND A.adviser=#{adviser,jdbcType=VARCHAR}
+    <if test="queryTypeCode != null and queryTypeCode == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+      and  A.agreement_id = #{queryTypeValue,jdbcType=VARCHAR}
+    </if>
+    <if test="queryTypeValue != null and queryTypeCode == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+      and  A.link_man = #{queryTypeValue,jdbcType=VARCHAR}
+    </if>
     GROUP BY agreement_id
     <if test="offset != null and limit != null ">
       limit #{offset}, #{limit}
@@ -480,7 +497,82 @@
   <select id="queryTotal" resultType="int">
     select count(1)
     from resource_agreement
-    where  status_code  in (#{statusCode,jdbcType=VARCHAR})
+    where  status_code  in
+    <foreach close=")" collection="statusCodeList" index="index" item="item" open="(" separator=",">
+        #{item}
+   </foreach>
+    <if test="queryTypeCode != null and queryTypeCode == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+      and  A.agreement_id = #{queryTypeValue,jdbcType=VARCHAR}
+    </if>
+    <if test="queryTypeValue != null and queryTypeCode == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+      and  A.link_man = #{queryTypeValue,jdbcType=VARCHAR}
+    </if>
     AND adviser=#{adviser,jdbcType=VARCHAR}
+  </select>
+
+  <!--合同管理-->
+  <select id="queryAgreementManageList" resultType="io.renren.modules.resource.vo.ResourceAgreementVo">
+    SELECT A.*,
+    GROUP_CONCAT(B.name SEPARATOR '|') AS tradeMarkName
+    FROM `resource_agreement` A
+    LEFT JOIN `resource_trade_mark` B
+    ON A.`agreement_id`=B.`agreement_id`
+    AND B.`delete_flag`!='1'
+    <where>
+      <if test="statusCode != null">
+        and A.status_code in
+        <foreach close=")" collection="statusCodeList" index="index" item="item" open="(" separator=",">
+          #{item}
+        </foreach>
+      </if>
+      <if test="queryTypeCode != null and queryTypeCode == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.agreement_id = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="queryTypeValue != null and queryTypeCode == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.link_man = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="queryTypeValue != null and queryTypeCode == 'QU_003' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.adviser = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="submitStartDate != null">
+        and  A.submit_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="submitEndDate != null">
+        and  A.submit_date &lt;= #{submitEndDate,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+    GROUP BY agreement_id
+    order By A.submit_date DESC
+    <if test="offset != null and limit != null ">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="queryAgreementManageListTotal" resultType="int">
+    select count(1)
+    from resource_agreement A
+    <where>
+      <if test="statusCode != null">
+        and A.status_code in
+        <foreach close=")" collection="statusCodeList" index="index" item="item" open="(" separator=",">
+          #{item}
+        </foreach>
+      </if>
+      <if test="queryTypeCode != null and queryTypeCode == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.agreement_id = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="queryTypeValue != null and queryTypeCode == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.link_man = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="queryTypeValue != null and queryTypeCode == 'QU_003' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.adviser = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="submitStartDate != null">
+        and  A.submit_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="submitEndDate != null">
+        and  A.submit_date &lt;= #{submitEndDate,jdbcType=TIMESTAMP}
+      </if>
+    </where>
   </select>
 </mapper>

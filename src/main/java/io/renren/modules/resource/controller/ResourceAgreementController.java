@@ -23,6 +23,7 @@ import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -73,15 +74,15 @@ public class ResourceAgreementController {
     @RequestMapping("/list")
     public R list(@LoginUser UserEntity user, @RequestParam(required = false) Map<String, Object> params) throws ParseException {
         //查询列表数据
-        Object createStartDate = params.get("createStartDate");
-        Object createEndDate = params.get("createEndDate");
+        Object submitStartDate = params.get("submitStartDate");
+        Object submitEndDate = params.get("submitEndDate");
         String username = user.getUsername();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        if(createStartDate!=null&&!"".equals(createStartDate.toString())){
-             params.put("createStartDate", dateFormat.parse(createStartDate.toString()));
+        if(submitStartDate!=null&&!"".equals(submitStartDate.toString())){
+             params.put("submitStartDate", dateFormat.parse(submitStartDate.toString()));
         }
-        if(createEndDate!=null&&!"".equals(createEndDate.toString())){
-            params.put("createEndDate",dateFormat.parse(createEndDate.toString()));
+        if(submitEndDate!=null&&!"".equals(submitEndDate.toString())){
+            params.put("submitEndDate",dateFormat.parse(submitEndDate.toString()));
         }
         if(StringUtils.isNotBlank(params.get("statusCode").toString())){
             String[] statusCodes = params.get("statusCode").toString().split(",");
@@ -91,6 +92,32 @@ public class ResourceAgreementController {
         Query query = new Query(params);
         List<ResourceAgreementVo> resourcePersonalPoolList = resourceAgreementService.queryList(query);
         int total = resourceAgreementService.queryTotal(query);
+        PageUtils pageUtil = new PageUtils(resourcePersonalPoolList, total, query.getLimit(), query.getPage());
+        return R.ok().put("page", pageUtil);
+    }
+
+    /**
+     * 合同列表
+     */
+    @RequestMapping("/manage/list")
+    public R manageList(@LoginUser UserEntity user, @RequestParam(required = false) Map<String, Object> params) throws ParseException {
+        //查询列表数据
+        Object submitStartDate = params.get("submitStartDate");
+        Object submitEndDate = params.get("submitEndDate");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(submitStartDate!=null&&!"".equals(submitStartDate.toString())){
+            params.put("submitStartDate", dateFormat.parse(submitStartDate.toString()));
+        }
+        if(submitEndDate!=null&&!"".equals(submitEndDate.toString())){
+            params.put("submitEndDate",dateFormat.parse(submitEndDate.toString()));
+        }
+        if(StringUtils.isNotBlank(params.get("statusCode").toString())){
+            String[] statusCodes = params.get("statusCode").toString().split(",");
+            params.put("statusCodeList",statusCodes);
+        }
+        Query query = new Query(params);
+        List<ResourceAgreementVo> resourcePersonalPoolList = resourceAgreementService.queryAgreementManageList(query);
+        int total = resourceAgreementService.queryAgreementManageListTotal(query);
         PageUtils pageUtil = new PageUtils(resourcePersonalPoolList, total, query.getLimit(), query.getPage());
         return R.ok().put("page", pageUtil);
     }
@@ -133,6 +160,7 @@ public class ResourceAgreementController {
         resourceAgreement.setUpdateBy(username);
         resourceAgreement.setStatusCode(DistEnum.AGREEMENT_STATUS_SUBMIT.getTypeCode());
         resourceAgreement.setStatusDes(DistEnum.AGREEMENT_STATUS_SUBMIT.getDes());
+        resourceAgreement.setSubmitDate(new Date());
         resourceAgreementService.update(resourceAgreement);
         resourceTradeMarkService.updateStatusByAgreementId(agreementId);
 

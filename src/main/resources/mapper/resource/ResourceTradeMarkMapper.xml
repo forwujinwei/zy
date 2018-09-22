@@ -338,18 +338,47 @@
         and delete_flag!='1'
     </update>
 
-  <select id="queryList" resultType="io.renren.modules.resource.model.ResourceTradeMark" >
+  <select id="queryListByAgreementId" resultType="io.renren.modules.resource.model.ResourceTradeMark" >
     select * from resource_trade_mark
-    <where>
-      and delete_flag!='1'
-      <if test="agreementId != null and agreementId.trim() != ''">
-        and agreement_id = #{agreementId,jdbcType=VARCHAR}
-      </if>
-      <if test="adviser != null and adviser.trim() != ''">
-        and adviser = #{adviser,jdbcType=VARCHAR}
-      </if>
-    </where>
+    where delete_flag!='1'
+    and agreement_id = #{agreementId,jdbcType=VARCHAR}
+    and adviser = #{adviser,jdbcType=VARCHAR}
     order by create_date ASC
+    <if test="offset != null and limit != null ">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="queryListByAgreementIdTotal" resultType="int">
+    select count(1)
+    from resource_trade_mark
+    where delete_flag!='1'
+    and agreement_id = #{agreementId,jdbcType=VARCHAR}
+    and adviser = #{adviser,jdbcType=VARCHAR}
+  </select>
+
+  <select id="queryList" resultType="io.renren.modules.resource.model.ResourceTradeMark" >
+    select * from resource_trade_mark A
+    <where>
+      and A.delete_flag!='1'
+      <if test="queryTypeCode != null and queryTypeCode == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.name = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="queryTypeValue != null and queryTypeCode == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.apply_number = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="queryTypeCode != null and queryTypeCode == 'QU_003' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.agreement_id = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="applyStartDate != null">
+        and  A.apply_date &gt;= #{applyStartDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="applyEndDate != null">
+        and  A.apply_date &lt;= #{applyEndDate,jdbcType=TIMESTAMP}
+      </if>
+      and A.adviser = #{adviser,jdbcType=VARCHAR}
+    </where>
+    order by A.create_date ASC
     <if test="offset != null and limit != null ">
       limit #{offset}, #{limit}
     </if>
@@ -357,22 +386,87 @@
 
   <select id="queryTotal" resultType="int">
     select count(1)
-    from resource_trade_mark
+    from resource_trade_mark A
     <where>
-      and delete_flag!='1'
-      <if test="agreementId != null and agreementId.trim() != ''">
-        and agreement_id = #{agreementId,jdbcType=VARCHAR}
+      and A.delete_flag!='1'
+      <if test="queryTypeCode != null and queryTypeCode == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.name = #{queryTypeValue,jdbcType=VARCHAR}
       </if>
-      <if test="adviser != null and adviser.trim() != ''">
-        and adviser = #{adviser,jdbcType=VARCHAR}
+      <if test="queryTypeValue != null and queryTypeCode == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.apply_number = #{queryTypeValue,jdbcType=VARCHAR}
       </if>
+      <if test="queryTypeCode != null and queryTypeCode == 'QU_003' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.agreement_id = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="applyStartDate != null">
+        and  A.apply_date &gt;= #{applyStartDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="applyEndDate != null">
+        and  A.apply_date &lt;= #{applyEndDate,jdbcType=TIMESTAMP}
+      </if>
+      and A.adviser = #{adviser,jdbcType=VARCHAR}
     </where>
   </select>
+
+
 
   <select id="selectByResourceId" resultType="io.renren.modules.resource.model.ResourceTradeMark" >
     select *
     from resource_trade_mark
     where agreement_id = #{agreementId,jdbcType=VARCHAR}
 
+  </select>
+
+<!--商标管理-->
+  <select id="queryManageList" resultType="io.renren.modules.resource.model.ResourceTradeMark" >
+    select * from resource_trade_mark A
+    <where>
+      and A.delete_flag!='1'
+      <if test="queryTypeCode != null and queryTypeCode == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.name = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="queryTypeValue != null and queryTypeCode == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.apply_number = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="queryTypeCode != null and queryTypeCode == 'QU_003' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.agreement_id = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="queryTypeCode != null and queryTypeCode == 'QU_004' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.adviser = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="applyStartDate != null">
+        and  A.apply_date &gt;= #{applyStartDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="applyEndDate != null">
+        and  A.apply_date &lt;= #{applyEndDate,jdbcType=TIMESTAMP}
+      </if>
+    </where>
+    order by A.create_date ASC
+    <if test="offset != null and limit != null ">
+      limit #{offset}, #{limit}
+    </if>
+  </select>
+
+  <select id="queryManageListTotal" resultType="int">
+    select count(1)
+    from resource_trade_mark A
+    <where>
+      and A.delete_flag!='1'
+      <if test="queryTypeCode != null and queryTypeCode == 'QU_001' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.name = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="queryTypeValue != null and queryTypeCode == 'QU_002' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.apply_number = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="queryTypeCode != null and queryTypeCode == 'QU_003' and queryTypeValue!=null and queryTypeValue.trim() != '' ">
+        and  A.agreement_id = #{queryTypeValue,jdbcType=VARCHAR}
+      </if>
+      <if test="applyStartDate != null">
+        and  A.apply_date &gt;= #{applyStartDate,jdbcType=TIMESTAMP}
+      </if>
+      <if test="applyEndDate != null">
+        and  A.apply_date &lt;= #{applyEndDate,jdbcType=TIMESTAMP}
+      </if>
+    </where>
   </select>
 </mapper>

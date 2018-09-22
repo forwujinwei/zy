@@ -31,23 +31,21 @@
         <div  v-show="showList" >
             <form role="form" class="contain">
                 <div  class="form-group form-inline row">
-                    <select  v-model="condition.urgent" class="form-control">
-                        <option value="00">所有</option>
+                    <select  v-model="condition.statusCode" class="form-control">
+                        <option value="">查询条件</option>
                         <option value="QU_001">草稿</option>
                         <option value="QU_001">提交</option>
                         <option value="QU_002">通过</option>
                     </select>
                     <select id="intention" v-model="condition.queryTypeCode"  class="form-control">
-                        <option value="IN_001">合同号</option>
-                        <option value="IN_002">联系人</option>
-                        <option value="IN_003">顾问</option>
-                        <option value="IN_004">名称</option>
+                        <option value="QU_001">合同号</option>
+                        <option value="QU_002">联系人</option>
                     </select>
                     <input type="text"  v-model="condition.queryTypeValue" class="form-control">
                     <span class="form-inline">
                     <span class="demonstration">提交时间</span>
                     <el-date-picker
-                            v-model="condition.createStartDate"
+                            v-model="condition.submitStartDate"
                             type="date"
                             placeholder="选择日期"
                             @change="getSubmitStartDate"
@@ -57,7 +55,7 @@
                     <span class="form-inline">
                     <span class="demonstration">到</span>
                     <el-date-picker
-                            v-model="condition.createEndDate"
+                            v-model="condition.submitEndDate"
                             type="date"
                             placeholder="选择日期"
                             @change="getSubmitEndDate"
@@ -65,7 +63,7 @@
                     </el-date-picker>
                 </span>
                     <div class="form-group">
-                        <a  class="btn btn-primary" ><i class="glyphicon glyphicon-search"></i>&nbsp;查询</a>
+                        <a  class="btn btn-primary" @click="list()"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</a>
                     </div>
                 </div>
             </form>
@@ -619,11 +617,11 @@
                     sureDocList:[]
                 },
                 condition: {
-                    queryType: 'AQT_001',
-                    urgent: '00',
-                    queryTypeValue: null,
-                    createStartDate: null,
-                    createEndDate: null
+                    queryTypeCode: '',
+                    statusCode: '',
+                    queryTypeValue: '',
+                    submitStartDate: null,
+                    submitEndDate: null
                 },
                 agreement: {
                     agreementId: null,
@@ -701,9 +699,17 @@
             list: function() {
                 var _this=this;
                 _this.tableData = [];
+                var statusCode = _this.condition.statusCode;
+                if(statusCode==null || statusCode==''){
+                    statusCode='AGS_001,AGS_002,AGS_004';
+                }
                 axios.get('api/resource/agreement/list', {
                     params: {
-                        statusCode:'AGS_001,AGS_002,AGS_004',
+                        queryTypeCode:_this.condition.queryTypeCode,
+                        statusCode: statusCode,
+                        queryTypeValue: _this.condition.queryTypeValue,
+                        submitStartDate: _this.condition.submitStartDate,
+                        submitEndDate: _this.condition.submitEndDate,
                         page: _this.tableConfig.pageNumber,
                         limit: _this.tableConfig.pageSize
                     }
@@ -981,7 +987,7 @@
             listTradeMark:function(agreementId){
                 var _this=this;
                 _this.tradeMarkData = [];
-                axios.get('/api/resource/trademark/list', {
+                axios.get('/api/resource/trademark/list/agreement', {
                     params: {
                         agreementId:agreementId,
                         page: _this.tradeMarkTableConfig.pageNumber,

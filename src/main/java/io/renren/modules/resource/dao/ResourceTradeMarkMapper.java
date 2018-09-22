@@ -1,5 +1,6 @@
 package io.renren.modules.resource.dao;
 
+import io.renren.common.utils.Query;
 import io.renren.modules.resource.model.ResourceTradeMark;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -26,4 +27,12 @@ public interface ResourceTradeMarkMapper {
     void updateStatusByAgreementId(String agreementId);
 
     List<ResourceTradeMark> selectByResourceId(String agreementId);
+
+    List<ResourceTradeMark> queryManageList(Query query);
+
+    int queryManageListTotal(Query query);
+
+    List<ResourceTradeMark> queryListByAgreementId(Query query);
+
+    int queryListByAgreementIdTotal(Query query);
 }

@@ -14,6 +14,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -66,13 +68,37 @@ public class ResourceTradeMarkController {
      * 商标列表
      */
     @RequestMapping("/list")
-    public R list(@LoginUser UserEntity user, @RequestParam(required = false) Map<String, Object> params) {
+    public R list(@LoginUser UserEntity user, @RequestParam(required = false) Map<String, Object> params) throws ParseException {
         //查询列表数据
         String username = user.getUsername();
+        Object applyStartDate = params.get("applyStartDate");
+        Object applyEndDate = params.get("applyEndDate");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(applyStartDate!=null&&!"".equals(applyStartDate.toString())){
+            params.put("applyStartDate", dateFormat.parse(applyStartDate.toString()));
+        }
+        if(applyEndDate!=null&&!"".equals(applyEndDate.toString())){
+            params.put("applyEndDate",dateFormat.parse(applyEndDate.toString()));
+        }
         params.put("adviser",username);
         Query query = new Query(params);
         List<ResourceTradeMark> resourceTradeMarks = resourceTradeMarkService.queryList(query);
         int total = resourceTradeMarkService.queryTotal(query);
+        PageUtils pageUtil = new PageUtils(resourceTradeMarks, total, query.getLimit(), query.getPage());
+        return R.ok().put("page", pageUtil);
+    }
+
+    /**
+     * 根据合同ID获取商标信息
+     */
+    @RequestMapping("/list/agreement")
+    public R listByAgreementId(@LoginUser UserEntity user, @RequestParam(required = false) Map<String, Object> params) throws ParseException {
+        //查询列表数据
+        String username = user.getUsername();
+        params.put("adviser",username);
+        Query query = new Query(params);
+        List<ResourceTradeMark> resourceTradeMarks = resourceTradeMarkService.queryListByAgreementId(query);
+        int total = resourceTradeMarkService.queryListByAgreementIdTotal(query);
         PageUtils pageUtil = new PageUtils(resourceTradeMarks, total, query.getLimit(), query.getPage());
         return R.ok().put("page", pageUtil);
     }
@@ -119,5 +145,28 @@ public class ResourceTradeMarkController {
         resourceTradeMark.setDeleteFlag("1");
         resourceTradeMarkService.update(resourceTradeMark);
         return R.ok();
+    }
+
+
+    /**
+     * 商标列表
+     */
+    @RequestMapping("/manage/list")
+    public R manageList(@LoginUser UserEntity user,  @RequestParam(required = false)Map<String, Object> params) throws ParseException {
+        Object applyStartDate = params.get("applyStartDate");
+        Object applyEndDate = params.get("applyEndDate");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(applyStartDate!=null&&!"".equals(applyStartDate.toString())){
+            params.put("applyStartDate", dateFormat.parse(applyStartDate.toString()));
+        }
+        if(applyEndDate!=null&&!"".equals(applyEndDate.toString())){
+            params.put("applyEndDate",dateFormat.parse(applyEndDate.toString()));
+        }
+        //查询列表数据
+        Query query = new Query(params);
+        List<ResourceTradeMark> resourceTradeMarks = resourceTradeMarkService.queryManageList(query);
+        int total = resourceTradeMarkService.queryManageListTotal(query);
+        PageUtils pageUtil = new PageUtils(resourceTradeMarks, total, query.getLimit(), query.getPage());
+        return R.ok().put("page", pageUtil);
     }
 }

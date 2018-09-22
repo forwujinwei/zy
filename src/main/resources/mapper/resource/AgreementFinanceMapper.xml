@@ -277,6 +277,12 @@
         B.government_cost AS governmentCost
         from agreement_finance A left join resource_agreement B on A.agreement_id=B.agreement_id
         where A.delete_flag!='1'
+        <if test="submitStartDate != null">
+            and  A.update_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="submitEndDate != null">
+            and  A.update_date &lt;= #{submitEndDate,jdbcType=TIMESTAMP}
+        </if>
         <if test="offset != null and limit != null ">
             limit #{offset}, #{limit}
         </if>
@@ -286,6 +292,12 @@
     select count(1)
     from agreement_finance
     where delete_flag!='1'
+    <if test="submitStartDate != null">
+        and  A.update_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="submitEndDate != null">
+        and  A.update_date &lt;= #{submitEndDate,jdbcType=TIMESTAMP}
+    </if>
   </select>
 
     <select id="queryFileList" resultType="io.renren.modules.resource.vo.AgreementFinanceVo" >
@@ -307,6 +319,15 @@
         where  A.adviser=#{username,jdbcType=VARCHAR}
         and A.status_code=#{statusCode,jdbcType=VARCHAR}
         and A.delete_flag!='1'
+        <if test="agreementId != null and agreementId.trim() != ''">
+            and  A.agreement_id = #{queryTypeValue,jdbcType=VARCHAR}
+        </if>
+        <if test="submitStartDate != null">
+            and  A.update_date &gt;= #{submitStartDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="submitEndDate != null">
+            and  A.update_date &lt;= #{submitEndDate,jdbcType=TIMESTAMP}
+        </if>
         <if test="offset != null and limit != null ">
             limit #{offset}, #{limit}
         </if>

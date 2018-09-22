@@ -59,6 +59,8 @@ public class ResourceAgreement {
 
     private String proxyImgName;
 
+    private Date submitDate;
+
     private String createBy;
 
     private Date createDate;
@@ -291,6 +293,14 @@ public class ResourceAgreement {
 
     public void setProxyImgName(String proxyImgName) {
         this.proxyImgName = proxyImgName;
+    }
+
+    public Date getSubmitDate() {
+        return submitDate;
+    }
+
+    public void setSubmitDate(Date submitDate) {
+        this.submitDate = submitDate;
     }
 
     public String getCreateBy() {

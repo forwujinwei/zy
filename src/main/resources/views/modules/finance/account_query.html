@@ -33,7 +33,7 @@
 			<a  class="btn btn-primary " @click="showAddFinance"><i class="glyphicon glyphicon-plus"></i>添加打款记录</a>
 			<a  class="btn btn-primary " @click="showAddPay"><i class="glyphicon glyphicon-plus"></i>官费&代理费</a>
 			<select  v-model="condition.queryTypeCode" class="form-control">
-				<option value="00">查询方式</option>
+				<option value="">查询条件</option>
 				<option value="QU_001">顾问</option>
 				<option value="QU_002">合同号</option>
 			</select>
@@ -58,7 +58,7 @@
 		                    value-format="yyyy-MM-dd">
                     </el-date-picker>
                 </span>
-			<a  class="btn btn-primary" @click=""><i class="glyphicon glyphicon-search"></i>&nbsp;查询</a>
+			<a  class="btn btn-primary" @click="list()"><i class="glyphicon glyphicon-search"></i>&nbsp;查询</a>
 		</div>
 	</form>
 	<div>
@@ -318,9 +318,10 @@
         data(){
             return {
                 condition:{
+                    queryTypeCode:'',
+                    queryTypeValue:'',
                     submitStartDate:null,
                     submitEndDate:null,
-
                 },
                 tableData: [],
                 //表格参数
@@ -371,6 +372,10 @@
                 _this.tableData = [];
                 axios.get('api/finance/list', {
                     params: {
+                        queryTypeCode:_this.condition.queryTypeCode,
+                        queryTypeValue:_this.condition.queryTypeValue,
+                        submitStartDate:_this.condition.submitStartDate,
+                        submitEndDate:_this.condition.submitEndDate,
                         page: _this.tableConfig.pageNumber,
                         limit: _this.tableConfig.pageSize
                     }

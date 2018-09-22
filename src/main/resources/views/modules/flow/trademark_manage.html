@@ -25,16 +25,35 @@
 <div id="rrapp">
     <div  class="form-group form-inline row">
         <div class="form-group">
-            <select class="form-control">
-                <option value="1">商标名称</option>
-                <option value="2">申请号</option>
-                <option value="3">申请日期</option>
-                <option value="4">联系电话</option>
-                <option value="5">联系人</option>
-                <option value="6">顾问</option>
+            <select class="form-control" v-model="condition.queryTypeCode" >
+                <option value="">查询条件</option>
+                <option value="QU_001">商标名称</option>
+                <option value="QU_002">申请号</option>
+                <option value="QU_003">合同号</option>
+                <option value="QU_004">顾问</option>
             </select>
-            <input type="text" class="form-control" v-model="condition.inputValue" @keyup.enter="query">
-            <a class="btn btn-primary"><i class="glyphicon glyphicon-search"></i>查询</a>
+            <input type="text" class="form-control" v-model="condition.queryTypeValue" @keyup.enter="list()">
+            <span class="form-inline">
+                    <span class="demonstration">申请时间</span>
+                    <el-date-picker
+                            v-model="condition.applyStartDate"
+                            type="date"
+                            placeholder="选择日期"
+                            @change="getApplyStartDate"
+                            value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </span>
+            <span class="form-inline">
+                    <span class="demonstration">到</span>
+                    <el-date-picker
+                            v-model="condition.applyEndDate"
+                            type="date"
+                            placeholder="选择日期"
+                            @change="getApplyEndDate"
+                            value-format="yyyy-MM-dd">
+                    </el-date-picker>
+                </span>
+            <a class="btn btn-primary" @click="list()"><i class="glyphicon glyphicon-search"></i>查询</a>
         </div>
     </div>
 
@@ -249,12 +268,10 @@
                     pageSize: 10,
                 },
                 condition: {
-                    queryType: 'AQT_001',
-                    urgent: '00',
-                    queryTypeValue: null,
-                    createStartDate: null,
-                    createEndDate: null,
-                    inputValue:null
+                    queryTypeCode: '',
+                    queryTypeValue: '',
+                    applyStartDate:null,
+                    applyEndDate:null
                 },
                 tradeMark:{
                     id:null,
@@ -308,8 +325,12 @@
             list: function() {
                 var _this=this;
                 _this.tableData = [];
-                axios.get('/api/resource/trademark/list', {
+                axios.get('/api/resource/trademark/manage/list', {
                     params: {
+                        queryTypeCode:_this.condition.queryTypeCode,
+                        queryTypeValue: _this.condition.queryTypeValue,
+                        applyStartDate: _this.condition.applyStartDate,
+                        applyEndDate: _this.condition.applyEndDate,
                         page: _this.tableConfig.pageNumber,
                         limit: _this.tableConfig.pageSize
                     }
@@ -369,8 +390,13 @@
                     console.log(error);
                 });
 
-            }
-
+            },
+            getApplyEndDate:function(val){
+                this.condition.applyEndDate=val;
+            },
+            getApplyStartDate:function(val){
+                this.condition.applyStartDate=val;
+            },
 
         },
         mounted () {

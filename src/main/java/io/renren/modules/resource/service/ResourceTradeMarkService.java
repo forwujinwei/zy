@@ -1,5 +1,6 @@
 package io.renren.modules.resource.service;
 
+import io.renren.common.utils.Query;
 import io.renren.modules.resource.dao.ResourcePoolMapper;
 import io.renren.modules.resource.dao.ResourceTradeMarkMapper;
 import io.renren.modules.resource.model.ResourcePersonalPoolModel;
@@ -51,5 +52,21 @@ public class ResourceTradeMarkService {
     }
     public ResourceTradeMark selectByPrimaryKey(String id) {
         return resourceTradeMarkMapper.selectByPrimaryKey(id);
+    }
+
+    public List<ResourceTradeMark> queryManageList(Query query) {
+        return resourceTradeMarkMapper.queryManageList(query);
+    }
+
+    public int queryManageListTotal(Query query) {
+        return resourceTradeMarkMapper.queryManageListTotal(query);
+    }
+
+    public List<ResourceTradeMark> queryListByAgreementId(Query query) {
+        return resourceTradeMarkMapper.queryListByAgreementId(query);
+    }
+
+    public int queryListByAgreementIdTotal(Query query) {
+        return resourceTradeMarkMapper.queryListByAgreementIdTotal(query);
     }
 }

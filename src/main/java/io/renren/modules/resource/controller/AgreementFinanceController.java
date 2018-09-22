@@ -43,6 +43,15 @@ public class AgreementFinanceController {
         if(StringUtils.isBlank(username)){
             return R.error("用户不存在，请联系管理员");
         }
+        Object submitStartDate = params.get("submitStartDate");
+        Object submitEndDate = params.get("submitEndDate");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(submitStartDate!=null&&!"".equals(submitStartDate.toString())){
+            params.put("submitStartDate", dateFormat.parse(submitStartDate.toString()));
+        }
+        if(submitEndDate!=null&&!"".equals(submitEndDate.toString())){
+            params.put("submitEndDate",dateFormat.parse(submitEndDate.toString()));
+        }
 
         Query query = new Query(params);
         List<AgreementFinanceVo> agreementFinanceModels = agreementFinanceService.queryList(query);
@@ -59,11 +68,20 @@ public class AgreementFinanceController {
      * @throws ParseException
      */
     @RequestMapping("/file/list")
-    public R fileList(@LoginUser UserEntity user, @RequestParam Map<String, Object> params)  {
+    public R fileList(@LoginUser UserEntity user, @RequestParam Map<String, Object> params) throws ParseException {
         //查询列表数据
         String username = user.getUsername();
         if(StringUtils.isBlank(username)){
             return R.error("用户不存在，请联系管理员");
+        }
+        Object submitStartDate = params.get("submitStartDate");
+        Object submitEndDate = params.get("submitEndDate");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        if(submitStartDate!=null&&!"".equals(submitStartDate.toString())){
+            params.put("submitStartDate", dateFormat.parse(submitStartDate.toString()));
+        }
+        if(submitEndDate!=null&&!"".equals(submitEndDate.toString())){
+            params.put("submitEndDate",dateFormat.parse(submitEndDate.toString()));
         }
         params.put("statusCode",DistEnum.ACCOUNT_STATUS_003.getTypeCode());
         params.put("username",username);
