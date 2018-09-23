@@ -40,6 +40,8 @@ import java.util.List;
 public class FileController {
     @Value("${constant.imgBasePath}")
     private String imgBasePath;
+    @Value("${constant.agreementImgBasePath}")
+    private String agreementImgBasePath;
 
     private static final Logger log = LoggerFactory.getLogger(FileController.class);
     @Resource
@@ -52,7 +54,7 @@ public class FileController {
     private SysUserTokenService sysUserTokenService;
     @AuthIgnore
     @RequestMapping(value = "/upload/{operation}")
-    public R upload(@RequestParam String token,@RequestParam(required = false) String tradeMarkId,@RequestParam String agreementId,@PathVariable String operation,MultipartFile file) {
+    public R upload(@RequestParam String token,@RequestParam(required = false) String agreementOperatType,@RequestParam(required = false) String tradeMarkId,@RequestParam String agreementId,@PathVariable String operation,MultipartFile file) {
         try {
             if (StringUtils.isBlank(token)||StringUtils.isBlank(agreementId)||file.isEmpty()) {
                 return R.error("文件为空");
@@ -96,7 +98,14 @@ public class FileController {
 
             //合同
             }else if("agreementFile".equals(operation)){
-                filePath="agreementFile"+"\\agreement_"+agreementId+"_"+System.currentTimeMillis();
+                String baseAgreementImgPath="agreementImg"+"\\"+agreementId;
+                //重新上传
+                if("afresh".equals(agreementOperatType)){
+                //删除目录下文件
+
+
+                }
+                filePath=baseAgreementImgPath+"\\agreement_"+agreementId+"_"+System.currentTimeMillis()+suffixName;
 
             //合同确认书
             }else if("agreementSureDocImg".equals(operation)){
@@ -267,7 +276,22 @@ public class FileController {
             ips.close();
         }
     }
-
+    @RequestMapping("/agreement/delete/{agreementId}")
+    public R deleteAgreementImg(@PathVariable String agreementId) {
+        File dest = new File(agreementImgBasePath+agreementId);
+        if(dest.isDirectory()){
+            String[] list = dest.list();
+            if(list==null||list.length<=0){
+                return R.ok("文件不存在");
+            }
+            File temp = null;
+            for(String fileName:list){
+                temp = new File(agreementImgBasePath+agreementId+File.separator + fileName);
+                temp.delete();
+            }
+        }
+        return R.ok("删除成功");
+    }
     @PostMapping("/batch")
     public R handleFileUpload(HttpServletRequest request) {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");

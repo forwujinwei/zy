@@ -42,3 +42,13 @@ spring:
 constant:
     imgBasePath: D:\\app_data\\imgData\\
     pdfBasePath: D:\\app_data\\pdfData\\
+    agreementImgBasePath: D:\\app_data\\imgData\\agreementImg\\
+    agreementPdfHasChapterBasePath: D:\\app_data\\pdfData\\has_chapter\\
+    agreementPdfNonChapterBasePath: D:\\app_data\\pdfData\\non_chapter\\
+    agreementPdfFinalBasePath: D:\\app_data\\pdfData\\final_agreement\\
+pdfField:
+    company_address:
+    sign_address_1:
+    bank_name:
+    bank_account_name:
+    bank_account_number:

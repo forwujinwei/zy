@@ -46,9 +46,11 @@ public class LoginUserHandlerMethodArgumentResolver implements HandlerMethodArgu
         //获取用户信息
         //UserEntity user = userService.queryObject((Long)object);
         SysUserEntity sysUserEntity = sysUserService.queryObject((Long) object);
-       UserEntity userEntity = new UserEntity();
+        UserEntity userEntity = new UserEntity();
         userEntity.setUserId(sysUserEntity.getUserId());
         userEntity.setUsername(sysUserEntity.getUsername());
+        userEntity.setMobile(sysUserEntity.getMobile());
+        userEntity.setEmail(sysUserEntity.getEmail());
         return userEntity;
     }
 }

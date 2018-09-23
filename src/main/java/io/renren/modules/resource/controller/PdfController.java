@@ -21,6 +21,12 @@ import java.io.OutputStream;
 public class PdfController {
     @Value("${web.upload-path}")
     private String pdfDir;
+    @Value("${constant.agreementPdfHasChapterBasePath}")
+    private String agreementPdfHasChapterBasePath;
+    @Value("${constant.agreementPdfNonChapterBasePath}")
+    private String agreementPdfNonChapterBasePath;
+    @Value("${constant.agreementPdfFinalBasePath}")
+    private String agreementPdfFinalBasePath;
 
     @AuthIgnore
     @RequestMapping("/show/{pdfTypt}/{pdfId}")
@@ -28,9 +34,11 @@ public class PdfController {
        String pdfPath=pdfDir;
         try {
             if("non".equals(pdfTypt)){
-                pdfPath=pdfPath+"pdfData/non_chapter/";
+                pdfPath=agreementPdfNonChapterBasePath;
             }else if("has".equals(pdfTypt)){
-                pdfPath=pdfPath+"pdfData/has_chapter/";
+                pdfPath=agreementPdfHasChapterBasePath;
+            }else if("final".equals(pdfTypt)){
+                pdfPath=agreementPdfFinalBasePath;
             }
             File file = new File(pdfPath+pdfId+".pdf");
             FileInputStream fileInputStream = new FileInputStream(file);

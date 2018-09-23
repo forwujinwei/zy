@@ -26,6 +26,16 @@ public class UserEntity implements Serializable {
 	//创建时间
 	private Date createTime;
 
+	private String email;
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	/**
 	 * 设置：用户ID
 	 */

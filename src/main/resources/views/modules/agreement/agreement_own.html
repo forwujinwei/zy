@@ -384,7 +384,7 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="control-label col-sm-2">合同</div>
-                                            <div class="col-sm-10 control-label " style="text-align: left;color: darkred">(请按照合同页码顺序上传，上传后自动生成pdf)</div>
+                                            <div class="col-sm-10 control-label " style="text-align: left;color: darkred">(请按照合同页码顺序上传，上传后在列表页面点击生成，如上传错误请删除再上传)</div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-2"></div>
@@ -396,6 +396,7 @@
                                                         :limit="6"
                                                         :file-list="uploadFile.agreementFileList">
                                                     <el-button slot="trigger"  size="small" type="primary">点击上传</el-button>
+                                                    <el-button size="small" style="margin-left: 10px;" type="success" @click="deleteAgreementImg(tradeMarkInfo.agreementId)">删除</el-button>
                                                     <el-button size="small" style="margin-left: 10px;" type="success" :disabled="agreement.finalFileName==null" @click="showImg(agreement.finalFileName)">查看合同</el-button>
                                                 </el-upload>
                                             </div>
@@ -730,6 +731,20 @@
                 $("#readImage").attr('src',_this.img_url+fileName);
 
             },
+            deleteAgreementImg:function(agreementId){
+                axios.get('/api/file/agreement/delete/'+agreementId)
+                     .then(function (response) {
+                        if(response.data.code === 0){
+                            alert('删除成功', function(){
+                            
+                            });
+                        }else{
+                            alert(response.data.msg);
+                        }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
             showBuildAgreement:function(agreementId){
                 var _this=this;
                 _this.agreement.agreementId=agreementId;
@@ -845,7 +860,7 @@
                             "</br>"
                     }
                     if(finalFileName!=null && finalFileName!='' && finalFileName!='undefined'){
-                        htmlStr+="<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/non/"+ finalFileName+"'>最终合同</a>"
+                        htmlStr+="<a target='_blank' href='../../plugins/pdf/generic/web/viewer.html?file=/api/pdf/show/final/"+ finalFileName+"'>最终合同</a>"
                     }
                 }
 

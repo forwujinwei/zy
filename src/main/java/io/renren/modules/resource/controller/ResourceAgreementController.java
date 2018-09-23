@@ -1,12 +1,20 @@
 package io.renren.modules.resource.controller;
 
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
 import io.renren.common.constants.DistEnum;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 import io.renren.common.utils.R;
 import io.renren.common.validator.ValidatorUtils;
+import io.renren.modules.FileModel;
 import io.renren.modules.api.annotation.LoginUser;
 import io.renren.modules.api.entity.UserEntity;
+import io.renren.modules.resource.config.AgreementField;
 import io.renren.modules.resource.model.ResourceAgreement;
 import io.renren.modules.resource.model.ResourcePersonalPoolModel;
 import io.renren.modules.resource.model.ResourcePoolModel;
@@ -17,15 +25,14 @@ import io.renren.modules.resource.service.ResourcePoolService;
 import io.renren.modules.resource.service.ResourceTradeMarkService;
 import io.renren.modules.resource.vo.ResourceAgreementVo;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author jinweia.wu
@@ -42,6 +49,13 @@ public class ResourceAgreementController {
     private ResourceTradeMarkService resourceTradeMarkService;
     @Resource
     private CommonService commonService;
+    @Resource
+    private AgreementField agreementField;
+
+    @Value("${constant.agreementImgBasePath}")
+    private String agreementImgBasePath;
+    @Value("${constant.agreementPdfFinalBasePath}")
+    private String agreementPdfFinalBasePath;
     /**
      * 保存定时任务
      */
@@ -148,10 +162,10 @@ public class ResourceAgreementController {
      * 合同提交
      */
     @RequestMapping("/submit")
-    public R submit(@LoginUser UserEntity user, @RequestParam String agreementId) throws Exception {
+    public R submit(@LoginUser UserEntity user, @RequestParam String agreementId) {
         ResourceAgreement resourceAgreementExist = resourceAgreementService.selectByPrimaryKey(agreementId);
         if(resourceAgreementExist==null||StringUtils.isBlank(resourceAgreementExist.getFinalFileName())){
-            R.error("请确保提交合同前已上传甲方签字或盖章合同");
+            return R.error("请确保提交合同前已上传甲方签字或盖章合同");
        }
         //修改数据库
         ResourceAgreement resourceAgreement = new ResourceAgreement();
@@ -179,6 +193,13 @@ public class ResourceAgreementController {
         //生成临时合同
         if(StringUtils.equals("temp",operate)){
             Map<String,String> agreementFormFieldMap = resourceAgreementService.selectFromByPrimaryKey(agreementId);
+            agreementFormFieldMap.put("adviser_email",user.getEmail());
+            agreementFormFieldMap.put("adviser_phoneNumber",user.getMobile());
+            agreementFormFieldMap.put("company_address",agreementField.getCompany_address());
+            agreementFormFieldMap.put("sign_address_1",agreementField.getSign_address_1());
+            agreementFormFieldMap.put("bank_name",agreementField.getBank_name());
+            agreementFormFieldMap.put("bank_account_name",agreementField.getBank_account_name());
+            agreementFormFieldMap.put("bank_account_number",agreementField.getBank_account_number());
             //获取商标信息
             List<ResourceTradeMark> resourceTradeMarks = resourceTradeMarkService.selectByResourceId(agreementId);
             Map<String, String> pdfNameMap = commonService.manipulatePdf(agreementId,agreementFormFieldMap, resourceTradeMarks);
@@ -188,10 +209,37 @@ public class ResourceAgreementController {
             resourceAgreementService.update(resourceAgreement);
         //生成最终合同
         }else if(StringUtils.equals("final",operate)){
+            File dest = new File(agreementImgBasePath+agreementId);
+            String pdfDest=agreementPdfFinalBasePath+agreementId+".pdf";
+            if(dest.isDirectory()){
+                String[] fileNames = dest.list();
+                if(fileNames==null||fileNames.length<=0){
+                    return R.ok("确认合同已上传");
+                }
+                ArrayList<FileModel> fileList = new ArrayList<>();
+                for(String fileName:fileNames){
+                    String substring = fileName.substring(fileName.lastIndexOf("_") + 1, fileName.lastIndexOf("."));
+                    FileModel fileModel = new FileModel();
+                    fileModel.setCreateTime(Long.parseLong(substring));
+                    fileModel.setFilePath(fileName);
+                    fileList.add(fileModel);
+                }
+                fileList.sort(Comparator.comparing(FileModel::getCreateTime));
+                PdfWriter writer = new PdfWriter(pdfDest);
+                PdfDocument pdf = new PdfDocument(writer);
+                Document document = new Document(pdf);
+
+                for(int i=0;i<fileList.size();i++){
+                    Image image=new Image(ImageDataFactory.create(agreementImgBasePath+agreementId+File.separator+fileList.get(i).getFilePath()));
+                    document.add(image);
+                }
+                document.close();
+            }
+            resourceAgreement.setFinalFileName(agreementId);
+            resourceAgreementService.update(resourceAgreement);
 
         }
         return R.ok();
     }
-
 
 }

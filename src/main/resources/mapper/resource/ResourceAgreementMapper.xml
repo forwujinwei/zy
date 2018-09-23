@@ -443,8 +443,6 @@
       email AS linkMan_email,
       address AS firstParty_address,
       adviser AS adviser,
-      adviser AS adviser_email,
-      adviser AS adviser_phoneNumber,
       phone_number AS linkMan_phoneNumber,
       DATE_FORMAT(CURRENT_DATE,'%Y-%c-%d') AS sign_date_2,
       CAST(allCost AS CHAR) AS allCost_1,
